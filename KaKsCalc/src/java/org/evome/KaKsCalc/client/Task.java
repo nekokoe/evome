@@ -12,11 +12,11 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Task implements IsSerializable{
+public class Task implements IsSerializable {
 
     private int task_id, task_status, task_owner, task_QR, task_PR;
     private String task_comment, task_name;
-    private Date task_create, task_finish;
+    private Date task_create, task_finish, task_modify, task_delete;
     //Define task status
     public static final int TASK_NEW = 0,
             TASK_READY = 1,
@@ -32,7 +32,14 @@ public class Task implements IsSerializable{
             TASK_PR_NORMAL = 10,
             TASK_PR_HIGH = 5,
             TASK_PR_INTENSE = 0;
-
+    //define queue job status
+    public static final int JOB_QUEUE = 1,
+            JOB_RUN = 2,
+            JOB_HOLD = 3,
+            JOB_ERR = 4,
+            JOB_KILL = 5,
+            JOB_FINISH = 6;
+    
     //set methods
     public void setCreateDate(Date create) {
         this.task_create = create;
@@ -42,10 +49,17 @@ public class Task implements IsSerializable{
         this.task_finish = finish;
     }
 
+    public void setModifyDate(Date modify) {
+        this.task_modify = modify;
+    }
+
+    public void setDeleteDate(Date delete) {
+        this.task_delete = delete;
+    }
+
     public void setId(int id) {
         this.task_id = id;
     }
-
 
     public void setStatus(int status) {
         this.task_status = status;
@@ -55,7 +69,6 @@ public class Task implements IsSerializable{
         this.task_owner = owner;
     }
 
-
     public void setQueueRank(int rank) {
         this.task_QR = rank;
     }
@@ -64,7 +77,6 @@ public class Task implements IsSerializable{
         this.task_PR = rank;
     }
 
-
     public void setComment(String comment) {
         this.task_comment = comment;
     }
@@ -72,7 +84,7 @@ public class Task implements IsSerializable{
     public void setName(String name) {
         this.task_name = name;
     }
-    
+
     //read methods
     public String getName() {
         return task_name;
@@ -110,6 +122,14 @@ public class Task implements IsSerializable{
         return task_finish;
     }
 
+    public Date getModifyDate() {
+        return this.task_modify;
+    }
+
+    public Date getDeleteDate() {
+        return this.task_delete;
+    }
+
     public String getCreateDateSimpleFormat() {
         return getSimpleDateFormat(task_create);
     }
@@ -123,5 +143,4 @@ public class Task implements IsSerializable{
         String dateStr = sdf.format(d);
         return dateStr;
     }
-    
 }

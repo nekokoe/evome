@@ -10,6 +10,7 @@ package org.evome.KaKsCalc.server;
  */
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -102,4 +103,18 @@ public class SysConfig extends RemoteServiceServlet{
         }
         return isSuccess;
     }
+    
+    private boolean checkConfig(){
+        //check userspace path\
+        File fck = new File(this.DATA_ROOT_PATH);
+        if (!fck.exists() || !fck.isDirectory()){
+            return false;
+        }
+        fck = new File(this.WORK_ROOT_PATH);
+        if (!fck.exists() || !fck.isDirectory()){
+            return false;
+        }
+        
+        return true;
+    }    
 }

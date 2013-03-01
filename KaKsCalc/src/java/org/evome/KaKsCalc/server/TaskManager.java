@@ -8,95 +8,198 @@ package org.evome.KaKsCalc.server;
  *
  * @author nekoko
  */
-
+import java.io.File;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.evome.KaKsCalc.client.Task;
 
 public class TaskManager {
-    private DBConnector dbconn = new DBConnector();
-    private SysConfig sysconf = new SysConfig();
-    
-    public TaskManager(){
 
+    private static DBConnector dbconn = new DBConnector();
+    private static SysConfig sysconf = new SysConfig();
+
+    public TaskManager() {
     }
-    
-    public Task get(int task_id){
+
+    public Task get(int task_id) {
         Task task = null;
         //send sql query
-        String sql = "SELECT * FROM `task` WHERE task_id = " + task_id;
+        String sql = "SELECT * FROM `task` WHERE id = " + task_id;
         try {
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()) {
                 task = new Task();
-                task.setComment(rs.getString("task_comment"));
-                task.setCreateDate(rs.getDate("task_create"));
-                task.setFinishDate(rs.getDate("task_finish"));
-                task.setId(rs.getInt("task_id"));
-                task.setName(rs.getString("task_name"));
-                task.setOwner(rs.getInt("task_owner"));
-                task.setPriorityRank(rs.getInt("task_PR"));
-                task.setQueueRank(rs.getInt("task_QR"));
-                task.setStatus(rs.getInt("task_status"));
+                task.setComment(rs.getString("comment"));
+                task.setCreateDate(rs.getDate("create"));
+                task.setFinishDate(rs.getDate("finish"));
+                task.setModifyDate(rs.getDate("modify"));
+                task.setDeleteDate(rs.getDate("delete"));
+                task.setId(rs.getInt("id"));
+                task.setName(rs.getString("name"));
+                task.setOwner(rs.getInt("owner"));
+                task.setPriorityRank(rs.getInt("prank"));
+                task.setQueueRank(rs.getInt("qrank"));
+                task.setStatus(rs.getInt("status"));
             }
         } catch (Exception ex) {
-            Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return task;
     }
-    
-    public int add(Task task){
+
+    public int add(Task task) {
         int task_id = 0;
         String sql = "INSERT INTO `task` SET ("
-                + "task_create = '" + task.getCreateDateSimpleFormat() + "',"
-                + "task_finish = '" + task.getFinishDateSimpleFormat() + "',"
-                + "task_status = " + task.getStatus() + ","
-                + "task_owner = " + task.getOwner() + ","
-                + "task_QR = " + task.getQueueRank() + ","
-                + "task_PR = " + task.getPriorityRank() + ","
-                + "task_comment = '" + task.getComment() + "',"
-                + "task_name = '" + task.getName() + "'"
+                + "create = '" + dbconn.getSqlTime() + "',"
+                + "finish = '" + "" + "',"
+                + "modify = '" + dbconn.getSqlTime() + "',"
+                + "delete = '" + "" + "',"
+                + "status = " + task.getStatus() + ","
+                + "owner = " + task.getOwner() + ","
+                + "qrank = " + task.getQueueRank() + ","
+                + "prank = " + task.getPriorityRank() + ","
+                + "comment = '" + task.getComment() + "',"
+                + "name = '" + task.getName() + "'"
                 + ")";
-        try{
+        try {
             ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
-            rs.next();
-            task_id = rs.getInt(1);
+            if (rs != null){
+                rs.next();
+                task_id = rs.getInt(1);
+            }            
             rs.close();
-        }catch(Exception ex) { //debug out output this way
-            Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) { //debug out output this way
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return task_id;
     }
-    
+
     public boolean modify(Task task) {
         String sql = "UPDATE `task` SET ("
-                + "task_create = '" + task.getCreateDateSimpleFormat() + "',"
-                + "task_finish = '" + task.getFinishDateSimpleFormat() + "',"
-                + "task_status = " + task.getStatus() + ","
-                + "task_owner = " + task.getOwner() + ","
-                + "task_QR = " + task.getQueueRank() + ","
-                + "task_PR = " + task.getPriorityRank() + ","
-                + "task_comment = '" + task.getComment() + "',"
-                + "task_name = '" + task.getName() + "'"
-                + ") WHERE task_id = " + task.getId();
+                + "modify = '" + dbconn.getSqlTime() + "',"
+                + "finish = '" + task.getFinishDateSimpleFormat() + "',"
+                + "status = " + task.getStatus() + ","
+                + "owner = " + task.getOwner() + ","
+                + "qrank = " + task.getQueueRank() + ","
+                + "prank = " + task.getPriorityRank() + ","
+                + "comment = '" + task.getComment() + "',"
+                + "name = '" + task.getName() + "'"
+                + ") WHERE id = " + task.getId();
         ResultSet rs = dbconn.execQuery(sql);
-        if (rs == null) {
-            return false;
-        } else {
+        if (rs != null) {
             return true;
+        } else {
+            return false;
         }
 
     }
 
     public boolean delete(Task task) {
-        String sql = "DELETE FROM `task` WHERE task_id = " + task.getId();
+        //deleting ops are async. tag it as TASK_REMOVED and wait recycler to remove it
+        //1.terminate its job in queue
+        this.terminate(task);
+        //2.mark it removed
+        String sql = "UPDATE `task` SET("
+                +"status = " + Task.TASK_REMOVED
+                +") WHERE id = " + task.getId();
         ResultSet rs = dbconn.execQuery(sql);
-        if (rs == null) {
-            return false;
-        } else {
+        if (rs != null) {
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int submit(Task task) {
+        //submit task to queue
+        int job_id = 0;
+        String sql = "INSERT INTO `job` SET("
+                +"task = '" + task.getId() + "',"
+                +"name = 'task_" + task.getId() + "',"
+                +"submit = '" + dbconn.getSqlTime() + "',"
+                +"queue = '" + "1" + "',"
+                +"status = " + Task.JOB_QUEUE + ","
+                +"prank = " + task.getPriorityRank() + ","
+                +"qrank = " + task.getQueueRank() + ""
+                +")";
+        try{
+            ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
+            if (rs != null){
+                rs.next();
+                job_id = rs.getInt(1);
+            }
+            rs.close();
+        }catch(Exception ex){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
+        }
+        return job_id;
+    }
+    
+    public void terminate(Task task){
+        //terminate task in queue
+        String sql = "UPDATE `job` SET ("
+                + "status = " + Task.JOB_KILL
+                + ") WHERE task = " + task.getId();
+        ResultSet rs = dbconn.execQuery(sql);        
+    }
+    
+    public void recycle(){
+        //recycle tasks marked as REMOVED
+        String sql = "SELECT * FROM `task` WHERE status = " + Task.TASK_REMOVED;
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while (rs.next()){
+                sql = "SELECT 1 FROM `job` WHERE task = " + rs.getInt("id");
+                ResultSet rs2 = dbconn.execQuery(sql);
+                if (rs2.next()){
+                    int job_status = rs2.getInt("status");
+                    if (job_status == Task.JOB_RUN 
+                            || job_status ==Task.JOB_KILL 
+                            || job_status == Task.JOB_HOLD){
+                        continue;
+                    }    
+                }
+                rs2.close();
+                sql = "DELETE FROM `task` WHERE id = " + rs.getInt("id");
+                dbconn.execQuery(sql);
+            }
+        }catch(Exception ex){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);              
+        }        
+    }
+
+    public boolean initTaskDir(Task task) {
+        String dir = sysconf.DATA_ROOT_PATH + "/" + task.getId();
+        try {
+            File file = new File(dir);
+            if (file.exists()) {
+                //task dir exists, check if empty
+                if (file.isDirectory()) {
+                    File[] list = file.listFiles();
+                    if (list.length > 0) {
+                        //cannot use this dir
+                        return false;
+                    }
+                } else {
+                    //is here, but regular file
+                    return false;
+                }
+                //now safe to remove it
+                file.delete();
+            }
+            file.mkdir();
+            System.out.println(this.getClass().getName() + ", create task dir : " + dir);
+            return true;
+        } catch (Exception ex) {
+            System.err.println(this.getClass().getName() + ", Cannot create dir: " + dir);
+            return false;
         }
     }
     
+    public boolean prepareTask(Task task) {
+        return true;
+    }
 }

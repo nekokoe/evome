@@ -35,7 +35,7 @@ public class DBConnector {
             PreparedStatement query = conn.prepareStatement(sql);
             rs = query.executeQuery();
         } catch (Exception ex) {
-            Logger.getLogger(DBConnector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
     }
@@ -47,7 +47,7 @@ public class DBConnector {
             query.executeUpdate();
             rs = query.getGeneratedKeys();
         } catch (Exception ex) { //debug out output this way
-            Logger.getLogger(DBConnector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
     }
@@ -63,7 +63,7 @@ public class DBConnector {
         try {
             connect = DriverManager.getConnection(conf.DB_URL + conf.DB_NAME, conf.DB_USER, conf.DB_PASS);
         } catch (SQLException ex) {
-            Logger.getLogger(DBConnector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return connect;
     }
