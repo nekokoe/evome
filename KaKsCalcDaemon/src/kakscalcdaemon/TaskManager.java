@@ -52,7 +52,7 @@ public class TaskManager {
                 task.setId(rs.getInt("id"));
                 task.setName(rs.getString("name"));
                 task.setOwner(rs.getInt("owner"));
-                task.setCalculation(rs.getInt("calculation"));
+                task.setCalc(rs.getInt("calculation"));
                 task.setProjcet(rs.getInt("project"));
                 task.setPriorityRank(rs.getInt("prank"));
                 task.setQueueRank(rs.getInt("qrank"));
@@ -73,7 +73,7 @@ public class TaskManager {
                 + "delete = '" + "" + "',"
                 + "status = " + task.getStatus() + ","
                 + "owner = " + task.getOwner() + ","
-                + "calculation = " + task.getCalculation() + ","
+                + "calc = " + task.getCalc() + ","
                 + "project = " + task.getProject() + ","
                 + "qrank = " + task.getQueueRank() + ","
                 + "prank = " + task.getPriorityRank() + ","
@@ -99,7 +99,7 @@ public class TaskManager {
                 + "finish = '" + task.getFinishDateSimpleFormat() + "',"
                 + "status = " + task.getStatus() + ","
                 + "owner = " + task.getOwner() + ","
-                + "calculation = " + task.getCalculation() + ","
+                + "calculation = " + task.getCalc() + ","
                 + "project = " + task.getProject() + ","                
                 + "qrank = " + task.getQueueRank() + ","
                 + "prank = " + task.getPriorityRank() + ","
@@ -279,6 +279,17 @@ public class TaskManager {
             return false;
         }
         return true; // all success
+    }
+    
+    public void updateTaskStauts(Task task, int status){
+       Task dbtask = this.get(task);//must get db here, avoid changing other data
+       task.setStatus(status);
+       dbtask.setStatus(status); //sychronize caller task
+       this.modify(dbtask);
+    }
+    
+    public void updateJobStatus(Task task, int status){
+        
     }
 
 }

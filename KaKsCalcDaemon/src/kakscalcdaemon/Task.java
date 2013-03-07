@@ -16,6 +16,7 @@ public class Task {
     private int task_id, task_status, task_owner, task_calc, task_project, task_QR, task_PR;
     private String task_comment, task_name;
     private Date task_create, task_finish, task_modify, task_delete;
+    
     //Define task status
     public static final int TASK_NEW = 0,
             TASK_READY = 1,
@@ -31,13 +32,7 @@ public class Task {
             TASK_PR_NORMAL = 10,
             TASK_PR_HIGH = 5,
             TASK_PR_INTENSE = 0;
-    //define queue job status
-    public static final int JOB_QUEUE = 1,
-            JOB_RUN = 2,
-            JOB_HOLD = 3,
-            JOB_ERR = 4,
-            JOB_KILL = 5,
-            JOB_FINISH = 6;
+
     
     //set methods
     public void setCreateDate(Date create) {
@@ -68,7 +63,7 @@ public class Task {
         this.task_owner = owner;
     }
     
-    public void setCalculation(int calc){
+    public void setCalc(int calc){
         this.task_calc = calc;        
     }
     
@@ -112,7 +107,7 @@ public class Task {
     public int getOwner() {
         return task_owner;
     }
-    public int getCalculation(){
+    public int getCalc(){
         return task_calc;
     }
     public int getProject(){
@@ -155,5 +150,78 @@ public class Task {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = sdf.format(d);
         return dateStr;
+    }
+    
+    
+    private int job_id, job_queue, job_status, job_prank, job_qrank;
+    private String job_name;
+    private Date job_submit;
+      
+    //define queue job status
+    public static final int JOB_QUEUE = 1,
+            JOB_RUN = 2,
+            JOB_HOLD = 3,
+            JOB_ERR = 4,
+            JOB_KILL = 5,
+            JOB_FINISH = 6;
+    
+    public void setJobId(int id){
+        this.job_id = id;
+    }
+    public void setJobQueue(int queue){
+        this.job_queue = queue;
+    }
+    public void setJobStatus(int status){
+        this.job_status = status;
+    }
+    public void setJobPriorityRank(int prank){
+        this.job_prank = prank;
+    }
+    public void setJobQueueRank(int qrank){
+        this.job_qrank = qrank;
+    }
+    public void setJobName(String name){
+        this.job_name = name;
+    }
+    public void setJobSubmitDate(Date submit){
+        this.job_submit = submit;
+    }
+    
+    public int getJobId(){
+        return this.job_id;
+    }
+    public int getJobQueu(){
+        return this.job_queue;
+    }
+    public int getJobStatus(){
+        return this.job_status;
+    }
+    public int getJobPriorityRank(){
+        return this.job_prank;
+    }
+    public int getJobQueueRank(){
+        return this.job_qrank;
+    }
+    public String getJobName(){
+        return this.job_name;
+    }
+    public Date getJobSubmitDate(){
+        return this.job_submit;
+    }
+    
+    private int kaks_c;
+    private String kaks_m;
+    
+    public void setKaKsGeneticCode(int c){
+        this.kaks_c = c;
+    }
+    public void setKaKsMethod(String m){
+        this.kaks_m = m;
+    }
+    public int getKaKsGeneticCode(){
+        return this.kaks_c;
+    }
+    public String getKaKsMethod(){
+        return this.kaks_m;
     }
 }
