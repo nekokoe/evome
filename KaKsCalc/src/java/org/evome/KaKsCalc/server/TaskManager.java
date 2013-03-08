@@ -23,6 +23,10 @@ public class TaskManager {
 
     public TaskManager() {
     }
+    
+    public Task get(Task task){
+        return this.get(task.getId());
+    }
 
     public Task get(int task_id) {
         Task task = null;
@@ -40,6 +44,8 @@ public class TaskManager {
                 task.setId(rs.getInt("id"));
                 task.setName(rs.getString("name"));
                 task.setOwner(rs.getInt("owner"));
+                task.setCalculation(rs.getInt("calculation"));
+                task.setProjcet(rs.getInt("project"));
                 task.setPriorityRank(rs.getInt("prank"));
                 task.setQueueRank(rs.getInt("qrank"));
                 task.setStatus(rs.getInt("status"));
@@ -59,6 +65,8 @@ public class TaskManager {
                 + "delete = '" + "" + "',"
                 + "status = " + task.getStatus() + ","
                 + "owner = " + task.getOwner() + ","
+                + "calculation = " + task.getCalculation() + ","
+                + "project = " + task.getProject() + ","                
                 + "qrank = " + task.getQueueRank() + ","
                 + "prank = " + task.getPriorityRank() + ","
                 + "comment = '" + task.getComment() + "',"
@@ -83,6 +91,8 @@ public class TaskManager {
                 + "finish = '" + task.getFinishDateSimpleFormat() + "',"
                 + "status = " + task.getStatus() + ","
                 + "owner = " + task.getOwner() + ","
+                + "calculation = " + task.getCalculation() + ","
+                + "project = " + task.getProject() + ","                
                 + "qrank = " + task.getQueueRank() + ","
                 + "prank = " + task.getPriorityRank() + ","
                 + "comment = '" + task.getComment() + "',"
@@ -171,14 +181,21 @@ public class TaskManager {
         }        
     }
 
-    public boolean initTaskDir(Task task) {
-        String dir = sysconf.DATA_ROOT_PATH + "/" + task.getId();
+    public String getSubDir(String prefix, Task task){
+        return prefix 
+                + "/" + task.getOwner() 
+                + "/" + task.getProject() 
+                + "/" + task.getId();
+    }
+    
+    private boolean initSubDir(String prefix, Task task) {
+        String path = getSubDir(prefix, task);
         try {
-            File file = new File(dir);
-            if (file.exists()) {
+            File dir = new File(path);
+            if (dir.exists()) {
                 //task dir exists, check if empty
-                if (file.isDirectory()) {
-                    File[] list = file.listFiles();
+                if (dir.isDirectory()) {
+                    File[] list = dir.listFiles();
                     if (list.length > 0) {
                         //cannot use this dir
                         return false;
@@ -188,18 +205,24 @@ public class TaskManager {
                     return false;
                 }
                 //now safe to remove it
-                file.delete();
+                dir.delete();
             }
-            file.mkdir();
-            System.out.println(this.getClass().getName() + ", create task dir : " + dir);
+            dir.mkdirs();
+            System.out.println(this.getClass().getName() + ", create task dir : " + path);
             return true;
         } catch (Exception ex) {
-            System.err.println(this.getClass().getName() + ", Cannot create dir: " + dir);
+            System.err.println(this.getClass().getName() + ", Cannot create dir: " + path);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
             return false;
         }
     }
-    
-    public boolean prepareTask(Task task) {
-        return true;
+
+    public boolean initDataDir(Task task){
+        return initSubDir(sysconf.DATA_ROOT_PATH, task);
     }
+    
+    public boolean initWorkDir(Task task){
+        return initSubDir(sysconf.WORK_ROOT_PATH, task);
+    }
+    
 }

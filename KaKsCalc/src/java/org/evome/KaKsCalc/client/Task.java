@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class Task implements IsSerializable {
 
-    private int task_id, task_status, task_owner, task_QR, task_PR;
+    private int task_id, task_status, task_owner, task_calc, task_project, task_QR, task_PR;
     private String task_comment, task_name;
     private Date task_create, task_finish, task_modify, task_delete;
     //Define task status
@@ -39,7 +39,7 @@ public class Task implements IsSerializable {
             JOB_ERR = 4,
             JOB_KILL = 5,
             JOB_FINISH = 6;
-    
+
     //set methods
     public void setCreateDate(Date create) {
         this.task_create = create;
@@ -67,6 +67,14 @@ public class Task implements IsSerializable {
 
     public void setOwner(int owner) {
         this.task_owner = owner;
+    }
+
+    public void setCalculation(int calc) {
+        this.task_calc = calc;
+    }
+
+    public void setProjcet(int proj) {
+        this.task_project = proj;
     }
 
     public void setQueueRank(int rank) {
@@ -104,6 +112,14 @@ public class Task implements IsSerializable {
 
     public int getOwner() {
         return task_owner;
+    }
+
+    public int getCalculation() {
+        return task_calc;
+    }
+
+    public int getProject() {
+        return task_project;
     }
 
     public int getStatus() {
