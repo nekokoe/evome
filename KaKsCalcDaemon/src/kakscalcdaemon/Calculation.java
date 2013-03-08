@@ -11,6 +11,7 @@ package kakscalcdaemon;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,10 +19,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
+import org.biojava3.core.sequence.io.FastaWriterHelper;
 
 public class Calculation implements Runnable{
     //the workflow of the KaKs Calculation is :
@@ -33,14 +36,93 @@ public class Calculation implements Runnable{
     private static TaskManager taskman = new TaskManager();
     
     private Task task;
+    private boolean isInitialized = false;
     
-    public void init(Task task) {
-        
+    public boolean init(Task t, ArrayList<String> filelist) {
+        //t is task to be executed
+        //filelist is file need to be copy from datadir to workdir
+        //set task
+        this.task = taskman.get(t);
+        //prepare workdir
+        if (!taskman.initWorkDir(task)){
+            System.err.println("Failed init workdir for task:" + task.getId());
+            return false;
+        }
+        //copy data from datadir to workdir
+        for (Iterator<String> file = filelist.iterator(); file.hasNext();){
+            String filename = file.next();
+            if (!taskman.copyTaskFile(task,TaskManager.OPS_COPY,TaskManager.FROM_DATA_TO_WORK,
+                    filename, filename)) {
+                System.err.println(this.getClass().getName() + ": error while copying file from datadir to workdir");
+                return false;
+            }
+        }
+        this.isInitialized = true;
+        return true;
     }
     
     @Override
     public void run(){
-        
+        if (this.isInitialized){
+            HashMap<String, String> mapper = new HashMap<String, String>();
+            String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, this.task);
+            //get DNApair
+            mapper.clear();
+            mapper.put("sequence", "sequence.fasta");
+            mapper.put("pairlist", "pair.list");
+            LinkedHashMap<String, DNAPair> dnaPair = splitDNAPair(this.task, mapper);
+            //do muscle alignment on each pair
+            for (Iterator<String> pair = dnaPair.keySet().iterator(); pair.hasNext();){
+                String pairname = pair.next();
+                try{
+                    
+                    mapper.clear();                    
+                    mapper.put("", null);
+                }catch(Exception ex){
+                    
+                }                
+
+            }
+
+            mapper.put("input", "");
+            this.doMuscleAlignment(task, );
+        }else{
+            System.err.println("Unable to run task which is not initialized, do nothing...");
+        }
+    }
+    
+    private LinkedHashMap<String, DNAPair> splitDNAPair(Task task, HashMap<String, String> mapper){
+        LinkedHashMap<String, DNAPair> dnaPair = new LinkedHashMap<String, DNAPair>();
+        String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, task);
+        String seqfile = mapper.get("sequnece");
+        String pairlist = mapper.get("pairlist");
+        //read DNA sequence
+        LinkedHashMap<String, DNASequence> sequence = null;
+        try{
+            sequence = FastaReaderHelper.readFastaDNASequence(new File(workdir + "/" + new File(seqfile).getName()));
+        }catch(Exception ex){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            System.err.println("faile to read sequence file: " + seqfile + "for task " + task.getId());
+        }
+        //read parlist and put pair
+        try{
+            Scanner scanner = new Scanner(new FileInputStream(workdir + "/" + new File(pairlist).getName()));
+            while (scanner.hasNextLine()){
+                String[] line = scanner.nextLine().split("\\t");
+                String pairname = line[0];
+                String pair1 = line[1];
+                String pair2 = line[2];
+                if (sequence.containsKey(pair1) && sequence.containsKey(pair2)){
+                    pairname = pairname.replaceAll("[^\\w]", "_"); //only \w is allowed for pairname
+                    DNAPair pair = new DNAPair(pairname, sequence.get(pair1), sequence.get(pair2));
+                    dnaPair.put(pairname, pair);
+                }
+            }
+        }catch(Exception ex){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            System.err.println("faile to read pair list: " + pairlist + "for task " + task.getId());            
+        }
+        return dnaPair;
     }
     
     public boolean doMuscleAlignment(Task task, HashMap<String, String> mapper) {
@@ -53,16 +135,6 @@ public class Calculation implements Runnable{
         String outputfile = mapper.get("output");
         String logfile = mapper.get("stdout");
         String errfile = mapper.get("stderr");
-
-        //copy data from datadir to workdir
-        //should be moved to outside?
-        if (!taskman.copyTaskFile(task,
-                TaskManager.OPS_COPY,
-                TaskManager.FROM_DATA_TO_WORK,
-                inputfile, inputfile)) {
-            System.err.println(this.getClass().getName() + ": error while copying file from datadir to workdir");
-            return false;
-        }
 
         //build cmdline
         String cmdline = muscle
@@ -177,4 +249,49 @@ public class Calculation implements Runnable{
             return false;
         }
     }
+    
+    private class DNAPair {
+
+        private String name;
+        private DNASequence a, b;
+
+        public DNAPair(){}
+        
+        public DNAPair(String name, DNASequence a, DNASequence b){
+            this.name = name;
+            this.a = a;
+            this.b = b;
+        }
+        
+        public void name(String name) {
+            this.name = name;
+        }
+
+        public void a(DNASequence a) {
+            this.a = a;
+        }
+
+        public void b(DNASequence b) {
+            this.b = b;
+        }
+
+        public String name() {
+            return this.name;
+        }
+
+        public DNASequence a() {
+            return a;
+        }
+
+        public DNASequence b() {
+            return b;
+        }
+        
+        public ArrayList<DNASequence> all(){
+            ArrayList<DNASequence> all = new ArrayList<DNASequence>();
+            all.add(a);
+            all.add(b);
+            return all;
+        }
+    }   
 }
