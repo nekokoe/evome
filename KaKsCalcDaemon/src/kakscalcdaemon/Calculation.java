@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,17 +76,32 @@ public class Calculation implements Runnable{
             for (Iterator<String> pair = dnaPair.keySet().iterator(); pair.hasNext();){
                 String pairname = pair.next();
                 try{
-                    
-                    mapper.clear();                    
-                    mapper.put("", null);
+                    FastaWriterHelper.writeNucleotideSequence(new File(workdir + pairname + ".fasta"), dnaPair.get(pairname).all());
+                    //do muscle alignment
+                    mapper.clear();
+                    mapper.put("input", pairname + ".fasta");
+                    mapper.put("output", pairname + ".muscle");
+                    mapper.put("stdout", pairname + ".log");
+                    mapper.put("stderr", pairname + ".stderr");
+                    if (!this.doMuscleAlignment(this.task, mapper)){
+                        System.err.println("muscle alignment failed on task " + this.task.getId() + ", gene pair " + pairname);
+                        return;
+                    }
+                    //convert muscle to axt
+                    mapper.clear();
+                    mapper.put("pairname", pairname);
+                    mapper.put("muscle", pairname + ".muscle");
+                    mapper.put("axt", pairname + ".axt");
+                    if (!this.convertMuscleToAxt(this.task, mapper)){
+                        System.err.println("muscle 2 axt conversion failed on task " + this.task.getId() + ", gene pair " + pairname);                        
+                        return;
+                    }
                 }catch(Exception ex){
-                    
-                }                
-
+                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                    return;
+                }
             }
 
-            mapper.put("input", "");
-            this.doMuscleAlignment(task, );
         }else{
             System.err.println("Unable to run task which is not initialized, do nothing...");
         }
