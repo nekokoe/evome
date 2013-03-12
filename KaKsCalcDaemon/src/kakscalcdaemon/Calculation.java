@@ -38,8 +38,16 @@ public class Calculation implements Runnable{
     
     private Task task;
     private boolean isInitialized = false;
+    private boolean isSuccess = false;
     
-    public boolean init(Task t, ArrayList<String> filelist) {
+    public void init(Task t) {
+        ArrayList<String> filelist = new ArrayList<>();
+        filelist.add("sequence.fasta");
+        filelist.add("pair.list");
+        this.init(t, filelist);
+    }
+    
+    public void init(Task t, ArrayList<String> filelist) {
         //t is task to be executed
         //filelist is file need to be copy from datadir to workdir
         //set task
@@ -47,7 +55,7 @@ public class Calculation implements Runnable{
         //prepare workdir
         if (!taskman.initWorkDir(task)){
             System.err.println("Failed init workdir for task:" + task.getId());
-            return false;
+            return;
         }
         //copy data from datadir to workdir
         for (Iterator<String> file = filelist.iterator(); file.hasNext();){
@@ -55,24 +63,31 @@ public class Calculation implements Runnable{
             if (!taskman.copyTaskFile(task,TaskManager.OPS_COPY,TaskManager.FROM_DATA_TO_WORK,
                     filename, filename)) {
                 System.err.println(this.getClass().getName() + ": error while copying file from datadir to workdir");
-                return false;
+                return;
             }
         }
         this.isInitialized = true;
-        return true;
     }
     
     @Override
     public void run(){
-        if (this.isInitialized){
-            HashMap<String, String> mapper = new HashMap<String, String>();
+        if (!this.isInitialized){
+            System.err.println("Unable to run task which is not initialized, do nothing...");
+            return;
+        }
+        try {
+            HashMap<String, String> mapper = new HashMap<>();
             String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, this.task);
+            //update status
+            taskman.updateTaskStauts(task, Task.TASK_RUNNING);
+            taskman.updateJobStatus(task, Job.JOB_RUN);
             //get DNApair
             mapper.clear();
             mapper.put("sequence", "sequence.fasta");
             mapper.put("pairlist", "pair.list");
             LinkedHashMap<String, DNAPair> dnaPair = splitDNAPair(this.task, mapper);
             //do muscle alignment on each pair
+            ArrayList<String> axtlist = new ArrayList<>();
             for (Iterator<String> pair = dnaPair.keySet().iterator(); pair.hasNext();){
                 String pairname = pair.next();
                 try{
@@ -84,8 +99,7 @@ public class Calculation implements Runnable{
                     mapper.put("stdout", pairname + ".log");
                     mapper.put("stderr", pairname + ".stderr");
                     if (!this.doMuscleAlignment(this.task, mapper)){
-                        System.err.println("muscle alignment failed on task " + this.task.getId() + ", gene pair " + pairname);
-                        return;
+                        throw new Exception("muscle alignment failed on task " + this.task.getId() + ", gene pair " + pairname);
                     }
                     //convert muscle to axt
                     mapper.clear();
@@ -93,22 +107,48 @@ public class Calculation implements Runnable{
                     mapper.put("muscle", pairname + ".muscle");
                     mapper.put("axt", pairname + ".axt");
                     if (!this.convertMuscleToAxt(this.task, mapper)){
-                        System.err.println("muscle 2 axt conversion failed on task " + this.task.getId() + ", gene pair " + pairname);                        
-                        return;
+                        throw new Exception("muscle 2 axt conversion failed on task " + this.task.getId() + ", gene pair " + pairname);                        
                     }
                 }catch(Exception ex){
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                    return;
+                    throw ex;
                 }
+                axtlist.add(pairname + ".axt");
             }
-
+            //cat axt files
+            if (!this.catAxtFiles(this.task, axtlist, task.getId() + ".kaks.in")){
+                throw new Exception("can't cat axt files to kaks on task " + this.task.getId());
+            }
+            //do kaks calc
+            mapper.clear();
+            mapper.put("input", task.getId() + ".kaks.in");
+            mapper.put("output", task.getId() + ".kaks.out");
+            mapper.put("stdout", task.getId() + ".kaks.stdout");
+            mapper.put("stderr", task.getId() + ".kaks.stderr");
+            if (!this.doKaKsCalculation(task, mapper)){
+                throw new Exception("error running kaks calculation on task " + this.task.getId());     
+            }
+            //seems to be ok, mark it success
+            this.isSuccess = true;
+            this.finish();
+        }catch(Exception ex){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
+            this.isSuccess = false;
+            this.finish();
+        }
+    }
+    
+    public void finish(){
+        //do cleaning after calculation
+        if (this.isSuccess){
+            //
+            2
         }else{
-            System.err.println("Unable to run task which is not initialized, do nothing...");
+            
         }
     }
     
     private LinkedHashMap<String, DNAPair> splitDNAPair(Task task, HashMap<String, String> mapper){
-        LinkedHashMap<String, DNAPair> dnaPair = new LinkedHashMap<String, DNAPair>();
+        LinkedHashMap<String, DNAPair> dnaPair = new LinkedHashMap<>();
         String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, task);
         String seqfile = mapper.get("sequnece");
         String pairlist = mapper.get("pairlist");
@@ -173,7 +213,8 @@ public class Calculation implements Runnable{
             int ret = process.waitFor();
             return (ret == 0) ? true : false;
         } catch (InterruptedException ex) {
-            //process stopped, do clean
+            //thread interrupted, destory process
+            process.destroy();
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             return false;
         }
@@ -260,7 +301,8 @@ public class Calculation implements Runnable{
             int ret = process.waitFor();
             return (ret == 0) ? true : false;
         } catch (InterruptedException ex) {
-            //process stopped, do clean
+            //thread interrupted, destory process
+            process.destroy();
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             return false;
         }
@@ -304,7 +346,7 @@ public class Calculation implements Runnable{
         }
         
         public ArrayList<DNASequence> all(){
-            ArrayList<DNASequence> all = new ArrayList<DNASequence>();
+            ArrayList<DNASequence> all = new ArrayList<>();
             all.add(a);
             all.add(b);
             return all;

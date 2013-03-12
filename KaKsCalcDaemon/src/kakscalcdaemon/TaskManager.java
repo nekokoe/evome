@@ -39,8 +39,8 @@ public class TaskManager {
     public Task get(int task_id) {
         Task task = null;
         //send sql query
-        String sql = "SELECT * FROM `task` WHERE id = " + task_id;
         try {
+            String sql = "SELECT * FROM `task` WHERE id = " + task_id;
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()) {
                 task = new Task();
@@ -52,15 +52,17 @@ public class TaskManager {
                 task.setId(rs.getInt("id"));
                 task.setName(rs.getString("name"));
                 task.setOwner(rs.getInt("owner"));
-                task.setCalc(rs.getInt("calculation"));
+                task.setCalc(rs.getInt("calc"));
                 task.setProjcet(rs.getInt("project"));
                 task.setPriorityRank(rs.getInt("prank"));
                 task.setQueueRank(rs.getInt("qrank"));
                 task.setStatus(rs.getInt("status"));
+                task.setKaKsGeneticCode(rs.getInt("kaks_c"));
+                task.setKaKsMethod(rs.getString("kaks_m"));
             }
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-        }
+        }        
         return task;
     }
 
@@ -93,7 +95,7 @@ public class TaskManager {
         return task_id;
     }
 
-    public boolean modify(Task task) {
+    public boolean update(Task task) {
         String sql = "UPDATE `task` SET ("
                 + "modify = '" + dbconn.getSqlTime() + "',"
                 + "finish = '" + task.getFinishDateSimpleFormat() + "',"
@@ -104,7 +106,9 @@ public class TaskManager {
                 + "qrank = " + task.getQueueRank() + ","
                 + "prank = " + task.getPriorityRank() + ","
                 + "comment = '" + task.getComment() + "',"
-                + "name = '" + task.getName() + "'"
+                + "name = '" + task.getName() + "',"
+                + "kaks_c = '" + task.getKaKsGeneticCode() + "',"
+                + "kaks_m = '" + task.getKaKsMethod() + "'"
                 + ") WHERE id = " + task.getId();
         ResultSet rs = dbconn.execQuery(sql);
         if (rs != null) {
@@ -131,37 +135,12 @@ public class TaskManager {
         }
     }
 
-    public int submit(Task task) {
-        //submit task to queue
-        int job_id = 0;
-        String sql = "INSERT INTO `job` SET("
-                + "task = '" + task.getId() + "',"
-                + "name = 'task_" + task.getId() + "',"
-                + "submit = '" + dbconn.getSqlTime() + "',"
-                + "queue = '" + "1" + "',"
-                + "status = " + Task.JOB_QUEUE + ","
-                + "prank = " + task.getPriorityRank() + ","
-                + "qrank = " + task.getQueueRank() + ""
-                + ")";
-        try {
-            ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
-            if (rs != null) {
-                rs.next();
-                job_id = rs.getInt(1);
-            }
-            rs.close();
-        } catch (Exception ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-        }
-        return job_id;
-    }
-
     public void terminate(Task task) {
         //terminate task in queue
         String sql = "UPDATE `job` SET ("
-                + "status = " + Task.JOB_KILL
+                + "status = " + Job.JOB_KILL
                 + ") WHERE task = " + task.getId();
-        ResultSet rs = dbconn.execQuery(sql);
+        dbconn.execQuery(sql);
     }
 
     public void recycle() {
@@ -174,9 +153,9 @@ public class TaskManager {
                 ResultSet rs2 = dbconn.execQuery(sql);
                 if (rs2.next()) {
                     int job_status = rs2.getInt("status");
-                    if (job_status == Task.JOB_RUN
-                            || job_status == Task.JOB_KILL
-                            || job_status == Task.JOB_HOLD) {
+                    if (job_status == Job.JOB_RUN
+                            || job_status == Job.JOB_KILL
+                            || job_status == Job.JOB_HOLD) {
                         continue;
                     }
                 }
@@ -285,11 +264,11 @@ public class TaskManager {
        Task dbtask = this.get(task);//must get db here, avoid changing other data
        task.setStatus(status);
        dbtask.setStatus(status); //sychronize caller task
-       this.modify(dbtask);
+       this.update(dbtask);
     }
     
     public void updateJobStatus(Task task, int status){
-        
+       
     }
 
 }

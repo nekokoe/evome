@@ -89,7 +89,7 @@ public class Task {
 
     //read methods
     public String getName() {
-        return task_name;
+        return (task_name.isEmpty())? String.valueOf(task_id) : task_name;
     }
 
     public String getComment() {
@@ -152,62 +152,6 @@ public class Task {
         return dateStr;
     }
     
-    
-    private int job_id, job_queue, job_status, job_prank, job_qrank;
-    private String job_name;
-    private Date job_submit;
-      
-    //define queue job status
-    public static final int JOB_QUEUE = 1,
-            JOB_RUN = 2,
-            JOB_HOLD = 3,
-            JOB_ERR = 4,
-            JOB_KILL = 5,
-            JOB_FINISH = 6;
-    
-    public void setJobId(int id){
-        this.job_id = id;
-    }
-    public void setJobQueue(int queue){
-        this.job_queue = queue;
-    }
-    public void setJobStatus(int status){
-        this.job_status = status;
-    }
-    public void setJobPriorityRank(int prank){
-        this.job_prank = prank;
-    }
-    public void setJobQueueRank(int qrank){
-        this.job_qrank = qrank;
-    }
-    public void setJobName(String name){
-        this.job_name = name;
-    }
-    public void setJobSubmitDate(Date submit){
-        this.job_submit = submit;
-    }
-    
-    public int getJobId(){
-        return this.job_id;
-    }
-    public int getJobQueu(){
-        return this.job_queue;
-    }
-    public int getJobStatus(){
-        return this.job_status;
-    }
-    public int getJobPriorityRank(){
-        return this.job_prank;
-    }
-    public int getJobQueueRank(){
-        return this.job_qrank;
-    }
-    public String getJobName(){
-        return this.job_name;
-    }
-    public Date getJobSubmitDate(){
-        return this.job_submit;
-    }
     
     private int kaks_c;
     private String kaks_m;
