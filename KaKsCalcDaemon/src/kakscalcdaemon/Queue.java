@@ -32,10 +32,10 @@ public class Queue {
         this.name = name;
     }
     
-    public static Job get(Task task){
+    public static Job get(int job_id){
         Job job = new Job();
         try{
-            String sql = "SELECT * FROM `job` WHERE task = " + task.getId();
+            String sql = "SELECT * FROM `job` WHERE id = " + job_id;
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
                 job.setId(rs.getInt("id"));
@@ -62,11 +62,19 @@ public class Queue {
                 + "status = '" + job.getStatus() + "',"
                 + "prank = '" + job.getPriorityRank() + "',"
                 + "qrank = '" + job.getQueueRank() + "'"
-                + ") WHERE task = " + job.getId();
+                + ") WHERE id = " + job.getId();
         ResultSet rs = dbconn.execQuery(sql);
         return (rs != null) ? true : false;
     }
-    
+   
+    public static void delete(Job job){
+        //kill task if running
+        Wrapper.stop(job);
+        //remove job from wrapper
+        Wrapper.remove(job);
+    }
+
+        
     public static int submit(Task task) {
         //submit task to queue
         int job_id = 0;
@@ -92,8 +100,24 @@ public class Queue {
         return job_id;
     }
     
-    public static void delete(Job job){
-        //kill task if running
-        if (Wrapper.)        
+    public static Job fetch(){
+        //fetch one job out of the top of the queue
+        //ordering by PR, QR and submit-time
+        Job job = null;
+        String sql = "SELECT TOP 1 * FROM `job` WHERE status = " + Job.JOB_QUEUE + " ORDER BY prank, qrank, submit";
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+               job = Queue.get(rs.getInt("id")); 
+            }
+        }catch (Exception ex){
+            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return job;
     }
+    
+    public boolean canSubmit(){
+        
+    }
+    
 }

@@ -13,9 +13,16 @@ import java.util.Date;
  */
 public class Job {
 
+    //sql data
     private int job_id, job_task, job_queue, job_status, job_prank, job_qrank;
+    private int job_req_cpu, job_req_mem;
     private String job_name;
     private Date job_submit;
+    //runtime data
+    private Thread job_thread;
+    private Calculation job_calc;
+    
+    
     //define queue job status
     public static final int JOB_QUEUE = 1,
             JOB_RUN = 2,
@@ -54,6 +61,19 @@ public class Job {
 
     public void setSubmitDate(Date submit) {
         this.job_submit = submit;
+    }
+    
+    public void setReqCPU(int cpu){
+        this.job_req_cpu = cpu;
+    }
+    public void setReqMem(int mem){
+        this.job_req_mem = mem;
+    }
+    public void setThread(Thread thread){
+        this.job_thread = thread;
+    }
+    public void setCalculation(Calculation calc){
+        this.job_calc = calc;
     }
 
     public int getId() {
@@ -96,5 +116,20 @@ public class Job {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = sdf.format(d);
         return dateStr;
+    }
+    
+    public int getReqCPU(){
+        return this.job_req_cpu;
+    }
+    
+    public int getReqMem(){
+        return this.job_req_mem;
+    }
+    
+    public Thread getThread(){
+        return this.job_thread;
+    }
+    public Calculation getCalculation(){
+        return this.job_calc;
     }
 }

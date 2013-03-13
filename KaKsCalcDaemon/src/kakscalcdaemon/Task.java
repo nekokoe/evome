@@ -33,7 +33,6 @@ public class Task {
             TASK_PR_HIGH = 5,
             TASK_PR_INTENSE = 0;
 
-    
     //set methods
     public void setCreateDate(Date create) {
         this.task_create = create;

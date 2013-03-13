@@ -141,7 +141,7 @@ public class Calculation implements Runnable{
         //do cleaning after calculation
         if (this.isSuccess){
             //
-            2
+            
         }else{
             
         }
