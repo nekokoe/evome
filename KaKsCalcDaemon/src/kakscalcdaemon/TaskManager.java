@@ -32,11 +32,11 @@ public class TaskManager {
     public TaskManager() {
     }
 
-    public Task get(Task task) {
-        return this.get(task.getId());
+    public static Task get(Task task) {
+        return get(task.getId());
     }
 
-    public Task get(int task_id) {
+    public static Task get(int task_id) {
         Task task = null;
         //send sql query
         try {
@@ -61,12 +61,12 @@ public class TaskManager {
                 task.setKaKsMethod(rs.getString("kaks_m"));
             }
         } catch (Exception ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-        }        
+            Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return task;
     }
 
-    public int add(Task task) {
+    public static int add(Task task) {
         int task_id = 0;
         String sql = "INSERT INTO `task` SET ("
                 + "create = '" + dbconn.getSqlTime() + "',"
@@ -80,7 +80,9 @@ public class TaskManager {
                 + "qrank = " + task.getQueueRank() + ","
                 + "prank = " + task.getPriorityRank() + ","
                 + "comment = '" + task.getComment() + "',"
-                + "name = '" + task.getName() + "'"
+                + "name = '" + task.getName() + "',"
+                + "kaks_c = '" + task.getKaKsGeneticCode() + "',"
+                + "kaks_m = '" + task.getKaKsMethod() + "'"                
                 + ")";
         try {
             ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
@@ -90,19 +92,19 @@ public class TaskManager {
             }
             rs.close();
         } catch (Exception ex) { //debug out output this way
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return task_id;
     }
 
-    public boolean update(Task task) {
+    public static boolean update(Task task) {
         String sql = "UPDATE `task` SET ("
                 + "modify = '" + dbconn.getSqlTime() + "',"
                 + "finish = '" + task.getFinishDateSimpleFormat() + "',"
                 + "status = " + task.getStatus() + ","
                 + "owner = " + task.getOwner() + ","
                 + "calculation = " + task.getCalc() + ","
-                + "project = " + task.getProject() + ","                
+                + "project = " + task.getProject() + ","
                 + "qrank = " + task.getQueueRank() + ","
                 + "prank = " + task.getPriorityRank() + ","
                 + "comment = '" + task.getComment() + "',"
@@ -119,63 +121,38 @@ public class TaskManager {
 
     }
 
-    public boolean delete(Task task) {
-        //deleting ops are async. tag it as TASK_REMOVED and wait recycler to remove it
-        //1.terminate its job in queue
-        this.terminate(task);
-        //2.mark it removed
-        String sql = "UPDATE `task` SET("
-                + "status = " + Task.TASK_REMOVED
-                + ") WHERE id = " + task.getId();
-        ResultSet rs = dbconn.execQuery(sql);
-        if (rs != null) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean updateStatus(Task task, int status) {
+        Task dbtask = get(task);//must get db here, avoid changing other data
+        task.setStatus(status);
+        dbtask.setStatus(status); //sychronize caller task
+        return update(dbtask);
     }
 
-    public void terminate(Task task) {
-        //terminate task in queue
-        String sql = "UPDATE `job` SET ("
-                + "status = " + Job.JOB_KILL
-                + ") WHERE task = " + task.getId();
-        dbconn.execQuery(sql);
-    }
-
-    public void recycle() {
-        //recycle tasks marked as REMOVED
-        String sql = "SELECT * FROM `task` WHERE status = " + Task.TASK_REMOVED;
-        try {
+    public static void recycle(){
+        //stop task marked as TASK_KILL and TASK_REMOVED
+        String sql = "SELECT * FROM `task` WHERE status = " + Task.TASK_KILL + "OR status = " + Task.TASK_REMOVE;
+        try{
             ResultSet rs = dbconn.execQuery(sql);
-            while (rs.next()) {
-                sql = "SELECT 1 FROM `job` WHERE task = " + rs.getInt("id");
-                ResultSet rs2 = dbconn.execQuery(sql);
-                if (rs2.next()) {
-                    int job_status = rs2.getInt("status");
-                    if (job_status == Job.JOB_RUN
-                            || job_status == Job.JOB_KILL
-                            || job_status == Job.JOB_HOLD) {
-                        continue;
-                    }
+            while (rs.next()){
+                sql = "SELECT * FROM `job` WHERE task = " + rs.getInt("id");
+                ResultSet rs2= dbconn.execQuery(sql);
+                while (rs2.next()){
+                    Queue.stop(Queue.get(rs2.getInt("id")));
                 }
-                rs2.close();
-                sql = "DELETE FROM `task` WHERE id = " + rs.getInt("id");
-                dbconn.execQuery(sql);
             }
-        } catch (Exception ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        }catch(Exception ex){
+            
         }
     }
     
-    public String getSubDir(String prefix, Task task){
-        return prefix 
-                + "/" + task.getOwner() 
-                + "/" + task.getProject() 
+    public static String getSubDir(String prefix, Task task) {
+        return prefix
+                + "/" + task.getOwner()
+                + "/" + task.getProject()
                 + "/" + task.getId();
     }
-    
-    private boolean initSubDir(String prefix, Task task) {
+
+    private static boolean initSubDir(String prefix, Task task) {
         String path = getSubDir(prefix, task);
         try {
             File dir = new File(path);
@@ -195,24 +172,24 @@ public class TaskManager {
                 dir.delete();
             }
             dir.mkdirs();
-            System.out.println(this.getClass().getName() + ", create task dir : " + path);
+            System.out.println(TaskManager.class.getName() + ", create task dir : " + path);
             return true;
         } catch (Exception ex) {
-            System.err.println(this.getClass().getName() + ", Cannot create dir: " + path);
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
+            System.err.println(TaskManager.class.getName() + ", Cannot create dir: " + path);
+            Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
 
-    public boolean initDataDir(Task task){
+    public static boolean initDataDir(Task task) {
         return initSubDir(sysconf.DATA_ROOT_PATH, task);
     }
-    
-    public boolean initWorkDir(Task task){
+
+    public static boolean initWorkDir(Task task) {
         return initSubDir(sysconf.WORK_ROOT_PATH, task);
     }
-    
-    public boolean copyTaskFile(Task task, int ops, int direct, String s, String d) {
+
+    public static boolean copyTaskFile(Task task, int ops, int direct, String s, String d) {
         File src, dest;
         //init src and dest
         if (direct == TaskManager.FROM_DATA_TO_WORK
@@ -230,7 +207,7 @@ public class TaskManager {
         //check
         if (s.equals(d)
                 && (direct == TaskManager.FROM_WORK_TO_WORK || direct == TaskManager.FROM_DATA_TO_DATA)) {
-            System.err.println(this.getClass().getName() + ":" + s + " and " + d + " are the same file!");
+            System.err.println(TaskManager.class.getName() + ":" + s + " and " + d + " are the same file!");
             return false;
         }
         //move or copy
@@ -247,28 +224,16 @@ public class TaskManager {
                 fcout.close();
                 return true;
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             } catch (IOException ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
         } else {
-            System.err.println(this.getClass().getName() + ": copy ops " + ops + " not defined?");
+            System.err.println(TaskManager.class.getName() + ": copy ops " + ops + " not defined?");
             return false;
         }
         return true; // all success
     }
-    
-    public void updateTaskStauts(Task task, int status){
-       Task dbtask = this.get(task);//must get db here, avoid changing other data
-       task.setStatus(status);
-       dbtask.setStatus(status); //sychronize caller task
-       this.update(dbtask);
-    }
-    
-    public void updateJobStatus(Task task, int status){
-       
-    }
-
 }

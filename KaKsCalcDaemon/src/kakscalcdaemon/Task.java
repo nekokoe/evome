@@ -20,12 +20,12 @@ public class Task {
     //Define task status
     public static final int TASK_NEW = 0,
             TASK_READY = 1,
-            TASK_RUNNING = 2,
+            TASK_RUN = 2,
             TASK_SUCCESS = 3,
             TASK_ERROR = 4,
-            TASK_STOPPED = 5,
-            TASK_PAUSED = 6,
-            TASK_REMOVED = 7;
+            TASK_KILL = 5,
+            TASK_PAUSE = 6,
+            TASK_REMOVE = 7;
     //Define task priority rank
     public static final int TASK_PR_RELAX = 20,
             TASK_PR_LOW = 15,

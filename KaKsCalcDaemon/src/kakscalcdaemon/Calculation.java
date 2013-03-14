@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,10 +33,10 @@ public class Calculation implements Runnable{
     //3.export axt to KaKsCalculator
 
     private static SysConfig sysconf = new SysConfig();
-    private static TaskManager taskman = new TaskManager();
     
     private Task task;
     private boolean isInitialized = false;
+    private boolean isFinished = false;
     private boolean isSuccess = false;
     
     public void init(Task t) {
@@ -51,16 +50,16 @@ public class Calculation implements Runnable{
         //t is task to be executed
         //filelist is file need to be copy from datadir to workdir
         //set task
-        this.task = taskman.get(t);
+        this.task = TaskManager.get(t);
         //prepare workdir
-        if (!taskman.initWorkDir(task)){
+        if (!TaskManager.initWorkDir(task)){
             System.err.println("Failed init workdir for task:" + task.getId());
             return;
         }
         //copy data from datadir to workdir
         for (Iterator<String> file = filelist.iterator(); file.hasNext();){
             String filename = file.next();
-            if (!taskman.copyTaskFile(task,TaskManager.OPS_COPY,TaskManager.FROM_DATA_TO_WORK,
+            if (!TaskManager.copyTaskFile(task,TaskManager.OPS_COPY,TaskManager.FROM_DATA_TO_WORK,
                     filename, filename)) {
                 System.err.println(this.getClass().getName() + ": error while copying file from datadir to workdir");
                 return;
@@ -77,10 +76,7 @@ public class Calculation implements Runnable{
         }
         try {
             HashMap<String, String> mapper = new HashMap<>();
-            String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, this.task);
-            //update status
-            taskman.updateTaskStauts(task, Task.TASK_RUNNING);
-            taskman.updateJobStatus(task, Job.JOB_RUN);
+            String workdir = TaskManager.getSubDir(sysconf.WORK_ROOT_PATH, this.task);
             //get DNApair
             mapper.clear();
             mapper.put("sequence", "sequence.fasta");
@@ -138,18 +134,34 @@ public class Calculation implements Runnable{
     }
     
     public void finish(){
+        //if finish() has been called, ignore this call
+        if (this.isFinished) {
+            return;
+        }
         //do cleaning after calculation
+        //NOTE: must update status here
         if (this.isSuccess){
-            //
+            Queue.updateStatus(Queue.get(task), Job.JOB_FINISH);
+            TaskManager.updateStatus(task, Task.TASK_SUCCESS);
             
         }else{
+            Queue.updateStatus(Queue.get(task), Job.JOB_ERR);
+            TaskManager.updateStatus(task, Task.TASK_ERROR);            
             
         }
+        this.isFinished = true;
+    }
+    
+    public boolean isFinished(){
+        return this.isFinished;
+    }
+    public boolean isSuccess(){
+        return this.isSuccess;
     }
     
     private LinkedHashMap<String, DNAPair> splitDNAPair(Task task, HashMap<String, String> mapper){
         LinkedHashMap<String, DNAPair> dnaPair = new LinkedHashMap<>();
-        String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, task);
+        String workdir = TaskManager.getSubDir(sysconf.WORK_ROOT_PATH, task);
         String seqfile = mapper.get("sequnece");
         String pairlist = mapper.get("pairlist");
         //read DNA sequence
@@ -185,8 +197,8 @@ public class Calculation implements Runnable{
         //task indicates working path
         //filemapper is designed for non-default input filename
         String muscle = sysconf.DAEMON_CLASS_PATH + "/" + "bin" + "/" + "muscle";
-        String datadir = taskman.getSubDir(sysconf.DATA_ROOT_PATH, task);
-        String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, task);
+        String datadir = TaskManager.getSubDir(sysconf.DATA_ROOT_PATH, task);
+        String workdir = TaskManager.getSubDir(sysconf.WORK_ROOT_PATH, task);
         String inputfile = mapper.get("input");
         String outputfile = mapper.get("output");
         String logfile = mapper.get("stdout");
@@ -222,7 +234,7 @@ public class Calculation implements Runnable{
 
     public boolean convertMuscleToAxt(Task task, HashMap<String, String> mapper) {
         //filemapper is designed for non-default input filename
-        String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, task);
+        String workdir = TaskManager.getSubDir(sysconf.WORK_ROOT_PATH, task);
         String muscle = mapper.get("muscle");
         String axt = mapper.get("axt");
 
@@ -252,7 +264,7 @@ public class Calculation implements Runnable{
     }
 
     public boolean catAxtFiles(Task task, ArrayList<String> axtlist, String filename) {
-        String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, task);
+        String workdir = TaskManager.getSubDir(sysconf.WORK_ROOT_PATH, task);
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File(workdir + "/" + new File(filename).getName())));
             for (Iterator<String> axt = axtlist.iterator(); axt.hasNext();) {
@@ -274,7 +286,7 @@ public class Calculation implements Runnable{
     public boolean doKaKsCalculation(Task task, HashMap<String, String> mapper) {
         //filemapper is designed for non-default input filename
         String kakscalc = sysconf.DAEMON_CLASS_PATH + "/" + "bin" + "/" + "KaKs_Calculator";
-        String workdir = taskman.getSubDir(sysconf.WORK_ROOT_PATH, task);
+        String workdir = TaskManager.getSubDir(sysconf.WORK_ROOT_PATH, task);
         String inputfile = mapper.get("input");
         String outputfile = mapper.get("output");
         String logfile = mapper.get("stdout");
