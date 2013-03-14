@@ -128,23 +128,6 @@ public class TaskManager {
         return update(dbtask);
     }
 
-    public static void recycle(){
-        //stop task marked as TASK_KILL and TASK_REMOVED
-        String sql = "SELECT * FROM `task` WHERE status = " + Task.TASK_KILL + "OR status = " + Task.TASK_REMOVE;
-        try{
-            ResultSet rs = dbconn.execQuery(sql);
-            while (rs.next()){
-                sql = "SELECT * FROM `job` WHERE task = " + rs.getInt("id");
-                ResultSet rs2= dbconn.execQuery(sql);
-                while (rs2.next()){
-                    Queue.stop(Queue.get(rs2.getInt("id")));
-                }
-            }
-        }catch(Exception ex){
-            
-        }
-    }
-    
     public static String getSubDir(String prefix, Task task) {
         return prefix
                 + "/" + task.getOwner()

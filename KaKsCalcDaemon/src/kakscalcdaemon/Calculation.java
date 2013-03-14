@@ -141,13 +141,16 @@ public class Calculation implements Runnable{
         //do cleaning after calculation
         //NOTE: must update status here
         if (this.isSuccess){
+            //move data back to datadir
+            
+            //update status
             Queue.updateStatus(Queue.get(task), Job.JOB_FINISH);
-            TaskManager.updateStatus(task, Task.TASK_SUCCESS);
-            
+            TaskManager.updateStatus(task, Task.TASK_SUCCESS);            
         }else{
+            //clean 
+            //update status
             Queue.updateStatus(Queue.get(task), Job.JOB_ERR);
-            TaskManager.updateStatus(task, Task.TASK_ERROR);            
-            
+            TaskManager.updateStatus(task, Task.TASK_ERROR);                        
         }
         this.isFinished = true;
     }

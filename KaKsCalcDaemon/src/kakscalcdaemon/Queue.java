@@ -125,6 +125,13 @@ public class Queue {
         //remove job from wrapper
         Wrapper.remove(job);
     }
+    
+    public static void stopKilled(){
+        //stop jobs killed from the web ui, which is marked JOB_KILL
+        //NOTE: TASK_KILL don't need to be written back to Task table, let web UI to do this
+        //because the KILL operation is normally sent by UI request, not the wrapper
+        
+    }
 
     public static int submit(Task task) {
         //submit task to queue
