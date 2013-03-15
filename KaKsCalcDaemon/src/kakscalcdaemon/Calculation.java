@@ -123,7 +123,22 @@ public class Calculation implements Runnable{
             if (!this.doKaKsCalculation(task, mapper)){
                 throw new Exception("error running kaks calculation on task " + this.task.getId());     
             }
-            //seems to be ok, mark it success
+
+            //move data back to datadir
+            ArrayList<String> filelist = new ArrayList<>();
+            filelist.add(task.getId() + ".kaks.in");
+            filelist.add(task.getId() + ".kaks.out");
+            filelist.add(task.getId() + ".kaks.stdout");
+            filelist.add(task.getId() + ".kaks.stderr");
+            for (Iterator<String> file = filelist.iterator(); file.hasNext();) {
+                String filename = file.next();
+                if (!TaskManager.copyTaskFile(task, TaskManager.OPS_COPY, TaskManager.FROM_WORK_TO_DATA,
+                        filename, filename)) {
+                    throw new Exception(this.getClass().getName() + ": error while copying file from workdir to datadir");
+                }
+            }
+            
+            //seems to be ok, mark it success            
             this.isSuccess = true;
             this.finish();
         }catch(Exception ex){
@@ -138,20 +153,15 @@ public class Calculation implements Runnable{
         if (this.isFinished) {
             return;
         }
-        //do cleaning after calculation
         //NOTE: must update status here
+        //do clean? perhaps not, leave it to UI, when deleting the task
+        //update status        
         if (this.isSuccess){
-            //move data back to datadir
-            
-            //update status
-            Queue.updateStatus(Queue.get(task), Job.JOB_FINISH);
-            TaskManager.updateStatus(task, Task.TASK_SUCCESS);            
+            TaskManager.updateStatus(task, Task.TASK_SUCCESS);         
         }else{
-            //clean 
-            //update status
-            Queue.updateStatus(Queue.get(task), Job.JOB_ERR);
             TaskManager.updateStatus(task, Task.TASK_ERROR);                        
         }
+        Queue.updateStatus(Queue.get(task), Job.JOB_FINISH); //seems that JOB_ERR has no actual effects?
         this.isFinished = true;
     }
     
@@ -200,7 +210,7 @@ public class Calculation implements Runnable{
         //task indicates working path
         //filemapper is designed for non-default input filename
         String muscle = sysconf.DAEMON_CLASS_PATH + "/" + "bin" + "/" + "muscle";
-        String datadir = TaskManager.getSubDir(sysconf.DATA_ROOT_PATH, task);
+        //String datadir = TaskManager.getSubDir(sysconf.DATA_ROOT_PATH, task);
         String workdir = TaskManager.getSubDir(sysconf.WORK_ROOT_PATH, task);
         String inputfile = mapper.get("input");
         String outputfile = mapper.get("output");

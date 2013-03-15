@@ -5,6 +5,8 @@
 package kakscalcdaemon;
 
 import java.sql.ResultSet;
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,6 +87,20 @@ public class Queue {
         return job;
     }
     
+    public static ArrayList<Job> getAll(int status){
+        ArrayList<Job> all_job = new ArrayList<>();
+        String sql = "SELECT * FROM `job` WHERE status = " + status;
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while(rs.next()){
+                all_job.add(Queue.get(rs.getInt("id")));
+            }            
+        }catch(Exception ex){
+            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return all_job;
+    }
+    
     public static boolean update(Job job) {
         String sql = "UPDATE `job` SET ("
                 + "name = '" + job.getName() + "',"
@@ -129,8 +145,22 @@ public class Queue {
     public static void stopKilled(){
         //stop jobs killed from the web ui, which is marked JOB_KILL
         //NOTE: TASK_KILL don't need to be written back to Task table, let web UI to do this
-        //because the KILL operation is normally sent by UI request, not the wrapper
-        
+        //because the KILL operation is normally sent by UI request, not the wrapper. UI should update status itself
+        String sql = "SELECT * FROM `job` WHERE status = " + Job.JOB_KILL;
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while(rs.next()){
+                stop(Queue.get(rs.getInt("id")));
+            }
+        }catch(Exception ex){
+            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+    }
+    
+    public static void removeFinished(){
+        //finished jobs are marked as JOB_FINISH or JOB_ERR
+        String sql = "DELETE FROM `job` WHERE status = " + Job.JOB_ERR + "OR status = " + Job.JOB_FINISH;
+        dbconn.execQuery(sql);
     }
 
     public static int submit(Task task) {
@@ -152,8 +182,10 @@ public class Queue {
             if (rs != null) {
                 rs.next();
                 job_id = rs.getInt(1);
+                //update task status
+                TaskManager.updateStatus(task, Task.TASK_RUN);
             }
-            rs.close();
+            rs.close();            
         } catch (Exception ex) {
             Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -191,7 +223,7 @@ public class Queue {
             ResultSet rs = dbconn.execQuery(sql);
             rs.next();
             int job_count = rs.getInt("job_count");
-            if (job_count < 100){
+            if (job_count < 100){ //manually set this to 100, ADJUSTABLE in future
                 return true;
             }
         }catch(Exception ex){
@@ -199,5 +231,16 @@ public class Queue {
         return false;
     }
     
-   
+    public static void resetBrokenJobs(){
+        //reset 'running jobs' to JOB_QUEUE
+        String sql = "SELECT * FROM `job` WHERE status = "  + Job.JOB_RUN;
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while(rs.next()){
+                Queue.updateStatus(Queue.get(rs.getInt("id")), Job.JOB_QUEUE);
+            }
+        }catch(Exception ex){
+            Logger.getLogger(Queue.class.getName()).log(Level.SEVERE, null, ex);   
+        } 
+    }
 }

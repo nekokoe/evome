@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,6 +128,21 @@ public class TaskManager {
         dbtask.setStatus(status); //sychronize caller task
         return update(dbtask);
     }
+    
+    public static ArrayList<Task> getAll(int status){
+        ArrayList<Task> all_task = new ArrayList<>(); 
+        String sql = "SELECT * FROM `task`  WHERE status = " + status;
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while (rs.next()){
+                all_task.add(TaskManager.get(rs.getInt("id")));
+            }
+        }catch(Exception ex){
+            Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return all_task;
+    }
+    
 
     public static String getSubDir(String prefix, Task task) {
         return prefix

@@ -36,7 +36,8 @@ public class SysConfig {
     public int 
             EMAIL_PORT = 25,
             MAX_CPU = 8,
-            MAX_MEM = 1073741824; //1T = 1073741824k
+            MAX_MEM = 1073741824, //1T = 1073741824k
+            DAEMON_INTERVAL = 5000;
     
    
     public SysConfig(){
@@ -58,7 +59,7 @@ public class SysConfig {
     }
     
     private boolean readConfig(String path) {
-        HashMap<String, String> config = new HashMap<String, String>();
+        HashMap<String, String> config = new HashMap<>();
         String conf_file = path + "/../conf/sys.conf";
         boolean isSuccess;
         try {
@@ -95,6 +96,8 @@ public class SysConfig {
             //resource limits
             this.MAX_CPU = Integer.parseInt(config.get("maxcpu"));
             this.MAX_MEM = Integer.parseInt(config.get("maxmem"));
+            //daemon refresh intervals
+            this.DAEMON_INTERVAL = Integer.parseInt(config.get("interval"));
 
             isSuccess = checkConfig();
 
