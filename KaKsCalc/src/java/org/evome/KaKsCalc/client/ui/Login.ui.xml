@@ -1,0 +1,138 @@
+<!--
+Uncomment this for XHTML entities
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+        xmlns:d="urn:import:com.sun.tools.internal.xjc.reader.dtd"
+        xmlns:c="urn:import:org.evome.KaKsCalc.client.ui">
+    <!--<ui:with field='res' type="org.evome.KaKsCalc.client.ui.UiResources"/>-->
+    <ui:style src="css.css">
+        
+    </ui:style>
+    <g:VerticalPanel width="100%" horizontalAlignment="ALIGN_LEFT">
+
+	<!-- the banner pannel -->
+        <g:HorizontalPanel ui:field="hpTopPanel" horizontalAlignment="ALIGN_LEFT" verticalAlignment="ALIGN_MIDDLE" addStyleNames="{style.margintop20}">
+            <!--            logo　-->
+                <g:Image ui:field="imgLogo" title="click to see the stats on monthly visits to EvolView" styleName='{style.logo}' url="images/logo_small.png"/>
+            <!-- two buttons --> 
+            <g:HorizontalPanel styleName='{style.headerbar}' verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_RIGHT" spacing="10">
+                <g:HTMLPanel>
+                    <c:AwesomeButton ui:field="btnCreateAccount" color="red" addStyleNames="{style.marginleft10} {style.marginright10}">Create an account</c:AwesomeButton>
+                    <c:AwesomeButton ui:field="btnTryWithoutAnAccount" color="blue" addStyleNames="{style.marginleft10} {style.marginright10}">Use without an account</c:AwesomeButton>
+                </g:HTMLPanel>
+            </g:HorizontalPanel>
+        </g:HorizontalPanel>
+
+	<!-- the showcases and signin panels -->
+        <g:HorizontalPanel>
+            <!--  showcases/ brief introduction of EviView  -->
+            <g:VerticalPanel styleName='{style.showcasePanel}'>
+                <g:Label styleName="{style.greytext}">A revolutionized approach to visualize phylogenetic trees</g:Label>
+                <g:HTMLPanel  styleName="{style.greytext}">
+                    <g:HTML styleName="{style.marginbottom}">EvolView is an easy-to-use online tool for displaying, managing and customizing phylogenetic trees.</g:HTML>
+                    <g:HTML styleName="{style.marginbottom}">EvolView provides a WYSIWYG (What-You-See-Is-What-You-Get) editor and a desktop-like web interface.</g:HTML>
+                    <g:HTML>With EvolView, you can:</g:HTML>
+                    <div class='{style.greytext}'>
+                    <ul >
+                        <li>visualize phylogenetic trees of various formats,</li>
+                        <li>add 
+                            <a href="http://code.google.com/p/evolgenius/wiki/EvolViewIntroductionToDatasets">datasets</a> and do customizations to phylogenetic trees,
+                        </li>
+                        <li>export trees to various text (newick, nhx, phyloXML, etc) and graphic formats, and </li>
+                        <li>organize trees, projects and datasets in an intuitive and efficient way.</li>
+                    </ul>
+                    </div>
+                </g:HTMLPanel>
+                
+                <!-- extra links to help pages -->
+                <g:HTMLPanel styleName="{style.showcaseevolviewlinks}">
+                    <table align="left">
+                        <tr>
+                            <td>
+                                <a href="http://code.google.com/p/evolgenius/wiki/EvolView" target="_blank">Help</a>
+                            </td>
+                            <td bgcolor="lightgrey" width="0.5"></td>
+                            <td>
+                                <a href="http://code.google.com/p/evolgenius/wiki/EvolViewSupportedBrowsers" target="_blank">Supported Browsers</a>
+                            </td>
+                            <td bgcolor="lightgrey" width="0.5"></td>
+                            <td>
+                                <a href="http://code.google.com/p/evolgenius/wiki/EvolViewCreateAnAccount" target="_blank">Why create an account?</a>
+                            </td>
+                            <td bgcolor="lightgrey" width="0.5"></td>
+                            <td>
+                                <a href="http://code.google.com/p/evolgenius/wiki/EvolViewUseWithoutAnAccount" target="_blank">Use without an account?</a>
+                            </td>
+                        </tr>
+                    </table>
+                </g:HTMLPanel>
+            </g:VerticalPanel>
+            
+            <!-- the signin panel -->
+            <g:VerticalPanel spacing="20" styleName="{style.signinpanel}">
+                <g:HTML styleName='{style.signin}' wordWrap="true">Sign in</g:HTML>
+                <g:HTMLPanel>
+                    <table align="left" style="margin-left:20px" spacing="10">
+                        <tr>
+                            <td>Email:</td>
+                            <td>
+                                <g:TextBox styleName="{style.txtBoxLoginPanel}" ui:field="tboxEmail"></g:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <g:HTML ui:field="htmlEmail" styleName="{style.error}"></g:HTML>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Password:</td>
+                            <td>
+                                <g:PasswordTextBox styleName="{style.txtBoxLoginPanel}" ui:field="pboxPassword"></g:PasswordTextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <g:HTML ui:field="htmlPassword" styleName="{style.error}"></g:HTML>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <g:HTML ui:field="htmlAcitivationCode" styleName="{style.error}">Activation code:</g:HTML>
+                            </td>
+                            <td>
+                                <g:TextBox styleName="{style.txtBoxLoginPanel}" ui:field="tboxActivationCode"></g:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <g:HTML ui:field="htmlAcitivationCodeHint" styleName="{style.error}">activation code is required on your first login; it can be found in your registration email</g:HTML>
+                            </td>
+                        </tr>
+                        
+                        <tr align="left">
+                            <TH colspan="2">
+                                <c:AwesomeButton ui:field="btnSignIn" color="blue">Sign in</c:AwesomeButton>
+                                <g:CheckBox ui:field="ckboxStaySignedIn" styleName="{style.textnormal}">Stay signed in
+                                </g:CheckBox>
+                            </TH>
+                        </tr>
+                        
+                        <tr>
+                            <TH colspan="2" align="left">
+                                <g:HTML styleName="{style.htmllink}" addStyleNames="{style.margintop20}"
+									ui:field="linkSendNewPassword">Forgot your password?
+                                </g:HTML>
+                            </TH>
+                        </tr>
+                    </table>
+                </g:HTMLPanel>
+                
+            </g:VerticalPanel>
+        </g:HorizontalPanel>
+    </g:VerticalPanel>
+</ui:UiBinder>
