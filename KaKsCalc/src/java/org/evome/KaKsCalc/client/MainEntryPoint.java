@@ -11,6 +11,11 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
+import org.evome.KaKsCalc.client.ui.*;
+
+
+
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -25,7 +30,6 @@ public class MainEntryPoint implements EntryPoint {
      */
     
     private GWTServiceAsync rpc = GWTServiceUsageExample.getService();
-    private GWTServiceUsageExample example = new GWTServiceUsageExample();
     
     public MainEntryPoint() {
     }
@@ -34,19 +38,13 @@ public class MainEntryPoint implements EntryPoint {
      * The entry point method, called automatically by loading a module that
      * declares an implementing class as an entry-point
      */
+    @Override
     public void onModuleLoad() {
-        final Label label = new Label("Hello, GWT!!!");
-        final Button button = new Button("Click me!");
+        //RootPanel.get().add(example);
+        //Login loginpage = new Login();
+        //RootPanel.get().add(new Login());
+        RootPanel.get().add(new Workspace());
+        RootPanel.get().add(new ProjectUtils());
         
-        button.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                label.setVisible(!label.isVisible());
-            }
-        });
-        
-        RootPanel.get().add(button);
-        RootPanel.get().add(label);
-        
-        RootPanel.get().add(example);
     }
 }

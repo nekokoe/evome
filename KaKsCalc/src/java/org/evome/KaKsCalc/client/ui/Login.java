@@ -20,8 +20,10 @@ public class Login extends Composite {
     private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);
     interface LoginUiBinder extends UiBinder<Widget, Login> {
     }
-
+    
     public Login() {
+        UiResources res = GWT.create(UiResources.class);
+        res.style().ensureInjected();
         this.initWidget(uiBinder.createAndBindUi(this));        
     }
     

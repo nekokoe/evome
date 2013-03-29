@@ -1,0 +1,188 @@
+/* 
+    Document   : css
+    Created on : Oct 18, 2011, 2:21:00 PM
+    Author     : wchen
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+body {
+    margin: 0px !important;
+}
+
+.error{
+    color: red;
+}
+
+/* total width = 300 */
+.logo {
+    vertical-align: middle;
+    margin: 0px 100px 0px 50px;
+    width: 150px;
+    cursor: pointer;
+}
+
+/* total width = 700px */
+.headerbar {
+    width: 900px !important;
+    height: 40px !important;
+    background: whiteSmoke !important;
+    margin: 5px;
+    align: right;
+    vertical-align: middle;
+}
+/* -------- show case panel -------------- */
+/* total width = 600px */
+.showcasePanel{
+    margin: 30px 0px 0px 50px;
+    width: 550px;
+}
+
+.showcaseevolviewslogan{
+    font-size: 140%;
+    font-style: italic;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.marginbottom{
+    margin-bottom: 15px;
+}
+
+.greytext{
+    color: #333;
+}
+
+.showcaseevolviewlinks{
+/*    border-top: 1px solid lightgrey;*/
+    margin-top: 10px;
+}
+
+/* total width = 400px */
+.signinpanel {
+    background-color: whitesmoke;
+    width: 350px;
+/*    border: 1px solid lightgray;*/
+    position: relative;
+    margin: 30px 0px 0px 50px;
+}
+
+.signin {
+    margin: 16px 21px 0px 0px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #CCDAE2;
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.textnormal{
+    font-weight: normal !important;
+}
+
+.txtBoxLoginPanel{
+    width: 180px;
+    height: 20px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.htmllink {
+    font-weight: normal !important;
+    color: darkBlue;
+    text-decoration: underline;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.marginright10{
+    margin-right: 10px !important;
+}
+.marginleft10{
+    margin-left: 10px !important;
+}
+
+.margintop20 {
+    margin-top: 20px !important;
+}
+
+.imgbtnLast{
+    margin-right: 5px;
+    border-right-style: dotted;
+    border-right-color: grey;
+    border-right-width: 1px;
+}
+
+.headerbarlogout {
+    height: 30px !important;
+    background: whiteSmoke !important;
+    margin: 5px;
+    align: right;
+    vertical-align: middle;
+}
+
+.logosmall {
+    vertical-align: middle;
+    margin: 0px 25px 0px 25px;
+    width: 150px;
+}
+
+.logoutbutton{
+    height: 28px;
+}
+
+
+.imgbtnFirst{
+    margin-left: 5px !important;
+    border-left:  1px dotted gray !important;
+    padding-left: 5px !important;
+}
+.texboxInToobar{
+    height: 15px !important;
+    font-size: 9px !important;
+    vertical-align: middle !important;
+    width: 40px !important;
+}
+
+/* Apr 25, 2012 */
+.verticalstripController{
+    margin-right: 5px !important;
+    vertical-align: middle !important;
+    min-height: 800px !important;
+    background-repeat: no-repeat;
+    border-color: white !important;
+    cursor: pointer;
+    background-color: whitesmoke;
+}
+
+.imageOnStripController{
+    margin-top: 200px;
+}
+
+.accountsettingsHeader{
+    -webkit-padding-end: 24px;
+    -webkit-user-select: none;
+    border-bottom: 1px solid #EEE;
+    color: #53637D;
+    font-size: 150%;
+    font-weight: normal;
+    margin: 0;
+    padding-bottom: 4px;
+    padding-top: 13px;
+    text-shadow: white 0 1px 2px;
+}
+
+.accountsettingsSubheader{
+    font-size: 105%;
+    font-weight: bold;
+    padding: 0px 20px 10px 0px;
+}
+
+.welcomeAtHeader{
+    margin-right: 20px;
+}

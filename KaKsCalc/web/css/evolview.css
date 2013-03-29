@@ -1,0 +1,406 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+    color: #777777;
+    margin: 40px 0px 70px;
+    text-align: center;
+}
+
+.sendButton {
+    display: block;
+    font-size: 16pt;
+    position: absolute;
+}
+
+body{
+    margin: 0px !important;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+    width: 400px;
+}
+
+.dialogVPanel {
+    margin: 5px;
+}
+
+.serverResponseLabelError {
+    color: red;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+    margin: 15px 6px 6px;
+}
+
+/* button/ clickable link -like HTML element */
+#decoratedHTML {
+    text-decoration: underline;
+    color: darkblue;
+    cursor: pointer;
+}
+
+
+.toolbarSubPanel {
+    border: 1px solid #BFCFCC;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+
+/*.gwt-TextBox { 
+        
+        border: 1px solid #C9C7BA;
+        font-family:Tahoma, Verdana, Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        padding-left: 2px;
+        padding-right: 2px;
+        -moz-border-radius: 0px 0px 6px 0px;
+        border-radius: 0px 0px 6px 0px;
+        height: 18px;
+        margin-left: 1px;
+        margin-right: 1px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        
+}*/
+/*
+.gwt-Button{
+    background: -webkit-gradient(linear, left top, left bottom, from(#6D8CB8), to(#476695)) !important;
+}
+
+.gwt-Button:active {
+  border: 1px inset #ccc;
+}
+.gwt-Button:hover {
+  border-color: #9cf #69e #69e #7af;
+  background: -webkit-gradient(linear, left top, left bottom, from(#77948D), to(#466796)) !important;
+}
+.gwt-Button[disabled] {
+  cursor: default;
+  color: #888;
+}
+.gwt-Button[disabled]:hover {
+  border: 1px outset #ccc;
+}
+*/
+
+#linearBg2 {
+    /* fallback */
+    background-color: #1a82f7 !important;
+
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(100% 100% 90deg, #2F2727, #1a82f7) !important;
+
+    /* Safari 4-5, Chrome 1-9 */
+    /* -webkit-gradient(<type>, <point> [, <radius>]?, <point> [, <radius>]? [, <stop>]*) */
+    background: -webkit-gradient(linear, center bottom, center top, color-stop(0%,#cdcdcd), color-stop(30%,#ffffff), color-stop(100%,#ffffff)) !important;
+
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-linear-gradient(#2F2727, #1a82f7) !important;
+
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(#2F2727, #1a82f7) !important;
+    margin-left: 10px;
+}
+
+/*
+override default GWT CSS style; use !important to disable original settings
+*/
+
+.gwt-TabLayoutPanel {
+    -moz-box-shadow: 0 0 4px #888;
+    -webkit-box-shadow: 0 0 4px#888;
+    box-shadow: 0 0 4px #888;
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
+    /*
+    *home made CSS: #92c1f0
+    */
+    border-bottom-color: white !important;
+    border-bottom-style: none !important;
+    border-bottom-width: none !important;
+
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContentContainer {
+    overflow: hidden;
+    padding: 0px 0px 0px 6px !important;
+    -webkit-border-horizontal-spacing: 0px;
+    -webkit-border-vertical-spacing: 0px;
+    border-color: white !important;
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
+    margin-left: 6px;
+    padding: 3px 6px 3px 6px !important;
+    color: white !important;
+    font-weight: normal !important;
+    text-align: center !important;
+    border-radius: 4px 4px 0px 0px !important;
+    background-color: #8E8E8E !important;
+}
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected {
+    cursor: pointer !important;
+    color: #333 !important;
+    background-color: white !important;
+} 
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContent{
+    border-color: white !important;
+}
+
+
+/* home made CSS styles */
+#rightAlignedTextWithColor{
+    text-align: right;
+    font-size: 11px;
+    color: darkblue;
+
+}
+
+/*  
+============================================================================
+==== OCT 2011 ====
+*/
+.headerbar {
+    width: 900px !important;
+    height: 40px !important;
+    background: whiteSmoke !important;
+    margin: 5px;
+    align: right;
+    vertical-align: middle;
+}
+
+.logoutbutton{
+    height: 28px;
+}
+.marginright10{
+    margin-right: 10px !important;
+}
+.marginleft10{
+    margin-left: 10px !important;
+}
+
+.margintopbottom5{
+    margin-bottom: 5px !important;
+}
+
+
+
+.logo {
+    vertical-align: middle;
+    margin: 0px 25px 0px 25px;
+    width: 150px;
+}
+
+.imgbtnLast{
+    margin-right: 5px;
+    border-right-style: dotted;
+    border-right-color: grey;
+    border-right-width: 1px;
+}
+
+/* fix-width font for text area */
+.fixwidthfont{
+    font-family: monospace !important;
+    font-size: 11px !important;
+}
+
+/*  
+============================================================================
+==== DEC 2011: footnotes ====
+*/
+.footer-bar {
+    z-index: 2;
+    position: fixed;
+    bottom: 0px;
+    border-top: 1px solid #ebebeb;
+    border-right: 1px solid #ebebeb;
+    background-color: white;
+    padding: 2px 2px 2px 2px;
+    font-size: .85em;
+}
+
+.evolview {
+    margin-bottom: 35px;
+}
+
+.greytext{
+    color: grey;
+}
+
+.footerVerticalLine{
+    padding: 0px 5px 0px 5px;
+    color: lightgray;
+}
+
+.footerSponsorSeparator{
+    padding: 0px 5px 0px 5px;
+    font-size: 200%;
+}
+
+
+.bubble{
+    box-shadow: 2px 2px 8px grey;
+    background-color: #F8FBCA;
+    padding: 2px 5px 2px 5px;
+    opacity: 0.9;
+    margin-left: 30px;
+}
+
+.bubble::before {
+    top: 10px;
+    bottom: auto;
+    left: -30px;
+    border-width: 15px 30px 15px 0;
+    border-color: transparent #5A8F00;
+}
+
+.bubble::after {
+    top: 16px;
+    bottom: auto;
+    left: -21px;
+    border-width: 9px 21px 9px 0;
+    border-color: transparent white;
+}
+
+/*  
+==== apr 23, 2012 ====
+*/
+.svgViewBorderAndShadow {
+    box-shadow: 3px 3px 5px grey;
+    border: solid #d0e4f6;
+    border-width: thin;
+    display: inline-block !important;
+}
+
+/*  
+==== May 11, 2012 ====
+*/
+.questionMarkGreen24{
+    margin-left: 5px;
+    height: 24px;
+    width: 24px;
+}
+
+
+.TooltipHandlerForOMElements{
+    box-shadow: 2px 2px 8px grey !important;
+    background-color: #F8FBCA  !important;
+    padding: 2px 10px 2px 10px  !important;
+    opacity: 0.9  !important;
+}
+
+.pop4DomainAnnos{
+    box-shadow: 2px 2px 8px grey !important;
+    background-color: white  !important;
+    padding: 2px 10px 2px 10px  !important;
+    opacity: 0.9  !important;
+}
+
+
+/*
+ --------- tooltips --------
+*/
+.tooltipwidgetBlue{
+    border: 2px solid #69B2D9 !important;
+    background-color: lightblue;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(top, rgb(183,223,246), rgb(115,194,236)) !important;
+
+    background: -moz-linear-gradient(rgb(183,223,246), rgb(115,194,236)); /* FF 3.6+ */
+    background: -ms-linear-gradient(rgb(183,223,246), rgb(115,194,236)); /* IE10 */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(183,223,246)), color-stop(100%, rgb(115,194,236))); /* Safari 4+, Chrome 2+ */
+    background: -webkit-linear-gradient(rgb(183,223,246), rgb(115,194,236)); /* Safari 5.1+, Chrome 10+ */
+    background: -o-linear-gradient(rgb(183,223,246), rgb(115,194,236)); /* Opera 11.10 */
+
+    padding: 10px;
+    opacity: .9;
+    border-radius: 4px;  
+    box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset;  
+    text-shadow: 0 1px 0 rgba(255,255,255,.4); 
+}
+
+.tooltipwidgetGray{
+    border: 2px solid #D1D1D1 !important;
+    background-color: lightgray;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(top, #EEEEEE, #E0E0E0) !important;
+
+    background: -moz-linear-gradient(#EEEEEE, #E0E0E0); /* FF 3.6+ */
+    background: -ms-linear-gradient(#EEEEEE, #E0E0E0); /* IE10 */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #EEEEEE), color-stop(100%, #E0E0E0)); /* Safari 4+, Chrome 2+ */
+    background: -webkit-linear-gradient(#EEEEEE, #E0E0E0); /* Safari 5.1+, Chrome 10+ */
+    background: -o-linear-gradient(#EEEEEE, #E0E0E0); /* Opera 11.10 */
+    
+    padding: 10px;
+    opacity: .9;
+    border-radius: 4px;  
+    box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset;  
+    text-shadow: 0 1px 0 rgba(255,255,255,.4); 
+}
+
+.tooltipwidgetYellow{
+    border: 2px solid #E2CE84 !important;
+    background-color: lightyellow;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(top, #FFF5D2, #FFEDA8) !important;
+    
+    background: -moz-linear-gradient(#FFF5D2, #FFEDA8); /* FF 3.6+ */
+    background: -ms-linear-gradient(#FFF5D2, #FFEDA8); /* IE10 */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFF5D2), color-stop(100%, #FFEDA8)); /* Safari 4+, Chrome 2+ */
+    background: -webkit-linear-gradient(#FFF5D2, #FFEDA8); /* Safari 5.1+, Chrome 10+ */
+    background: -o-linear-gradient(#FFF5D2, #FFEDA8); /* Opera 11.10 */
+    
+
+    padding: 10px;
+    opacity: .9;
+    border-radius: 4px;  
+    box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset;  
+    text-shadow: 0 1px 0 rgba(255,255,255,.4); 
+}
+
+.tooltipwidgetBlack{
+    border: 2px solid #2D3135 !important;
+    background-color: #34383D;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(top, #2D3135, #34383D) !important;
+
+    background: -moz-linear-gradient(#2D3135, #34383D); /* FF 3.6+ */
+    background: -ms-linear-gradient(#2D3135, #34383D); /* IE10 */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2D3135), color-stop(100%, #34383D)); /* Safari 4+, Chrome 2+ */
+    background: -webkit-linear-gradient(#2D3135, #34383D); /* Safari 5.1+, Chrome 10+ */
+    background: -o-linear-gradient(#2D3135, #34383D); /* Opera 11.10 */
+    
+    
+    padding: 10px;
+    opacity: .9;
+    border-radius: 4px;  
+    box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset;  
+    text-shadow: 0 1px 0 rgba(255,255,255,.4); 
+    color: white !important; 
+}
+
+.tooltipwidgetPink{
+    border: 2px solid #D05987 !important;
+    background-color: #EC84AE;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(top, #F3ADCA, #E96196) !important;
+    
+    background: -moz-linear-gradient(#F3ADCA, #E96196); /* FF 3.6+ */
+    background: -ms-linear-gradient(#F3ADCA, #E96196); /* IE10 */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #F3ADCA), color-stop(100%, #E96196)); /* Safari 4+, Chrome 2+ */
+    background: -webkit-linear-gradient(#F3ADCA, #E96196); /* Safari 5.1+, Chrome 10+ */
+    background: -o-linear-gradient(#F3ADCA, #E96196); /* Opera 11.10 */
+    
+
+    padding: 10px;
+    opacity: .9;
+    border-radius: 4px;  
+    box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset;  
+    text-shadow: 0 1px 0 rgba(255,255,255,.4); 
+    color: white !important; 
+}

@@ -48,7 +48,7 @@ public interface UiResources extends ClientBundle{
         String headerbarlogout();
     }
     
-    @Source("resources/css.css")
-    Style style();
+    @Source("css.css")
+    public Style style();
     
 }

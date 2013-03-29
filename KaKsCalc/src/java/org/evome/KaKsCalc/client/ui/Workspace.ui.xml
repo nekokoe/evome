@@ -4,11 +4,71 @@ Uncomment this for XHTML entities
 -->
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client">
+             xmlns:c="urn:import:org.evome.KaKsCalc.client.widget"
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+             xmlns:tree="urn:import:com.sencha.gxt.widget.core.client.tree"
+>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.MarginData" field="outerData" />
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="northData" />
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="westData" />
+    <ui:with type="com.sencha.gxt.widget.core.client.container.MarginData" field="centerData" />
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="eastData" />
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="southData" />  
+    
+    <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store" /> 
+    <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider" /> 
+    
     <ui:style>
-
-    </ui:style>
-    <gxt:VerticalPanel>
+        .border{
+            border: 1px dotted;
+        }
         
-    </gxt:VerticalPanel>
+        .title{
+            font-size: 24px;
+        }
+        
+    </ui:style>
+    <!--<g:VerticalPanel ui:field="pnlRoot" width="1024px" styleName="{style.border}"  horizontalAlignment="ALIGN_LEFT">-->
+    <!--workspace-->
+    <container:SimpleContainer width="1024px" height="720px" >
+        <container:child layoutData="{outerData}">
+            <container:BorderLayoutContainer ui:field="conWorkspace" borders="true">
+                <container:north layoutData="{northData}">
+                    <!--logo and botton-->
+                    <g:HorizontalPanel ui:field="pnlHead" width="100%" styleName="{style.border}" verticalAlignment="ALIGN_MIDDLE">
+                        <g:HorizontalPanel width="100%" horizontalAlignment="ALIGN_LEFT" verticalAlignment="ALIGN_MIDDLE" styleName="{style.border}">
+                            <g:Image ui:field="imgLogo" url="" title="" styleName=""/>
+                            <g:Label styleName="{style.title}">evolgenius - KaKsCalc (beta)</g:Label>
+                        </g:HorizontalPanel> 
+                        <g:HorizontalPanel width="100%" horizontalAlignment="ALIGN_RIGHT" verticalAlignment="ALIGN_MIDDLE" styleName="{style.border}">
+                            <c:AwesomeButton ui:field="btnHelp" color="blue" >help</c:AwesomeButton>
+                            <c:AwesomeButton ui:field="btnSettings" color="blue" >settings</c:AwesomeButton>
+                            <c:AwesomeButton ui:field="btnLogout" color="red" >logout</c:AwesomeButton>
+                        </g:HorizontalPanel>                
+                    </g:HorizontalPanel>
+                </container:north>
+                <container:west layoutData="{westData}">
+                    <gxt:ContentPanel headingText="Projects">
+                        <tree:Tree ui:field="treeProject" valueProvider="{valueProvider}" store="{store}">
+                        </tree:Tree>
+                    </gxt:ContentPanel>
+                </container:west>
+                <container:center layoutData="{centerData}">
+                    <gxt:ContentPanel ui:field="pnlWorkSpace" g:id="workspace" headingText="Working Space">
+
+                    </gxt:ContentPanel>                
+                </container:center>
+                <container:east layoutData="{eastData}">
+                    <!-- leave blank -->
+                </container:east>
+                <container:south layoutData="{southData}">
+                    <!-- leave blank -->
+                </container:south>                    
+            </container:BorderLayoutContainer>
+        </container:child>
+    </container:SimpleContainer>
+    <!--</g:VerticalPanel>  -->
+
 </ui:UiBinder>

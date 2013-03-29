@@ -1,0 +1,58 @@
+@CHARSET "UTF-8";
+/* 
+    Document   : AlertWidget
+    Created on : May 12, 2012, 12:06:17 PM
+    last modified: Sep 11, 2012
+    *  change the font-color to black;
+    Feb 11, 2013; Feb 20, 2013 --
+    *  make all names external 
+    Author     : wchen
+    Description:
+        Purpose of the stylesheet follows.
+*/
+@external .AWinfo, .AWsuccess, .AWwarning, .AWerror, .AWbusy;
+.AWinfo, .AWsuccess, .AWwarning, .AWerror, .AWbusy {
+    font-family:Arial, Helvetica, sans-serif; 
+    color: black;
+    border: 1px solid;
+    border-radius: 2px !important;
+    box-shadow: -1px 2px 12px rgba(0, 0, 0, 0.91) !important;
+    margin: 10px 0px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+
+@external .AWinfo, .AWsuccess, .AWwarning, .AWerror；
+.AWinfo, .AWsuccess, .AWwarning, .AWerror {
+    padding:5px 15px 5px 50px;
+}   
+
+@external .AWinfo;
+.AWinfo {
+    border-color: #00529B;
+    /*border: 10px solid rgba( 0, 82, 155, 0.5 );*/
+    background-color: #BDE5F8;
+}
+
+@external .AWsuccess;
+.AWsuccess {
+    border-color: #4F8A10;
+    background-color: #DFF2BF;
+}
+
+@external .AWwarning;
+.AWwarning {
+    border-color: #9F6000;
+    background-color: #FEEFB3;
+}
+@external .AWerror;
+.AWerror {
+    border-color: #D8000C;
+    background-color: #FFBABA;
+}
+
+@external .AWbusy;
+.AWbusy {
+    border-color: #00529B;
+    background-color: #BDE5F8;
+}
