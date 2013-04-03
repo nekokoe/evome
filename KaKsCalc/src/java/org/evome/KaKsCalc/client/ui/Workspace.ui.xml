@@ -37,6 +37,7 @@ Uncomment this for XHTML entities
             <container:BorderLayoutContainer ui:field="conWorkspace" borders="true">
                 <container:north layoutData="{northData}">
                     <!--logo and botton-->
+                    
                     <g:HorizontalPanel ui:field="pnlHead" width="100%" styleName="{style.border}" verticalAlignment="ALIGN_MIDDLE">
                         <g:HorizontalPanel width="100%" horizontalAlignment="ALIGN_LEFT" verticalAlignment="ALIGN_MIDDLE" styleName="{style.border}">
                             <g:Image ui:field="imgLogo" url="" title="" styleName=""/>

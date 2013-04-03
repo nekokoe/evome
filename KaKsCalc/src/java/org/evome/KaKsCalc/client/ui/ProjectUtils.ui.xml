@@ -10,82 +10,56 @@ Uncomment this for XHTML entities
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 >
     <ui:with field="images" type="org.evome.KaKsCalc.client.widget.resources.ExampleImages"/>
+    
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins0">
+        <ui:attributes top="0" right="0" bottom="0" left="0" />
+    </ui:with>
+      <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins10">
+    <ui:attributes top="10" right="10" bottom="10" left="10" />
+  </ui:with>
+  <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="toolBarRowData">
+    <ui:attributes width="1" height="-1" />
+  </ui:with>
+  <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="contentRowData">
+    <ui:attributes width="-1" height="-1" margins="{margins10}"/>      
+  </ui:with>
 
     <ui:style>
-
+        .grid{
+            border : 1px solid grey;
+        }
+       
     </ui:style>
-    <g:VerticalPanel>
-        <g:Button ui:field="btnShow">show</g:Button>
-    <gxt:Window ui:field="window" headingText="Overflow UiBinder Example" pixelSize="400, 200" minWidth="50"
-    minButtonWidth="100" buttonAlign="CENTER">
- 
-    <container:NorthSouthContainer>
-      <container:north>
-        <toolbar:ToolBar borders="true">
-          <button:ButtonGroup headingText="Clipboard">
-            <g:Grid>
-              <g:row>
-                <g:customCell>
-                  <button:TextButton text="Cool" icon="{images.add16}" />
-                </g:customCell>
-                <g:customCell>
-                  <button:TextButton text="Copy" icon="{images.add16}" />
-                </g:customCell>
-              </g:row>
-              <g:row>
-                <g:customCell>
-                  <button:TextButton text="Add" icon="{images.user_add}" />
-                </g:customCell>
-                <g:customCell>
-                  <button:TextButton text="Delete" icon="{images.user_delete}" />
-                </g:customCell>
-              </g:row>
+    <!--<g:VerticalPanel>-->
+    <container:VerticalLayoutContainer>
+        <container:child layoutData="{toolBarRowData}">
+            <toolbar:ToolBar borders="true">
+                <button:TextButton ui:field="btnProjectAdd" text="Add New Project..." icon="{images.add}"/>
+                <button:TextButton ui:field="btnProjectDel" text="Delete This Project..." icon="{images.delete}"/>
+            </toolbar:ToolBar>            
+        </container:child>
+        <container:child layoutData="{contentRowData}">
+            <!--<g:Label>test</g:Label>-->
+            <g:Grid styleName="grid">
+                <g:row>
+                    <g:customCell>
+                        <g:Label>Project ID</g:Label>
+                    </g:customCell>
+                    <g:customCell>
+                        <g:Label>test</g:Label>
+                    </g:customCell>                    
+                </g:row>
+                <g:row>
+                    <g:customCell>
+                        <g:Label>Project Name</g:Label>
+                    </g:customCell>
+                    <g:customCell>
+                        <g:Label>test</g:Label>
+                    </g:customCell>                    
+                </g:row>
             </g:Grid>
-          </button:ButtonGroup>
- 
-          <toolbar:FillToolItem />
- 
-          <button:ButtonGroup headingText="Other Bogus Actions">
-            <g:Grid>
-              <g:row>
-                <g:customCell>
-                  <button:TextButton text="Cool" icon="{images.add16}" />
-                </g:customCell>
-                <g:customCell>
-                  <button:TextButton text="Copy" icon="{images.add16}" />
-                </g:customCell>
-              </g:row>
-              <g:row>
-                <g:customCell>
-                  <button:TextButton text="Add" icon="{images.user_add}" />
-                </g:customCell>
-                <g:customCell>
-                  <button:TextButton text="Delete" icon="{images.user_delete}" />
-                </g:customCell>
-              </g:row>
-            </g:Grid>
-          </button:ButtonGroup>
-        </toolbar:ToolBar>
-      </container:north>
-    </container:NorthSouthContainer>
- 
-    <gxt:button>
-      <button:TextButton text="Save" />
-    </gxt:button>
-    <gxt:button>
-      <button:TextButton text="Cancel" />
-    </gxt:button>
-    <gxt:button>
-      <button:TextButton text="Close" />
-    </gxt:button>
-    <gxt:button>
-      <button:TextButton text="Highlight" />
-    </gxt:button>
-    <gxt:button>
-      <button:TextButton text="Shutdown" />
-    </gxt:button>
-  </gxt:Window>  
-    </g:VerticalPanel>  
-    
-    
+        </container:child>
+        
+    </container:VerticalLayoutContainer>
+<!--</g:VerticalPanel>-->
 </ui:UiBinder>
