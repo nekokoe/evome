@@ -95,7 +95,8 @@ public class Workspace extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
         
         //add project utils
-        pnlWorkSpace.add(new ProjectUtils());
+        //pnlWorkSpace.add(new ProjectUtils());
+        pnlWorkSpace.add(new CalculationUtils());
     }
     
     

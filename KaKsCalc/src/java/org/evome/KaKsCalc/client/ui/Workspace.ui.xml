@@ -10,12 +10,22 @@ Uncomment this for XHTML entities
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
              xmlns:tree="urn:import:com.sencha.gxt.widget.core.client.tree"
 >
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins5">
+        <ui:attributes top="5" right="5" bottom="5" left="5" />
+    </ui:with>
+
     <ui:with type="com.sencha.gxt.widget.core.client.container.MarginData" field="outerData" />
     <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="northData" />
     <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="westData" />
     <ui:with type="com.sencha.gxt.widget.core.client.container.MarginData" field="centerData" />
     <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="eastData" />
     <ui:with type="com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData" field="southData" />  
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData" field="layoutBox">
+        <ui:attributes margins="{margins5}"/>
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData" field="layoutBoxFlex">
+        <ui:attributes margins="{margins5}" flex="1" />
+    </ui:with>
     
     <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store" /> 
     <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider" /> 
@@ -30,35 +40,47 @@ Uncomment this for XHTML entities
         }
         
     </ui:style>
-    <!--<g:VerticalPanel ui:field="pnlRoot" width="1024px" styleName="{style.border}"  horizontalAlignment="ALIGN_LEFT">-->
+  
     <!--workspace-->
     <container:SimpleContainer width="1024px" height="720px" >
         <container:child layoutData="{outerData}">
+            
             <container:BorderLayoutContainer ui:field="conWorkspace" borders="true">
+                
                 <container:north layoutData="{northData}">
                     <!--logo and botton-->
-                    
-                    <g:HorizontalPanel ui:field="pnlHead" width="100%" styleName="{style.border}" verticalAlignment="ALIGN_MIDDLE">
-                        <g:HorizontalPanel width="100%" horizontalAlignment="ALIGN_LEFT" verticalAlignment="ALIGN_MIDDLE" styleName="{style.border}">
+                    <container:HBoxLayoutContainer hBoxLayoutAlign="MIDDLE">
+                        <container:child layoutData="{layoutBox}">
                             <g:Image ui:field="imgLogo" url="" title="" styleName=""/>
+                        </container:child>
+                        <container:child layoutData="{layoutBox}">
                             <g:Label styleName="{style.title}">evolgenius - KaKsCalc (beta)</g:Label>
-                        </g:HorizontalPanel> 
-                        <g:HorizontalPanel width="100%" horizontalAlignment="ALIGN_RIGHT" verticalAlignment="ALIGN_MIDDLE" styleName="{style.border}">
+                        </container:child>
+                        <container:child layoutData="{layoutBoxFlex}">
+                            <g:Label></g:Label>
+                        </container:child>
+                        <container:child layoutData="{layoutBox}">
                             <c:AwesomeButton ui:field="btnHelp" color="blue" >help</c:AwesomeButton>
+                        </container:child>                        
+                        <container:child layoutData="{layoutBox}">
                             <c:AwesomeButton ui:field="btnSettings" color="blue" >settings</c:AwesomeButton>
-                            <c:AwesomeButton ui:field="btnLogout" color="red" >logout</c:AwesomeButton>
-                        </g:HorizontalPanel>                
-                    </g:HorizontalPanel>
+                        </container:child>                        
+                        <container:child layoutData="{layoutBox}">
+                            <c:AwesomeButton ui:field="btnLogout" color="red" >logout</c:AwesomeButton>                            
+                        </container:child>                        
+                    </container:HBoxLayoutContainer>
                 </container:north>
+                
                 <container:west layoutData="{westData}">
                     <gxt:ContentPanel headingText="Projects">
                         <tree:Tree ui:field="treeProject" valueProvider="{valueProvider}" store="{store}">
                         </tree:Tree>
                     </gxt:ContentPanel>
                 </container:west>
+                
                 <container:center layoutData="{centerData}">
-                    <gxt:ContentPanel ui:field="pnlWorkSpace" g:id="workspace" headingText="Working Space">
-
+                    <gxt:ContentPanel ui:field="pnlWorkSpace" headingText="Working Space">
+                        <!-- workspace for child widgets-->
                     </gxt:ContentPanel>                
                 </container:center>
                 <container:east layoutData="{eastData}">
@@ -68,8 +90,8 @@ Uncomment this for XHTML entities
                     <!-- leave blank -->
                 </container:south>                    
             </container:BorderLayoutContainer>
+            
         </container:child>
     </container:SimpleContainer>
-    <!--</g:VerticalPanel>  -->
 
 </ui:UiBinder>
