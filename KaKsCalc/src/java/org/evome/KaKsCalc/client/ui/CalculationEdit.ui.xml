@@ -1,0 +1,28 @@
+<!--
+Uncomment this for XHTML entities
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="verticalLayout">
+        <ui:attributes width="1" height="-1" />
+    </ui:with>
+    
+    <ui:style>
+
+    </ui:style>
+    <g:VerticalPanel spacing="10">
+        <gxt:FramedPanel ui:field="pnlCalcEditForm" width="400">
+            <container:VerticalLayoutContainer>
+                <container:child layoutData="{verticalLayout}">
+                    
+                </container:child>
+            </container:VerticalLayoutContainer>
+        </gxt:FramedPanel>        
+    </g:VerticalPanel>
+</ui:UiBinder>

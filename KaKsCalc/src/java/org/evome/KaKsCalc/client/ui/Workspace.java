@@ -7,6 +7,7 @@ package org.evome.KaKsCalc.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -16,7 +17,9 @@ import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
 import com.sencha.gxt.widget.core.client.container.MarginData;
+import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
+import java.util.Iterator;
 
 /**
  *
@@ -37,32 +40,10 @@ public class Workspace extends Composite {
     @UiField(provided = true)
     BorderLayoutData southData = new BorderLayoutData(100);
 
-    @UiField(provided=true)
-    TreeStore<TreeViewProperties> store = new TreeStore<TreeViewProperties>(new ModelKeyProvider<TreeViewProperties>(){
-        @Override
-        public String getKey(TreeViewProperties tvp){
-            return tvp.getKey();
-        }
-    });
-    
-    @UiField(provided=true)
-    ValueProvider<TreeViewProperties, String> valueProvider = new ValueProvider<TreeViewProperties, String>(){
-        @Override
-        public String getValue(TreeViewProperties tvp){
-            return tvp.getValue();
-        }
-        @Override
-        public void setValue(TreeViewProperties tvp, String value){
-            
-        }
-        @Override
-        public String getPath(){
-            return "key";
-        }
-    };
-    
+
     @UiField
-    Tree<TreeViewProperties, String> treeProject;
+    ContentPanel pnlTreeView;
+    
     @UiField
     ContentPanel pnlWorkSpace;
     
@@ -77,27 +58,36 @@ public class Workspace extends Composite {
         westData.setCollapsible(true);
         westData.setSplit(true);
         centerData.setMargins(new Margins(0, 5, 5, 5));
-        //set autoselect active
-        treeProject.setAutoSelect(true);        
-        //set treeview
-        TreeViewProperties p1 = new TreeViewProperties("1","project 1");
-        store.add(p1);
-        store.add(p1, new TreeViewProperties("1.1","calculation 1"));
-        store.add(p1, new TreeViewProperties("1.2","calculation 2"));        
-        TreeViewProperties p2 = new TreeViewProperties("2","project 2");
-        store.add(p2);
-        store.add(p2, new TreeViewProperties("2.1","calculation 1"));
-        store.add(p2, new TreeViewProperties("2.2","calculation 2"));          
-
-        
         
         //bind UI
         initWidget(uiBinder.createAndBindUi(this));
         
+        //declare workspace widget
+        final ProjectUtils project = new ProjectUtils();
+        final CalculationUtils calculation = new CalculationUtils();
+        //add Tree View
+        TreeView treeView = new TreeView();
+        treeView.addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewProperties>(){
+            @Override
+            public void onSelectionChanged(SelectionChangedEvent<TreeViewProperties> event){
+                for(Iterator<TreeViewProperties> it = event.getSelection().iterator(); it.hasNext();){
+                    String itemValue = it.next().getValue();
+                    pnlWorkSpace.clear();
+                    pnlWorkSpace.setHeadingText(itemValue);
+                    if (itemValue.startsWith("project")){
+                        pnlWorkSpace.add(project);
+                    }else{
+                        pnlWorkSpace.add(calculation);
+                    }
+                }
+            }
+        });
+        pnlTreeView.add(treeView);
+
         //add project utils
-        //pnlWorkSpace.add(new ProjectUtils());
-        pnlWorkSpace.add(new CalculationUtils());
+        pnlWorkSpace.add(project);
     }
+    
     
     
 }

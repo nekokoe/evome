@@ -44,7 +44,6 @@ public class MainEntryPoint implements EntryPoint {
         //Login loginpage = new Login();
         //RootPanel.get().add(new Login());
         RootPanel.get().add(new Workspace());
-        RootPanel.get().add(new ProjectUtils());
         
     }
 }

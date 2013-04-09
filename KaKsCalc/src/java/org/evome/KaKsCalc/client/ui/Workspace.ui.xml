@@ -8,7 +8,6 @@ Uncomment this for XHTML entities
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
-             xmlns:tree="urn:import:com.sencha.gxt.widget.core.client.tree"
 >
     <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins5">
         <ui:attributes top="5" right="5" bottom="5" left="5" />
@@ -26,9 +25,6 @@ Uncomment this for XHTML entities
     <ui:with type="com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData" field="layoutBoxFlex">
         <ui:attributes margins="{margins5}" flex="1" />
     </ui:with>
-    
-    <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store" /> 
-    <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider" /> 
     
     <ui:style>
         .border{
@@ -72,9 +68,8 @@ Uncomment this for XHTML entities
                 </container:north>
                 
                 <container:west layoutData="{westData}">
-                    <gxt:ContentPanel headingText="Projects">
-                        <tree:Tree ui:field="treeProject" valueProvider="{valueProvider}" store="{store}">
-                        </tree:Tree>
+                    <gxt:ContentPanel ui:field="pnlTreeView" headingText="Projects">
+
                     </gxt:ContentPanel>
                 </container:west>
                 

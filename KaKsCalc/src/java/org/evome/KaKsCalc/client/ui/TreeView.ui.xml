@@ -1,0 +1,17 @@
+<!--
+Uncomment this for XHTML entities
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:tree="urn:import:com.sencha.gxt.widget.core.client.tree"
+>
+    <ui:with type="com.sencha.gxt.data.shared.TreeStore" field="store" /> 
+    <ui:with type="com.sencha.gxt.core.client.ValueProvider" field="valueProvider" /> 
+
+    <ui:style>
+
+    </ui:style>
+    <tree:Tree ui:field="treeProject" valueProvider="{valueProvider}" store="{store}">
+    </tree:Tree>
+</ui:UiBinder>
