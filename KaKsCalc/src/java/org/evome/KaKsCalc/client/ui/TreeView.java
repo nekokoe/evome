@@ -64,7 +64,7 @@ public class TreeView extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
         //set autoselect active
         
-        //set treeview
+        //set treeview data
         TreeViewProperties p1 = new TreeViewProperties("1","project 1");
         store.add(p1);
         TreeViewProperties c1 = new TreeViewProperties("1.1","calculation 1");
@@ -80,21 +80,13 @@ public class TreeView extends Composite {
         store.add(p2);
         store.add(p2, new TreeViewProperties("2.1","calculation 1"));
         store.add(p2, new TreeViewProperties("2.2","calculation 2"));      
-        
 
         //set selection mode
         treeProject.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
-        //defined selection change handler
-//        treeProject.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewProperties>(){
-//            @Override
-//            public void onSelectionChanged(SelectionChangedEvent<TreeViewProperties> event){
-//                for(Iterator<TreeViewProperties> it = event.getSelection().iterator(); it.hasNext();){
-//                    Window.alert("you have selected: " + it.next().getValue());
-//                }
-//            }
-//        });
+
     }
     
+    //export handler outside
     public HandlerRegistration addSelectionChangedHandler(
                 SelectionChangedEvent.SelectionChangedHandler<TreeViewProperties> handler){
         return treeProject.getSelectionModel().addSelectionChangedHandler(handler);
