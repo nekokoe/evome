@@ -13,10 +13,13 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.sencha.gxt.widget.core.client.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.Dialog;
 /**
  *
  * @author nekoko
@@ -27,45 +30,21 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 public class ProjectUtils extends Composite {
     
     private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
+
+    final Dialog dlgEditProject = new Dialog();
     
     interface ProjectUtilsUiBinder extends UiBinder<Widget, ProjectUtils> {
     }
     
     public ProjectUtils() {
         initWidget(uiBinder.createAndBindUi(this));
-        initListData();
+        dlgEditProject.add(new ProjectEdit());
+        dlgEditProject.setModal(true);
     }
     
-    ListStore<ListViewProperties> listStore = new ListStore<ListViewProperties>(new ModelKeyProvider<ListViewProperties>(){
-        @Override
-        public String getKey(ListViewProperties lvp){
-            return lvp.getKey();
-        } 
-    });
-    
-    ValueProvider<ListViewProperties, String> valueProvider = new ValueProvider<ListViewProperties, String>(){
-        @Override
-        public String getValue(ListViewProperties lvp){
-            return lvp.getValue();
-        }
-        @Override
-        public void setValue(ListViewProperties tvp, String value){
-            
-        }
-        @Override
-        public String getPath(){
-            return "list";
-        }  
-    };
-    
-//    @UiField(provided=true)
-//    ListView<ListViewProperties, String> listStatus = new ListView<ListViewProperties, String>(listStore, valueProvider);
-    
-    private void initListData(){
-        listStore.add(new ListViewProperties("1","Project ID"));
-        listStore.add(new ListViewProperties("2","Project Name"));
-        listStore.add(new ListViewProperties("3","Project Owner"));
-        listStore.add(new ListViewProperties("4","Project Description"));
-        
+    @UiHandler("btnProjectAdd")
+    public void btnProjectAddClick(SelectEvent event){
+        dlgEditProject.show();
+        dlgEditProject.center();
     }
 }

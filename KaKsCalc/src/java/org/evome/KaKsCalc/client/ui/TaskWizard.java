@@ -13,14 +13,14 @@ import com.google.gwt.user.client.ui.Widget;
  *
  * @author nekoko
  */
-public class CalculationResult extends Composite {
+public class TaskWizard extends Composite {
     
-    private static CalculationResultUiBinder uiBinder = GWT.create(CalculationResultUiBinder.class);
+    private static TaskWizardUiBinder uiBinder = GWT.create(TaskWizardUiBinder.class);
     
-    interface CalculationResultUiBinder extends UiBinder<Widget, CalculationResult> {
+    interface TaskWizardUiBinder extends UiBinder<Widget, TaskWizard> {
     }
     
-    public CalculationResult() {
+    public TaskWizard() {
         initWidget(uiBinder.createAndBindUi(this));
     }
 }

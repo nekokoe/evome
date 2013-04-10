@@ -1,0 +1,42 @@
+<!--
+Uncomment this for XHTML entities
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"                            
+>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
+        <ui:attributes width="1" height="-1" />
+    </ui:with>
+
+    
+    <ui:style>
+
+    </ui:style>
+
+        <container:VerticalLayoutContainer>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Project Name">
+                    <form:widget>
+                        <form:TextField ui:field="txtProjectName" allowBlank="false"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+            
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+            
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+            
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+            
+            </container:child>
+        </container:VerticalLayoutContainer>
+
+</ui:UiBinder>

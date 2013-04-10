@@ -17,7 +17,7 @@ Uncomment this for XHTML entities
       <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins10">
     <ui:attributes top="10" right="10" bottom="10" left="10" />
   </ui:with>
-  <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="toolBarRowData">
+  <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
     <ui:attributes width="1" height="-1" />
   </ui:with>
   <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="contentRowData">
@@ -25,14 +25,15 @@ Uncomment this for XHTML entities
   </ui:with>
 
     <ui:style>
-        .grid{
-            border : 1px solid grey;
+        .celltext{
+            font-size:22px;
         }
        
     </ui:style>
-    <!--<g:VerticalPanel>-->
+    <!-- start of project status page -->
+
     <container:VerticalLayoutContainer>
-        <container:child layoutData="{toolBarRowData}">
+        <container:child layoutData="{defaultVerticalLayout}">
             <toolbar:ToolBar borders="true">
                 <button:TextButton ui:field="btnProjectAdd" text="Add New Project..." icon="{images.add}"/>
                 <button:TextButton ui:field="btnProjectDel" text="Delete This Project..." icon="{images.delete}"/>
@@ -40,7 +41,7 @@ Uncomment this for XHTML entities
         </container:child>
         <container:child layoutData="{contentRowData}">
             <!--<g:Label>test</g:Label>-->
-            <g:Grid styleName="grid">
+            <g:Grid styleName="{style.celltext}">
                 <g:row>
                     <g:customCell>
                         <g:Label>Project ID</g:Label>
@@ -77,5 +78,6 @@ Uncomment this for XHTML entities
         </container:child>
         
     </container:VerticalLayoutContainer>
-<!--</g:VerticalPanel>-->
+    <!-- end of project status page -->
+
 </ui:UiBinder>
