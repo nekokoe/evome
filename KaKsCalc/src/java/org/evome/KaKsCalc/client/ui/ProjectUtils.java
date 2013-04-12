@@ -14,12 +14,10 @@ import com.sencha.gxt.widget.core.client.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.sencha.gxt.widget.core.client.ListView;
-import com.sencha.gxt.data.shared.ListStore;
-import com.sencha.gxt.core.client.ValueProvider;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.Dialog;
+import com.google.gwt.user.client.ui.SimplePanel;
+import org.evome.KaKsCalc.client.Project;
 /**
  *
  * @author nekoko
@@ -30,21 +28,27 @@ import com.sencha.gxt.widget.core.client.Dialog;
 public class ProjectUtils extends Composite {
     
     private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
-
-    final Dialog dlgEditProject = new Dialog();
+    private Project project = new Project();
     
     interface ProjectUtilsUiBinder extends UiBinder<Widget, ProjectUtils> {
     }
     
     public ProjectUtils() {
         initWidget(uiBinder.createAndBindUi(this));
-        dlgEditProject.add(new ProjectEdit());
-        dlgEditProject.setModal(true);
     }
     
     @UiHandler("btnProjectAdd")
     public void btnProjectAddClick(SelectEvent event){
-        dlgEditProject.show();
-        dlgEditProject.center();
+        ProjectEdit edit = new ProjectEdit();
+        edit.show();
     }
+    
+    @UiHandler("btnProjectEdit")
+    public void btnProjectEditClick(SelectEvent event){
+        ProjectEdit edit = new ProjectEdit(project);
+        edit.show();
+    }
+    
+    @UiField
+    SimplePanel pnlProject;
 }

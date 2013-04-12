@@ -1,0 +1,44 @@
+<!--
+Uncomment this for XHTML entities
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+
+    </ui:style>
+    <g:Grid>
+        <g:row>
+            <g:customCell>
+                <g:Label>Project ID</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblProjectID">test</g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Project Name</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblProjectName">test</g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Project Owner</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblProjectOwner">test</g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Project Details</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblProjectComment">test</g:Label>
+            </g:customCell>                    
+        </g:row>                                
+    </g:Grid>
+</ui:UiBinder>

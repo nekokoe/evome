@@ -6,27 +6,33 @@ Uncomment this for XHTML entities
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
-             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"                            
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 >
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
         <ui:attributes width="1" height="-1" />
     </ui:with>
-
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="flexVerticalLayout">
+        <ui:attributes width="1" height="1" />
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData" field="defaultHorizontalLayout">
+        <ui:attributes width="-1" height="1" />
+    </ui:with>
     
     <ui:style>
 
     </ui:style>
-
+        
         <container:VerticalLayoutContainer>
             <container:child layoutData="{defaultVerticalLayout}">
-                <form:FieldLabel text="Project ID">
+                <form:FieldLabel text="Project ID" ui:field="fieldID">
                     <form:widget>
                         <form:TextField ui:field="txtProjectID" />
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
             <container:child layoutData="{defaultVerticalLayout}">
-                <form:FieldLabel text="Project Owner">
+                <form:FieldLabel text="Project Owner" ui:field="fieldOwner">
                     <form:widget>
                         <form:TextField ui:field="txtProjectOwner"/>
                     </form:widget>
@@ -46,13 +52,16 @@ Uncomment this for XHTML entities
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
+            <container:child layoutData="{flexVerticalLayout}">
+                
+            </container:child>
             <container:child layoutData="{defaultVerticalLayout}">
                 <container:HorizontalLayoutContainer>
-                    <container:child>
-                        <gxt:TextButton ui:field="btn">Save</gxt:TextButton>    
+                    <container:child layoutData="{defaultHorizontalLayout}">
+                        <button:TextButton ui:field="btnSave">Save</button:TextButton>    
                     </container:child>
-                    <container:child>
-                        <gxt:TextButton>Cancel</gxt:TextButton>
+                    <container:child layoutData="{defaultHorizontalLayout}">
+                        <button:TextButton ui:field="btnCancel">Cancel</button:TextButton>
                     </container:child>                    
                 </container:HorizontalLayoutContainer>
             </container:child>

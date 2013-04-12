@@ -11,12 +11,17 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import org.evome.KaKsCalc.client.Project;
 import com.sencha.gxt.widget.core.client.form.TextField;
-
+import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.sencha.gxt.widget.core.client.Dialog;
+import com.sencha.gxt.widget.core.client.form.FieldLabel;
+import com.sencha.gxt.widget.core.client.Window;
 /**
  *
  * @author nekoko
  */
-public class ProjectEdit extends Composite {
+public class ProjectEdit extends Window {
     
     private static ProjectEditUiBinder uiBinder = GWT.create(ProjectEditUiBinder.class);
     
@@ -24,23 +29,50 @@ public class ProjectEdit extends Composite {
     }
     
     public ProjectEdit(Project project){
-        initWidget(uiBinder.createAndBindUi(this));
-        //set id and owner read only
-        txtProjectID.setReadOnly(true);
-        txtProjectOwner.setReadOnly(true);
+        super();
+        setWidget(uiBinder.createAndBindUi(this));
+        init();
         //fill fields with given project
-        txtProjectID.setText(Integer.toString(project.getId()));
-        txtProjectOwner.setText(project.getOwnerName());
-        txtProjectName.setText(project.getName());
-        txtProjectComment.setText(project.getComment());
+//        txtProjectID.setText(Integer.toString(project.getId()));
+//        txtProjectOwner.setText(project.getOwnerName());
+//        txtProjectName.setText(project.getName());
+//        txtProjectComment.setText(project.getComment());
+//        //set id and owner read only
+//        txtProjectID.setReadOnly(true);
+//        txtProjectOwner.setReadOnly(true);        
     }
     
     public ProjectEdit() {
-        initWidget(uiBinder.createAndBindUi(this));
-        txtProjectID.setVisible(false);
-        txtProjectOwner.setVisible(false);
+        super();
+        setWidget(uiBinder.createAndBindUi(this));
+        init();
+        fieldID.setVisible(false);
+        fieldOwner.setVisible(false);
     }
+    
+    
     
     @UiField
     TextField txtProjectID, txtProjectOwner, txtProjectName, txtProjectComment;
+    @UiField
+    FieldLabel fieldID, fieldOwner;
+    
+    @UiHandler("btnSave")
+    public void onSaveClick(SelectEvent event){
+        //process data update
+    }
+    
+    @UiHandler("btnCancel")
+    public void onCancelClick(SelectEvent event){
+        //return 
+    }
+    
+    
+    private void init(){
+        this.setModal(true);
+        this.setMinWidth(300);
+        this.setMinHeight(200);
+        
+    }
+    
 }

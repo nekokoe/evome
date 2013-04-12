@@ -41,41 +41,9 @@ Uncomment this for XHTML entities
             </toolbar:ToolBar>            
         </container:child>
         <container:child layoutData="{contentRowData}">
-            <!--<g:Label>test</g:Label>-->
-            <g:Grid styleName="{style.celltext}">
-                <g:row>
-                    <g:customCell>
-                        <g:Label>Project ID</g:Label>
-                    </g:customCell>
-                    <g:customCell>
-                        <g:Label ui:field="lblProjectID">test</g:Label>
-                    </g:customCell>                    
-                </g:row>
-                <g:row>
-                    <g:customCell>
-                        <g:Label>Project Name</g:Label>
-                    </g:customCell>
-                    <g:customCell>
-                        <g:Label ui:field="lblProjectName">test</g:Label>
-                    </g:customCell>                    
-                </g:row>
-                <g:row>
-                    <g:customCell>
-                        <g:Label>Project Owner</g:Label>
-                    </g:customCell>
-                    <g:customCell>
-                        <g:Label ui:field="lblProjectOwner">test</g:Label>
-                    </g:customCell>                    
-                </g:row>
-                <g:row>
-                    <g:customCell>
-                        <g:Label>Project Details</g:Label>
-                    </g:customCell>
-                    <g:customCell>
-                        <g:Label ui:field="lblProjectComment">test</g:Label>
-                    </g:customCell>                    
-                </g:row>                                
-            </g:Grid>
+            <g:SimplePanel ui:field="pnlProject">
+                
+            </g:SimplePanel>
         </container:child>
         
     </container:VerticalLayoutContainer>
