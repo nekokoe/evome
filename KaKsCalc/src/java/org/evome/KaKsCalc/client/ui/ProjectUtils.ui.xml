@@ -36,7 +36,8 @@ Uncomment this for XHTML entities
         <container:child layoutData="{defaultVerticalLayout}">
             <toolbar:ToolBar borders="true">
                 <button:TextButton ui:field="btnProjectAdd" text="Add New Project..." icon="{images.add}"/>
-                <button:TextButton ui:field="btnProjectDel" text="Delete This Project..." icon="{images.delete}"/>
+                <button:TextButton ui:field="btnProjectEdit" text="Edit Project..." icon="{images.list}"/>
+                <button:TextButton ui:field="btnProjectDel" text="Delete Project..." icon="{images.delete}"/>
             </toolbar:ToolBar>            
         </container:child>
         <container:child layoutData="{contentRowData}">

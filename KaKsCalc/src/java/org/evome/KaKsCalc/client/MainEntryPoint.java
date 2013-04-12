@@ -29,6 +29,11 @@ public class MainEntryPoint implements EntryPoint {
      * Creates a new instance of MainEntryPoint
      */
     
+    //session id is generated when browsing the main page
+    //session is associated with user and at the server end
+    //if session is still alive at the server end, trying to recover thde session data to UI
+    private String sessionID;
+    
     private GWTServiceAsync rpc = GWTServiceUsageExample.getService();
     
     public MainEntryPoint() {

@@ -16,6 +16,7 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
@@ -30,7 +31,7 @@ public class Workspace extends Composite {
     @UiField(provided = true)
     MarginData outerData = new MarginData();
     @UiField(provided = true)
-    BorderLayoutData northData = new BorderLayoutData(100);
+    BorderLayoutData northData = new BorderLayoutData(50);
     @UiField(provided = true)
     BorderLayoutData westData = new BorderLayoutData(150);
     @UiField(provided = true)
@@ -47,11 +48,15 @@ public class Workspace extends Composite {
     @UiField
     ContentPanel pnlWorkSpace;
     
+    @UiField
+    SimpleContainer conRoot;
+    
     private static WorkspaceUiBinder uiBinder = GWT.create(WorkspaceUiBinder.class);
 
     interface WorkspaceUiBinder extends UiBinder<Widget, Workspace> {}
     
     public Workspace() {
+        outerData.setMargins(new Margins(0, 0, 0, 0));
         //workspace margins
         northData.setMargins(new Margins(5));
         westData.setMargins(new Margins(0, 0, 5, 5));
@@ -61,10 +66,13 @@ public class Workspace extends Composite {
         
         //bind UI
         initWidget(uiBinder.createAndBindUi(this));
+        //set root container width        
+        conRoot.setWidth(Window.getClientWidth());
         
         //declare workspace widget
         final ProjectUtils project = new ProjectUtils();
         final CalculationUtils calculation = new CalculationUtils();
+        final TaskUtils task = new TaskUtils();
         //add Tree View
         TreeView treeView = new TreeView();
         treeView.addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewProperties>(){
@@ -76,8 +84,10 @@ public class Workspace extends Composite {
                     pnlWorkSpace.setHeadingText(itemValue);
                     if (itemValue.startsWith("project")){
                         pnlWorkSpace.add(project);
-                    }else{
+                    }else if(itemValue.startsWith("calc")){
                         pnlWorkSpace.add(calculation);
+                    }else if(itemValue.startsWith("task")){
+                        pnlWorkSpace.add(task);
                     }
                 }
             }

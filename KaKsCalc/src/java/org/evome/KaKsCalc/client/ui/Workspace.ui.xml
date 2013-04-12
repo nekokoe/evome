@@ -38,7 +38,7 @@ Uncomment this for XHTML entities
     </ui:style>
   
     <!--workspace-->
-    <container:SimpleContainer width="1024px" height="720px" >
+    <container:SimpleContainer ui:field="conRoot" height="700" >
         <container:child layoutData="{outerData}">
             
             <container:BorderLayoutContainer ui:field="conWorkspace" borders="true">

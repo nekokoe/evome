@@ -1,0 +1,39 @@
+<!--
+Uncomment this for XHTML entities
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:toolbar="urn:import:com.sencha.gxt.widget.core.client.toolbar"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+>
+
+    <ui:with field="images" type="org.evome.KaKsCalc.client.widget.resources.ExampleImages"/>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
+        <ui:attributes width="1" height="-1" />
+    </ui:with>
+    <ui:style>
+
+    </ui:style>
+    <container:VerticalLayoutContainer>
+        <container:child layoutData="{defaultVerticalLayout}">
+            <toolbar:ToolBar borders="true">
+                <button:TextButton ui:field="btnTaskStart" text="Start" icon="{images.add}"/>
+                <button:TextButton ui:field="btnTaskStop" text="Stop" icon="{images.delete}"/>
+                <toolbar:SeparatorToolItem />                
+                <button:TextButton ui:field="btnTaskAdd" text="New Task..." icon="{images.add}"/>
+                <button:TextButton ui:field="btnTaskEdit" text="Edit Task..." icon="{images.list}"/>
+                <button:TextButton ui:field="btnTaskDel" text="Delete Task..." icon="{images.delete}"/>
+                <toolbar:SeparatorToolItem />
+                <button:TextButton ui:field="btnTaskResult" text="Show Result..." icon="{images.text}"/>                   
+            </toolbar:ToolBar>            
+        </container:child>
+        <container:child layoutData="{defaultVerticalLayout}">
+            <g:VerticalPanel ui:field="pnlContent">
+                
+            </g:VerticalPanel>
+        </container:child>
+    </container:VerticalLayoutContainer>
+</ui:UiBinder>

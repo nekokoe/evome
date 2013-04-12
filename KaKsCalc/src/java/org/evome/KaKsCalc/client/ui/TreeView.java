@@ -93,6 +93,9 @@ public class TreeView extends Composite {
 //                }
 //            }
 //        });
+        
+        //expand all leaves
+        treeProject.expandAll();
     }
     
     public HandlerRegistration addSelectionChangedHandler(

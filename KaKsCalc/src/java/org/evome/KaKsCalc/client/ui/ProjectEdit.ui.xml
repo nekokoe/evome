@@ -19,6 +19,20 @@ Uncomment this for XHTML entities
 
         <container:VerticalLayoutContainer>
             <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Project ID">
+                    <form:widget>
+                        <form:TextField ui:field="txtProjectID" />
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Project Owner">
+                    <form:widget>
+                        <form:TextField ui:field="txtProjectOwner"/>
+                    </form:widget>
+                </form:FieldLabel>                
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
                 <form:FieldLabel text="Project Name">
                     <form:widget>
                         <form:TextField ui:field="txtProjectName" allowBlank="false"/>
@@ -26,16 +40,21 @@ Uncomment this for XHTML entities
                 </form:FieldLabel>
             </container:child>
             <container:child layoutData="{defaultVerticalLayout}">
-            
+                <form:FieldLabel text="Project Details">
+                    <form:widget>
+                        <form:TextField ui:field="txtProjectComment"/>
+                    </form:widget>
+                </form:FieldLabel>
             </container:child>
             <container:child layoutData="{defaultVerticalLayout}">
-            
-            </container:child>
-            <container:child layoutData="{defaultVerticalLayout}">
-            
-            </container:child>
-            <container:child layoutData="{defaultVerticalLayout}">
-            
+                <container:HorizontalLayoutContainer>
+                    <container:child>
+                        <gxt:TextButton ui:field="btn">Save</gxt:TextButton>    
+                    </container:child>
+                    <container:child>
+                        <gxt:TextButton>Cancel</gxt:TextButton>
+                    </container:child>                    
+                </container:HorizontalLayoutContainer>
             </container:child>
         </container:VerticalLayoutContainer>
 
