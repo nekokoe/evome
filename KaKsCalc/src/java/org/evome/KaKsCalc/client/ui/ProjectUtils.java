@@ -18,6 +18,9 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.google.gwt.user.client.ui.SimplePanel;
 import org.evome.KaKsCalc.client.Project;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.box.MessageBox;
+import com.sencha.gxt.widget.core.client.event.HideEvent;
 /**
  *
  * @author nekoko
@@ -28,7 +31,7 @@ import org.evome.KaKsCalc.client.Project;
 public class ProjectUtils extends Composite {
     
     private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
-    private Project project = new Project();
+    private Project current = new Project();
     
     interface ProjectUtilsUiBinder extends UiBinder<Widget, ProjectUtils> {
     }
@@ -45,10 +48,36 @@ public class ProjectUtils extends Composite {
     
     @UiHandler("btnProjectEdit")
     public void btnProjectEditClick(SelectEvent event){
-        ProjectEdit edit = new ProjectEdit(project);
+        ProjectEdit edit = new ProjectEdit(current);
         edit.show();
     }
     
+    @UiHandler("btnProjectDel")
+    public void btnProjectDelCLick(SelectEvent event){
+        ConfirmMessageBox confirm = 
+                new ConfirmMessageBox("Confirm", "Are you sure want to delete : " + current.getName() + " ? <br>"
+                + "All data under this project will be deleted!");
+        confirm.addHideHandler(new HideEvent.HideHandler(){
+            @Override
+            public void onHide(HideEvent event){
+                MessageBox source = (MessageBox)event.getSource();
+                if (source.getHideButton() == source.getButtonById(Dialog.PredefinedButton.YES.name())){
+                    //YES clicked
+                    //perform project deletion
+                }
+            }
+        });
+        confirm.show();
+    }
+    
+    
     @UiField
-    SimplePanel pnlProject;
+    SimplePanel panel;
+    
+    
+    public void setCurrentProject(Project project){
+        this.current = project;
+        panel.clear();
+        panel.add(new ProjectStatus(current));
+    }
 }

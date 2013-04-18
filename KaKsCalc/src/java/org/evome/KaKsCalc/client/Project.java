@@ -16,6 +16,13 @@ public class Project implements IsSerializable{
     private int id, owner;
     private String name, ownerName, comment;
     
+    public Project(String name){//for test purpose
+        this.name = name;
+    }
+    public Project(){
+        
+    }
+    
     public void setId(int id){
         this.id = id;
     }

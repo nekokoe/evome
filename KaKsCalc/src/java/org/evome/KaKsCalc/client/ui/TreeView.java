@@ -84,16 +84,8 @@ public class TreeView extends Composite {
 
         //set selection mode
         treeProject.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
-        //defined selection change handler
-//        treeProject.getSelectionModel().addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewProperties>(){
-//            @Override
-//            public void onSelectionChanged(SelectionChangedEvent<TreeViewProperties> event){
-//                for(Iterator<TreeViewProperties> it = event.getSelection().iterator(); it.hasNext();){
-//                    Window.alert("you have selected: " + it.next().getValue());
-//                }
-//            }
-//        });
-        
+        //select the first 'project' at the first load
+        treeProject.getSelectionModel().select(0, false);
         //expand all leaves
         treeProject.expandAll();
     }

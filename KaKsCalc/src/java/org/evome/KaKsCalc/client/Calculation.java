@@ -8,7 +8,7 @@ package org.evome.KaKsCalc.client;
  *
  * @author nekoko
  */
-public class Calc {
+public class Calculation {
 
     private int calc_id, calc_project, calc_owner;
     private String calc_name, calc_comment;

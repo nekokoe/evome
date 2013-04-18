@@ -13,7 +13,7 @@ Uncomment this for XHTML entities
                 <g:Label>Project ID</g:Label>
             </g:customCell>
             <g:customCell>
-                <g:Label ui:field="lblProjectID">test</g:Label>
+                <g:Label ui:field="lblID">test</g:Label>
             </g:customCell>                    
         </g:row>
         <g:row>
@@ -21,7 +21,7 @@ Uncomment this for XHTML entities
                 <g:Label>Project Name</g:Label>
             </g:customCell>
             <g:customCell>
-                <g:Label ui:field="lblProjectName">test</g:Label>
+                <g:Label ui:field="lblName">test</g:Label>
             </g:customCell>                    
         </g:row>
         <g:row>
@@ -29,15 +29,31 @@ Uncomment this for XHTML entities
                 <g:Label>Project Owner</g:Label>
             </g:customCell>
             <g:customCell>
-                <g:Label ui:field="lblProjectOwner">test</g:Label>
+                <g:Label ui:field="lblOwner">test</g:Label>
             </g:customCell>                    
         </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Created on</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblCreate">test</g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Last Modified on</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblModify">test</g:Label>
+            </g:customCell>                    
+        </g:row>        
         <g:row>
             <g:customCell>
                 <g:Label>Project Details</g:Label>
             </g:customCell>
             <g:customCell>
-                <g:Label ui:field="lblProjectComment">test</g:Label>
+                <g:Label ui:field="lblComment">test</g:Label>
             </g:customCell>                    
         </g:row>                                
     </g:Grid>

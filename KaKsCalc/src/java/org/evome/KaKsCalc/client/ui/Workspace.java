@@ -21,7 +21,7 @@ import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import java.util.Iterator;
-
+import org.evome.KaKsCalc.client.Project;
 /**
  *
  * @author nekoko
@@ -75,6 +75,7 @@ public class Workspace extends Composite {
         final TaskUtils task = new TaskUtils();
         //add Tree View
         TreeView treeView = new TreeView();
+        
         treeView.addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewProperties>(){
             @Override
             public void onSelectionChanged(SelectionChangedEvent<TreeViewProperties> event){
@@ -84,6 +85,7 @@ public class Workspace extends Composite {
                     pnlWorkSpace.setHeadingText(itemValue);
                     if (itemValue.startsWith("project")){
                         pnlWorkSpace.add(project);
+                        project.setCurrentProject(new Project(itemValue));
                     }else if(itemValue.startsWith("calc")){
                         pnlWorkSpace.add(calculation);
                     }else if(itemValue.startsWith("task")){

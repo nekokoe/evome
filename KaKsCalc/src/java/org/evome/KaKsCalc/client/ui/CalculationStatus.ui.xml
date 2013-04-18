@@ -7,6 +7,64 @@ Uncomment this for XHTML entities
     <ui:style>
 
     </ui:style>
-    <g:HTMLPanel>
-    </g:HTMLPanel>
+    <g:Grid>
+        <g:row>
+            <g:customCell>
+                <g:Label>Calculation ID</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblID"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Calculation Name</g:Label>
+            </g:customCell>
+            <g:customCell>
+                
+                <g:Label ui:field="lblName"></g:Label>                
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Related Project</g:Label>
+                
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblProject"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Calculation Owner</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblOwner"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Created on</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblCreate"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Last Modified on</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblModify"></g:Label>
+            </g:customCell>                    
+        </g:row>                
+        <g:row>
+            <g:customCell>
+                <g:Label>Calculation Details</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblComment"></g:Label>
+            </g:customCell>                    
+        </g:row>                                
+    </g:Grid>
 </ui:UiBinder>

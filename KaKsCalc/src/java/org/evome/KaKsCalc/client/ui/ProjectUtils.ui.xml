@@ -41,7 +41,7 @@ Uncomment this for XHTML entities
             </toolbar:ToolBar>            
         </container:child>
         <container:child layoutData="{contentRowData}">
-            <g:SimplePanel ui:field="pnlProject">
+            <g:SimplePanel ui:field="panel">
                 
             </g:SimplePanel>
         </container:child>

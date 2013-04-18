@@ -44,7 +44,9 @@ Uncomment this for XHTML entities
         
         
         <container:child layoutData="{contentRowData}">
-            <!--<g:Label>test</g:Label>-->
+            <g:SimplePanel ui:field="panel">
+                
+            </g:SimplePanel>
         </container:child>
         
     </container:VerticalLayoutContainer>

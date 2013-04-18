@@ -9,20 +9,68 @@ Uncomment this for XHTML entities
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 >
-    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="verticalLayout">
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
         <ui:attributes width="1" height="-1" />
     </ui:with>
-    
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="flexVerticalLayout">
+        <ui:attributes width="1" height="1" />
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData" field="defaultHorizontalLayout">
+        <ui:attributes width="-1" height="1" />
+    </ui:with>
+        
     <ui:style>
 
     </ui:style>
-    <g:VerticalPanel spacing="10">
-        <gxt:FramedPanel ui:field="pnlCalcEditForm" width="400">
-            <container:VerticalLayoutContainer>
-                <container:child layoutData="{verticalLayout}">
-                    
-                </container:child>
-            </container:VerticalLayoutContainer>
-        </gxt:FramedPanel>        
-    </g:VerticalPanel>
+        <container:VerticalLayoutContainer>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Calculation ID" ui:field="fieldID">
+                    <form:widget>
+                        <form:TextField ui:field="txtCalcID" />
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Calculation Owner" ui:field="fieldOwner">
+                    <form:widget>
+                        <form:TextField ui:field="txtCalcOwner"/>
+                    </form:widget>
+                </form:FieldLabel>                
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Related Project" ui:field="fieldProject">
+                    <form:widget>
+                        <form:TextField ui:field="txtCalcProject"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Calculation Name">
+                    <form:widget>
+                        <form:TextField ui:field="txtCalcName" allowBlank="false"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child>
+                <form:FieldLabel text="Calculation Details">
+                    <form:widget>
+                        <form:TextField ui:field="txtCalcComment"/>
+                    </form:widget>
+                </form:FieldLabel> 
+            </container:child>
+            <container:child layoutData="{flexVerticalLayout}">
+                
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <container:HorizontalLayoutContainer>
+                    <container:child layoutData="{defaultHorizontalLayout}">
+                        <button:TextButton ui:field="btnSave">Save</button:TextButton>    
+                    </container:child>
+                    <container:child layoutData="{defaultHorizontalLayout}">
+                        <button:TextButton ui:field="btnCancel">Cancel</button:TextButton>
+                    </container:child>                    
+                </container:HorizontalLayoutContainer>
+            </container:child>
+        </container:VerticalLayoutContainer>
+
 </ui:UiBinder>

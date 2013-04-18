@@ -33,13 +33,13 @@ public class ProjectEdit extends Window {
         setWidget(uiBinder.createAndBindUi(this));
         init();
         //fill fields with given project
-//        txtProjectID.setText(Integer.toString(project.getId()));
-//        txtProjectOwner.setText(project.getOwnerName());
-//        txtProjectName.setText(project.getName());
-//        txtProjectComment.setText(project.getComment());
+        txtProjectID.setValue(Integer.toString(project.getId()));
+        txtProjectOwner.setValue(project.getOwnerName());
+        txtProjectName.setValue(project.getName());
+        txtProjectComment.setValue(project.getComment());
 //        //set id and owner read only
-//        txtProjectID.setReadOnly(true);
-//        txtProjectOwner.setReadOnly(true);        
+        txtProjectID.setReadOnly(true);
+        txtProjectOwner.setReadOnly(true);        
     }
     
     public ProjectEdit() {
@@ -60,11 +60,13 @@ public class ProjectEdit extends Window {
     @UiHandler("btnSave")
     public void onSaveClick(SelectEvent event){
         //process data update
+        this.hide();
     }
     
     @UiHandler("btnCancel")
     public void onCancelClick(SelectEvent event){
-        //return 
+        //return
+        this.hide();
     }
     
     

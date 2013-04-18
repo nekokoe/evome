@@ -7,6 +7,111 @@ Uncomment this for XHTML entities
     <ui:style>
 
     </ui:style>
-    <g:HTMLPanel>
-    </g:HTMLPanel>
+    <g:Grid>
+        <g:row>
+            <g:customCell>
+                <g:Label>Task ID</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblID"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Task Name</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblName"></g:Label>
+            </g:customCell>                    
+        </g:row>        
+        <g:row>
+            <g:customCell>
+                <g:Label>Task Status</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblStatus"></g:Label>                
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Task Owner</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblOwner"></g:Label>                
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Related Calculation</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblCalc"></g:Label>
+            </g:customCell>                    
+        </g:row>        
+        <g:row>
+            <g:customCell>
+                <g:Label>Related Project</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblProject"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Queue Rank</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblQueueRank"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Priority</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblPriority"></g:Label>
+            </g:customCell>                    
+        </g:row>        
+        <g:row>
+            <g:customCell>
+                <g:Label>Task Created on</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblCreate"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Last Modified on</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblModify"></g:Label>
+            </g:customCell>                    
+        </g:row>                
+        <g:row>
+            <g:customCell>
+                <g:Label>Finished on</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblFinish"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Parameters</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblParam"></g:Label>
+            </g:customCell>                    
+        </g:row>
+        <g:row>
+            <g:customCell>
+                <g:Label>Task Description</g:Label>
+            </g:customCell>
+            <g:customCell>
+                <g:Label ui:field="lblComment"></g:Label>
+            </g:customCell>                    
+        </g:row>                                
+    </g:Grid>
+
 </ui:UiBinder>
