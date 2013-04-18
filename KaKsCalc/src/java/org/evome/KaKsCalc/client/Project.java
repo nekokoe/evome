@@ -14,7 +14,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class Project implements IsSerializable{
     private int id, owner;
-    private String name, ownerName, comment;
+    private String name, ownerText, comment;
     
     public Project(String name){//for test purpose
         this.name = name;
@@ -29,8 +29,8 @@ public class Project implements IsSerializable{
     public void setOwner(int owner){
         this.owner = owner;
     }
-    public void setOwnerName(String name){
-        this.ownerName = name;
+    public void setOwnerText(String owner){
+        this.ownerText = owner;
     }
     public void setName(String name){
         this.name = name;
@@ -45,8 +45,8 @@ public class Project implements IsSerializable{
     public int getOwner(){
         return this.owner;
     }
-    public String getOwnerName(){
-        return this.ownerName;
+    public String getOwnerText(){
+        return this.ownerText;
     }
     public String getName(){
         return this.name;

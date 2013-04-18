@@ -15,12 +15,16 @@ import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.evome.KaKsCalc.client.Task;
+import org.evome.KaKsCalc.client.Job;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class TaskManager {
 
     private static DBConnector dbconn = new DBConnector();
     private static SysConfig sysconf = new SysConfig();
-
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
     public TaskManager() {
     }
     
@@ -37,10 +41,10 @@ public class TaskManager {
             if (rs.next()) {
                 task = new Task();
                 task.setComment(rs.getString("comment"));
-                task.setCreateDate(rs.getDate("create"));
-                task.setFinishDate(rs.getDate("finish"));
-                task.setModifyDate(rs.getDate("modify"));
-                task.setDeleteDate(rs.getDate("delete"));
+                task.setCreateDate(sdf.format(rs.getDate("create")));
+                task.setFinishDate(sdf.format(rs.getDate("finish")));
+                task.setModifyDate(sdf.format(rs.getDate("modify")));
+                task.setDeleteDate(sdf.format(rs.getDate("delete")));
                 task.setId(rs.getInt("id"));
                 task.setName(rs.getString("name"));
                 task.setOwner(rs.getInt("owner"));
@@ -88,7 +92,7 @@ public class TaskManager {
     public boolean modify(Task task) {
         String sql = "UPDATE `task` SET ("
                 + "modify = '" + dbconn.getSqlTime() + "',"
-                + "finish = '" + task.getFinishDateSimpleFormat() + "',"
+                + "finish = '" + task.getFinishDate() + "',"
                 + "status = " + task.getStatus() + ","
                 + "owner = " + task.getOwner() + ","
                 + "calculation = " + task.getCalculation() + ","
@@ -131,7 +135,7 @@ public class TaskManager {
                 +"name = 'task_" + task.getId() + "',"
                 +"submit = '" + dbconn.getSqlTime() + "',"
                 +"queue = '" + "1" + "',"
-                +"status = " + Task.JOB_QUEUE + ","
+                +"status = " + Job.JOB_QUEUE + ","
                 +"prank = " + task.getPriorityRank() + ","
                 +"qrank = " + task.getQueueRank() + ""
                 +")";
@@ -151,7 +155,7 @@ public class TaskManager {
     public void terminate(Task task){
         //terminate task in queue
         String sql = "UPDATE `job` SET ("
-                + "status = " + Task.JOB_KILL
+                + "status = " + Job.JOB_KILL
                 + ") WHERE task = " + task.getId();
         ResultSet rs = dbconn.execQuery(sql);        
     }
@@ -166,9 +170,9 @@ public class TaskManager {
                 ResultSet rs2 = dbconn.execQuery(sql);
                 if (rs2.next()){
                     int job_status = rs2.getInt("status");
-                    if (job_status == Task.JOB_RUN 
-                            || job_status ==Task.JOB_KILL 
-                            || job_status == Task.JOB_HOLD){
+                    if (job_status == Job.JOB_RUN 
+                            || job_status == Job.JOB_KILL 
+                            || job_status == Job.JOB_HOLD){
                         continue;
                     }    
                 }
