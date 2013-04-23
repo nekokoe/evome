@@ -21,6 +21,10 @@ import org.evome.KaKsCalc.client.Project;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
+import org.evome.KaKsCalc.client.rpc.GWTServiceAccount;
+import org.evome.KaKsCalc.client.rpc.GWTServiceAccountAsync;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 /**
  *
  * @author nekoko
@@ -30,8 +34,10 @@ import com.sencha.gxt.widget.core.client.event.HideEvent;
  */
 public class ProjectUtils extends Composite {
     
-    private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
     private Project current = new Project();
+
+    private static GWTServiceAccountAsync rpc_account = GWT.create(GWTServiceAccount.class);
+    private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
     
     interface ProjectUtilsUiBinder extends UiBinder<Widget, ProjectUtils> {
     }
@@ -53,7 +59,7 @@ public class ProjectUtils extends Composite {
     }
     
     @UiHandler("btnProjectDel")
-    public void btnProjectDelCLick(SelectEvent event){
+    public void btnProjectDelClick(SelectEvent event){
         ConfirmMessageBox confirm = 
                 new ConfirmMessageBox("Confirm", "Are you sure want to delete : " + current.getName() + " ? <br>"
                 + "All data under this project will be deleted!");
@@ -70,6 +76,23 @@ public class ProjectUtils extends Composite {
         confirm.show();
     }
     
+    @UiHandler("btnAddCalc")
+    public void btnAddCalcClick(SelectEvent event){
+        rpc_account.test(new AsyncCallback<String>(){
+            @Override
+            public void onSuccess(String str){
+                com.google.gwt.user.client.Window.alert(str);
+            }
+            @Override
+            public void onFailure(Throwable caught){
+                
+            }
+        });
+        //CalculationAdd add = new CalculationAdd(current);
+        //add.show();        
+    }
+    
+    
     
     @UiField
     SimplePanel panel;
@@ -80,4 +103,5 @@ public class ProjectUtils extends Composite {
         panel.clear();
         panel.add(new ProjectStatus(current));
     }
+    
 }

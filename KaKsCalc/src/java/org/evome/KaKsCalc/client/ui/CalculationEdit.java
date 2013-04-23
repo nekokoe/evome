@@ -7,6 +7,7 @@ package org.evome.KaKsCalc.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.widget.core.client.Window;
@@ -14,7 +15,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import org.evome.KaKsCalc.client.Calculation;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
-import com.google.gwt.uibinder.client.UiField;
+
 
 /**
  *

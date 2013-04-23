@@ -18,7 +18,7 @@ import org.evome.KaKsCalc.client.Task;
  */
 public class TaskStatus extends Composite {
     
-    private Task task;
+    private Task current;
     
     private static TaskStatusUiBinder uiBinder = GWT.create(TaskStatusUiBinder.class);
     
@@ -38,7 +38,7 @@ public class TaskStatus extends Composite {
     
     
     public final void setTask(Task task){
-        this.task = task;
+        this.current = task;
         lblID.setText(Integer.toString(task.getId()));
         lblName.setText(task.getName());
         lblStatus.setText(Task.statusText(task.getStatus()));

@@ -4,6 +4,8 @@
  */
 package org.evome.KaKsCalc.client;
 
+import org.evome.KaKsCalc.client.rpc.GWTServiceDatabase;
+import org.evome.KaKsCalc.client.rpc.GWTServiceAccount;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 

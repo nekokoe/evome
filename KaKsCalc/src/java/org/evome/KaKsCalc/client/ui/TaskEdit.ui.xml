@@ -1,0 +1,91 @@
+<!--
+Uncomment this for XHTML entities
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+-->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:gxt="urn:import:com.sencha.gxt.widget.core.client"
+             xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
+             xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
+             xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
+>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
+        <ui:attributes width="1" height="-1" />
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="flexVerticalLayout">
+        <ui:attributes width="1" height="1" />
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData" field="defaultHorizontalLayout">
+        <ui:attributes width="-1" height="1" />
+    </ui:with>
+        
+    <ui:style>
+
+    </ui:style>
+        <container:VerticalLayoutContainer>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Task ID" ui:field="fieldID">
+                    <form:widget>
+                        <form:TextField ui:field="txtID" />
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Task Owner" ui:field="fieldOwner">
+                    <form:widget>
+                        <form:TextField ui:field="txtOwner"/>
+                    </form:widget>
+                </form:FieldLabel>                
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Related Project" ui:field="fieldProject">
+                    <form:widget>
+                        <form:TextField ui:field="txtProject"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Related Calculation" ui:field="fieldCalc">
+                    <form:widget>
+                        <form:TextField ui:field="txtCalc"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Task Name">
+                    <form:widget>
+                        <form:TextField ui:field="txtName" allowBlank="false"/>
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <form:FieldLabel text="Codon Selection">
+                    <form:widget>
+                        <!--<form:ComboBox ui:field="comboCodon"/>-->
+                    </form:widget>
+                </form:FieldLabel>
+            </container:child>
+            <container:child>
+                <form:FieldLabel text="Task Details">
+                    <form:widget>
+                        <form:TextField ui:field="txtComment"/>
+                    </form:widget>
+                </form:FieldLabel> 
+            </container:child>
+            <container:child layoutData="{flexVerticalLayout}">
+                
+            </container:child>
+            <container:child layoutData="{defaultVerticalLayout}">
+                <container:HorizontalLayoutContainer>
+                    <container:child layoutData="{defaultHorizontalLayout}">
+                        <button:TextButton ui:field="btnSave">Save</button:TextButton>    
+                    </container:child>
+                    <container:child layoutData="{defaultHorizontalLayout}">
+                        <button:TextButton ui:field="btnCancel">Cancel</button:TextButton>
+                    </container:child>                    
+                </container:HorizontalLayoutContainer>
+            </container:child>
+        </container:VerticalLayoutContainer>
+
+
+</ui:UiBinder>

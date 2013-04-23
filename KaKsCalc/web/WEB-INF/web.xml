@@ -4,10 +4,20 @@
         <servlet-name>GWTService</servlet-name>
         <servlet-class>org.evome.KaKsCalc.server.GWTServiceImpl</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GWTServiceAccount</servlet-name>
+        <servlet-class>org.evome.KaKsCalc.server.rpc.GWTServiceAccountImpl</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>GWTService</servlet-name>
         <url-pattern>/org.evome.KaKsCalc.Main/gwtservice</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GWTServiceAccount</servlet-name>
+        <url-pattern>/org.evome.KaKsCalc.Main/gwtserviceaccount</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30

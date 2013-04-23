@@ -13,11 +13,17 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.evome.KaKsCalc.client.Task;
+
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.event.HideEvent;
+
 /**
  *
  * @author nekoko
  */
 public class TaskUtils extends Composite {
+    
+    private Task current;
     
     private static TaskUtilsUiBinder uiBinder = GWT.create(TaskUtilsUiBinder.class);
     
@@ -33,4 +39,10 @@ public class TaskUtils extends Composite {
     
     @UiField
     VerticalPanel panel;
+    
+    @UiHandler("btnTaskEdit")
+    public void onTaskEditClick(SelectEvent event){
+        panel.clear();
+        panel.add(new TaskEdit(current));
+    }
 }
