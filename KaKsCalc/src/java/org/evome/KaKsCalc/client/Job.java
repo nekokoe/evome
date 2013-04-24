@@ -4,22 +4,20 @@
  */
 package org.evome.KaKsCalc.client;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  *
  * @author nekoko
  */
-public class Job {
+public class Job implements IsSerializable{
 
     //sql data
     private int job_id, job_task, job_queue, job_status, job_prank, job_qrank;
     private int job_req_cpu, job_req_mem;
     private String job_name;
-    private Date job_submit;
+    private String job_submit;
     //runtime data
-    private Thread job_thread;
     private Calculation job_calc;
     
     
@@ -59,7 +57,7 @@ public class Job {
         this.job_name = name;
     }
 
-    public void setSubmitDate(Date submit) {
+    public void setSubmitDate(String submit) {
         this.job_submit = submit;
     }
     
@@ -69,9 +67,7 @@ public class Job {
     public void setReqMem(int mem){
         this.job_req_mem = mem;
     }
-    public void setThread(Thread thread){
-        this.job_thread = thread;
-    }
+
     public void setCalculation(Calculation calc){
         this.job_calc = calc;
     }
@@ -104,20 +100,10 @@ public class Job {
         return this.job_name;
     }
 
-    public Date getSubmitDate() {
+    public String getSubmitDate() {
         return this.job_submit;
     }
 
-    public String getSubmitDateSimpleFormat() {
-        return getSimpleDateFormat(this.job_submit);
-    }
-
-    private String getSimpleDateFormat(Date d) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = sdf.format(d);
-        return dateStr;
-    }
-    
     public int getReqCPU(){
         return this.job_req_cpu;
     }
@@ -126,9 +112,6 @@ public class Job {
         return this.job_req_mem;
     }
     
-    public Thread getThread(){
-        return this.job_thread;
-    }
     public Calculation getCalculation(){
         return this.job_calc;
     }

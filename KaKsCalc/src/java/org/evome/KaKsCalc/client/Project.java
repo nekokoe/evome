@@ -15,6 +15,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 public class Project implements IsSerializable{
     private int id, owner;
     private String name, ownerText, comment;
+    private String create, modify;  //store date as string
     
     public Project(String name){//for test purpose
         this.name = name;
@@ -38,6 +39,12 @@ public class Project implements IsSerializable{
     public void setComment(String comment){
         this.comment = comment;
     }
+    public void setCreateDate(String create){
+        this.create = create;
+    }
+    public void setModifyDate(String modify){
+        this.modify = modify;
+    }
     
     public int getId(){
         return this.id;
@@ -53,5 +60,11 @@ public class Project implements IsSerializable{
     }
     public String getComment(){
         return this.comment;
+    }
+    public String getCreateDate(){
+        return this.create;
+    }
+    public String getModifyDate(){
+        return this.modify;
     }
 }

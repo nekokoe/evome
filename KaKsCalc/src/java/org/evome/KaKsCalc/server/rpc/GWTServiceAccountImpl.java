@@ -12,8 +12,5 @@ import org.evome.KaKsCalc.client.rpc.GWTServiceAccount;
  * @author nekoko
  */
 public class GWTServiceAccountImpl extends RemoteServiceServlet implements GWTServiceAccount{
-    @Override
-    public String test(){
-        return "This messages is returned from server";
-    }
+
 }

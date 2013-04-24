@@ -12,5 +12,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("gwtserviceaccount")
 public interface GWTServiceAccount extends RemoteService{
-    public String test();
+
 }
