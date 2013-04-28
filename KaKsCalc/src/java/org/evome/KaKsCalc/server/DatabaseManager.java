@@ -26,7 +26,7 @@ public class DatabaseManager {
     private static DBConnector dbconn = new DBConnector();
     private static SysConfig sysconf = new SysConfig();
     
-    public Project getProject(int project_id){
+    public static Project getProject(int project_id){
         Project pj = new Project();
         String sql = "SELECT * FROM `project` WHERE id = " + project_id;
         try{
@@ -34,15 +34,14 @@ public class DatabaseManager {
             if (rs.next()){
                 pj.setId(project_id);
                 pj.setName(rs.getString("name"));
-                pj.setOwner(rs.getInt("owner"));
-                pj.setOwnerText(AccountManager.getAccount(rs.getInt("owner")).getFullName());
+                pj.setOwner(AccountManager.getAccount(rs.getInt("owner")));
                 pj.setCreateDate(rs.getDate("create"));
                 pj.setModifyDate(rs.getDate("modify"));                
             }else{
                 pj = null;    //return null if no this project or else
             }
         }catch(Exception ex){
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);            
             pj = null;
         }
         return pj;
@@ -54,11 +53,22 @@ public class DatabaseManager {
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
-                calc.set
+                calc.setComment(rs.getString("comment"));
+                calc.setId(rs.getInt("id"));
+                calc.setName(rs.getString("name"));
+                calc.setOwner(rs.getInt("owner"));
+                calc.setOwnerText();
+                calc.setProject(rs.getInt("project"));
+                calc.setCreateTime(rs.getDate("create"));
+                calc.setModifyTime(rs.getDate("modify"));
+            }else{
+                calc = null;
             }
         }catch(Exception ex){
-            
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            calc = null;
         }
+        return calc;
     }
     
     public Task getTask(int task_id){

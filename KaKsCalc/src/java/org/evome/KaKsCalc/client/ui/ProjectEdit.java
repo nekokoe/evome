@@ -34,7 +34,7 @@ public class ProjectEdit extends Window {
         init();
         //fill fields with given project
         txtProjectID.setValue(Integer.toString(project.getId()));
-        txtProjectOwner.setValue(project.getOwnerText());
+        txtProjectOwner.setValue(project.getOwner().getFullName());
         txtProjectName.setValue(project.getName());
         txtProjectComment.setValue(project.getComment());
 //        //set id and owner read only
