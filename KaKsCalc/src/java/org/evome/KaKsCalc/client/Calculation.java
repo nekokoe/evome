@@ -14,7 +14,9 @@ import java.util.Date;
 
 public class Calculation implements IsSerializable{
 
-    private int calc_id, calc_project, calc_owner;
+    private int calc_id;
+    private Account owner;
+    private Project project;
     private String calc_name, calc_comment;
     private Date create, modify;
     private String owner_text;
@@ -23,12 +25,12 @@ public class Calculation implements IsSerializable{
         this.calc_id = id;
     }
 
-    public void setProject(int project) {
-        this.calc_project = project;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public void setOwner(int owner) {
-        this.calc_owner = owner;
+    public void setOwner(Account owner) {
+        this.owner = owner;
     }
     
     public void setOwnerText(String text){
@@ -55,12 +57,12 @@ public class Calculation implements IsSerializable{
         return this.calc_id;
     }
 
-    public int getProject() {
-        return this.calc_project;
+    public Project getProject() {
+        return this.project;
     }
 
-    public int getOwner() {
-        return this.calc_owner;
+    public Account getOwner() {
+        return this.owner;
     }
     
     public String getOwnerText(){

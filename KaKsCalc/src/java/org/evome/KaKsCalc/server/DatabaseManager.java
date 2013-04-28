@@ -47,7 +47,7 @@ public class DatabaseManager {
         return pj;
     }
     
-    public Calculation getCalculation(int calc_id){
+    public static Calculation getCalculation(int calc_id){
         Calculation calc = new Calculation();
         String sql = "SELECT * FROM `calculation` WHERE id = " + calc_id;
         try{
@@ -56,16 +56,15 @@ public class DatabaseManager {
                 calc.setComment(rs.getString("comment"));
                 calc.setId(rs.getInt("id"));
                 calc.setName(rs.getString("name"));
-                calc.setOwner(rs.getInt("owner"));
-                calc.setOwnerText();
-                calc.setProject(rs.getInt("project"));
+                calc.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                calc.setProject(DatabaseManager.getProject(rs.getInt("project")));
                 calc.setCreateTime(rs.getDate("create"));
                 calc.setModifyTime(rs.getDate("modify"));
             }else{
                 calc = null;
             }
         }catch(Exception ex){
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
             calc = null;
         }
         return calc;
