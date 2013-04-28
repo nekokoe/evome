@@ -34,8 +34,6 @@ public class MainEntryPoint implements EntryPoint {
     //if session is still alive at the server end, trying to recover thde session data to UI
     private String sessionID;
     
-    private GWTServiceAsync rpc = GWTServiceUsageExample.getService();
-    
     public MainEntryPoint() {
     }
 

@@ -10,12 +10,13 @@ package org.evome.KaKsCalc.client;
  */
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import java.util.Date;
 
 
 public class Project implements IsSerializable{
     private int id, owner;
     private String name, ownerText, comment;
-    private String create, modify;  //store date as string
+    private Date create, modify;
     
     public Project(String name){//for test purpose
         this.name = name;
@@ -39,10 +40,10 @@ public class Project implements IsSerializable{
     public void setComment(String comment){
         this.comment = comment;
     }
-    public void setCreateDate(String create){
+    public void setCreateDate(Date create){
         this.create = create;
     }
-    public void setModifyDate(String modify){
+    public void setModifyDate(Date modify){
         this.modify = modify;
     }
     
@@ -61,10 +62,10 @@ public class Project implements IsSerializable{
     public String getComment(){
         return this.comment;
     }
-    public String getCreateDate(){
+    public Date getCreateDate(){
         return this.create;
     }
-    public String getModifyDate(){
+    public Date getModifyDate(){
         return this.modify;
     }
 }

@@ -8,10 +8,16 @@ package org.evome.KaKsCalc.client;
  *
  * @author nekoko
  */
+
+import com.google.gwt.user.client.rpc.IsSerializable;
+import java.util.Date;
+
 public class Calculation {
 
     private int calc_id, calc_project, calc_owner;
     private String calc_name, calc_comment;
+    private Date create, modify;
+    
 
     public void setId(int id) {
         this.calc_id = id;
@@ -32,6 +38,14 @@ public class Calculation {
     public void setComment(String comment) {
         this.calc_comment = comment;
     }
+    
+    public void setCreateTime(Date date){
+        this.create = date;
+    }
+    public void setModifyTime(Date date){
+        this.modify = date;
+    }
+    
 
     public int getId() {
         return this.calc_id;

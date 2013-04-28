@@ -35,17 +35,30 @@ public class DatabaseManager {
                 pj.setId(project_id);
                 pj.setName(rs.getString("name"));
                 pj.setOwner(rs.getInt("owner"));
-                pj.setOwnerText(sql);
+                pj.setOwnerText(AccountManager.getAccount(rs.getInt("owner")).getFullName());
+                pj.setCreateDate(rs.getDate("create"));
+                pj.setModifyDate(rs.getDate("modify"));                
             }else{
-                return null;    //return null if no this project or else
+                pj = null;    //return null if no this project or else
             }
         }catch(Exception ex){
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
-        }        
+            pj = null;
+        }
+        return pj;
     }
     
     public Calculation getCalculation(int calc_id){
-        
+        Calculation calc = new Calculation();
+        String sql = "SELECT * FROM `calculation` WHERE id = " + calc_id;
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                calc.set
+            }
+        }catch(Exception ex){
+            
+        }
     }
     
     public Task getTask(int task_id){

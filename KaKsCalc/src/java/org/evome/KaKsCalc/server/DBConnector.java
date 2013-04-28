@@ -68,10 +68,28 @@ public class DBConnector {
         return connect;
     }
 
-    public String getSqlTime() {
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = sdf.format(date);
-        return dateStr;
+    public String getSQLTime() {
+        return getSQLTime(new Date());
     }
+    
+    public String getSQLTime(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(date);
+    }
+    
+//    public Connection getAccountDBConn(){
+//        Connection connect = null;
+//        String driver = "com.mysql.jdbc.Driver";
+//        try {
+//            Class.forName(driver).newInstance();
+//        } catch (Exception ex) {
+//        }
+//
+//        try {
+//            connect = DriverManager.getConnection(conf.DB_URL + conf.DB_NAME, conf.DB_USER, conf.DB_PASS);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return connect;        
+//    }
 }

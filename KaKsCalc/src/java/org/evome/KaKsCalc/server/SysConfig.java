@@ -24,6 +24,9 @@ public class SysConfig extends RemoteServiceServlet{
             DATA_ROOT_PATH = "",
             WORK_ROOT_PATH = "",
             ACCOUNT_DB = "",
+            ACCOUNT_DB_USER = "",
+            ACCOUNT_DB_PASS = "",
+            ACCOUNT_DB_URL = "",
             DB_NAME = "",
             DB_USER = "",
             DB_PASS = "",
@@ -78,10 +81,13 @@ public class SysConfig extends RemoteServiceServlet{
             //resolve setting hash
             //db connection
             this.DB_NAME = config.get("database");
-            this.ACCOUNT_DB = config.get("accountdb");
             this.DB_USER = config.get("username");
             this.DB_PASS = config.get("password");
             this.DB_URL = config.get("serverurl");
+            this.ACCOUNT_DB = config.get("accountdb");
+            this.ACCOUNT_DB_USER = config.get("accountdb_user");
+            this.ACCOUNT_DB_PASS = config.get("accountdb_pass");
+            this.ACCOUNT_DB_URL = config.get("accountdb_url");
             //activation
             this.EMAIL_SERVER = config.get("emailserver");
             this.EMAIL_PORT = Integer.parseInt(config.get("emailport"));

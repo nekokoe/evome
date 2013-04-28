@@ -12,5 +12,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface GWTServiceAsync {
 
-    public void myMethod(String s, AsyncCallback<String> callback);
+    public void getServerTime(AsyncCallback<Long> callback);
+
 }

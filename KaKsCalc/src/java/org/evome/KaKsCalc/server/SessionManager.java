@@ -4,10 +4,16 @@
  */
 package org.evome.KaKsCalc.server;
 
+import org.evome.KaKsCalc.client.Account;
+import org.evome.KaKsCalc.client.Session;
+import java.util.UUID;
+
 /**
  *
  * @author nekoko
  */
 public class SessionManager {
-    
+    public Session createSession4Account(Account account){
+        
+    }
 }

@@ -4,8 +4,6 @@
  */
 package org.evome.KaKsCalc.client;
 
-import org.evome.KaKsCalc.client.rpc.GWTServiceDatabase;
-import org.evome.KaKsCalc.client.rpc.GWTServiceAccount;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -16,5 +14,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("gwtservice")
 public interface GWTService extends RemoteService {
 
-    public String myMethod(String s);
+    public long getServerTime(); //server time in second from 1970-1-1
+    
 }

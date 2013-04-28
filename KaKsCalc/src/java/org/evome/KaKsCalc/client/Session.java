@@ -4,7 +4,10 @@
  */
 package org.evome.KaKsCalc.client;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.Date;
 
 /**
@@ -19,20 +22,16 @@ public class Session implements IsSerializable {
      */
 
     private int sessionID, userID;
-    private String accountKey;
+    private String uuid, auuid;
     private Date create, lastActive;
-    private int serverTime;
-
+    
+    
     public int getSessionID() {
         return this.sessionID;
     }
 
     public int getUserID() {
         return this.userID;
-    }
-
-    public String getAccountKey() {
-        return this.accountKey;
     }
 
     public Date getCreateTime() {
@@ -51,10 +50,6 @@ public class Session implements IsSerializable {
         this.userID = id;
     }
 
-    public void setAccountKey(String key) {
-        this.accountKey = key;
-    }
-
     public void setCreateTime(Date create) {
         this.create = create;
     }
@@ -63,10 +58,4 @@ public class Session implements IsSerializable {
         this.lastActive = active;
     }
     
-    
-    public static String toAccountKey(Account account){
-        //generate AccountKey from account
-        String userName = account.getEmail();
-        
-    }
 }

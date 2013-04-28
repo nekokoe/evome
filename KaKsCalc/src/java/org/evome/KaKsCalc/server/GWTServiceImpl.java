@@ -6,15 +6,19 @@ package org.evome.KaKsCalc.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.evome.KaKsCalc.client.GWTService;
+import org.evome.KaKsCalc.client.Session;
+import java.util.Date;
 
 /**
  *
  * @author nekoko
  */
 public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
-
-    public String myMethod(String s) {
-        // Do something interesting with 's' here on the server.
-        return "Server says: " + s.toUpperCase();
+    
+    @Override
+    public long getServerTime(){
+        Date date = new Date();
+        return date.getTime();
     }
+    
 }
