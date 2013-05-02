@@ -18,16 +18,28 @@ public class GWTServiceDatabaseImpl extends RemoteServiceServlet implements GWTS
         //add operations returns the generated ID, failed if 0 returned
     @Override
     public int addNewProject(Project project){
-        
+        return 0;
     };
-    public int addNewCalculation(Calculation calc);
-    public int addNewTask(Task task);
+    public int addNewCalculation(Calculation calc){
+        
+    }
+    public int addNewTask(Task task){
+        
+    }
     
-    public boolean editProject(Project project);
-    public boolean editCalculation(Calculation calc);
-    public boolean editTask(Task task);
+    public boolean editProject(Project project){
+        
+    }
+    public boolean editCalculation(Calculation calc){
+        
+    }
+    public boolean editTask(Task task){
+        
+    }
     
-    public boolean delProject(Project project);
+    public boolean delProject(Project project){
+        
+    }
     public boolean delCalculation(Calculation calc);
     public boolean delTask(Task task);
     

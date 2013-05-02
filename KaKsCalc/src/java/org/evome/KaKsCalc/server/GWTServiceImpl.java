@@ -8,6 +8,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.evome.KaKsCalc.client.GWTService;
 import org.evome.KaKsCalc.client.Session;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  *
@@ -21,4 +22,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
         return date.getTime();
     }
     
+    @Override
+    public String randomUUID(){
+        return UUID.randomUUID().toString();
+    }
 }

@@ -78,18 +78,18 @@ public class ProjectUtils extends Composite {
     
     @UiHandler("btnAddCalc")
     public void btnAddCalcClick(SelectEvent event){
-        rpc_account.test(new AsyncCallback<String>(){
-            @Override
-            public void onSuccess(String str){
-                com.google.gwt.user.client.Window.alert(str);
-            }
-            @Override
-            public void onFailure(Throwable caught){
-                
-            }
-        });
-        //CalculationAdd add = new CalculationAdd(current);
-        //add.show();        
+//        rpc_account.test(new AsyncCallback<String>(){
+//            @Override
+//            public void onSuccess(String str){
+//                com.google.gwt.user.client.Window.alert(str);
+//            }
+//            @Override
+//            public void onFailure(Throwable caught){
+//                
+//            }
+//        });
+        CalculationAdd add = new CalculationAdd(current);
+        add.show();        
     }
     
     

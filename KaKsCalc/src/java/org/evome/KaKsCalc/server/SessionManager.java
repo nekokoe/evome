@@ -14,6 +14,6 @@ import java.util.UUID;
  */
 public class SessionManager {
     public Session createSession4Account(Account account){
-        
+        return null;
     }
 }

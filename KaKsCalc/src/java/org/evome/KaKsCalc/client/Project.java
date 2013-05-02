@@ -69,4 +69,16 @@ public class Project implements IsSerializable{
     public Date getModifyDate(){
         return this.modify;
     }
+    
+    
+    //code below for test purpose
+    public static Project sampleData(){
+        Project sample = new Project();
+        sample.setComment("this is a test project");
+        sample.setCreateDate(new Date());
+        sample.setId(1);
+        sample.setModifyDate(new Date());
+        sample.setOwner(Account.sampleData());
+        return sample;
+    }
 }

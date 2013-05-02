@@ -41,14 +41,14 @@ public class TaskManager {
             if (rs.next()) {
                 task = new Task();
                 task.setComment(rs.getString("comment"));
-                task.setCreateDate(sdf.format(rs.getDate("create")));
-                task.setFinishDate(sdf.format(rs.getDate("finish")));
-                task.setModifyDate(sdf.format(rs.getDate("modify")));
-                task.setDeleteDate(sdf.format(rs.getDate("delete")));
+                task.setCreateDate(rs.getDate("create"));
+                task.setFinishDate(rs.getDate("finish"));
+                task.setModifyDate(rs.getDate("modify"));
+                task.setDeleteDate(rs.getDate("delete"));
                 task.setId(rs.getInt("id"));
                 task.setName(rs.getString("name"));
-                task.setOwner(rs.getInt("owner"));
-                task.setCalculation(rs.getInt("calculation"));
+                task.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                task.setCalculation(DatabaseManager.getCalculation(rs.getInt("calculation")));
                 task.setProjcet(rs.getInt("project"));
                 task.setPriorityRank(rs.getInt("prank"));
                 task.setQueueRank(rs.getInt("qrank"));

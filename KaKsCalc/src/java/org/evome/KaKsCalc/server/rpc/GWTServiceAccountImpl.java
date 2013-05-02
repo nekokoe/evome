@@ -15,6 +15,6 @@ import org.evome.KaKsCalc.client.rpc.GWTServiceAccount;
 public class GWTServiceAccountImpl extends RemoteServiceServlet implements GWTServiceAccount{
     @Override
     public Session createSession4Account(Account account){
-        
+        return null;
     }
 }

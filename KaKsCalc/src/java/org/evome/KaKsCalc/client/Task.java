@@ -9,43 +9,54 @@ package org.evome.KaKsCalc.client;
  * @author nekoko
  */
 import com.google.gwt.user.client.rpc.IsSerializable;
+import java.util.Date;
 
 public class Task implements IsSerializable {
-
-    private int task_id, task_status, task_owner, task_calc, task_project, task_QR, task_PR;
-    private String ownerText;
+    //vars
+    private int task_id, task_QR;
     private String task_comment, task_name;
-    private String task_create, task_finish, task_modify, task_delete;
+    private Date task_create, task_finish, task_modify, task_delete;
+    private Project project;
+    private Calculation calc;
+    private Account owner;
+    private Status status;
+    private Priority priority;
+    //kaks calculation params
+    private Gencode kaks_code;
+    private Method kaks_method;
     //Define task status
-    public static final int TASK_NEW = 0,
-            TASK_READY = 1,
-            TASK_RUNNING = 2,
-            TASK_SUCCESS = 3,
-            TASK_ERROR = 4,
-            TASK_STOPPED = 5,
-            TASK_PAUSED = 6,
-            TASK_REMOVED = 7;
+    public enum Status{
+        TASK_NEW,TASK_READY,TASK_RUNNING,TASK_SUCCESS,TASK_ERROR,TASK_STOPPED,TASK_PAUSED,TASK_REMOVED
+    }
     //Define task priority rank
-    public static final int TASK_PR_RELAX = 20,
-            TASK_PR_LOW = 15,
-            TASK_PR_NORMAL = 10,
-            TASK_PR_HIGH = 5,
-            TASK_PR_INTENSE = 0;
-
+    public enum Priority{
+        TASK_PR_INTENSE,TASK_PR_HIGH,TASK_PR_NORMAL,TASK_PR_LOW,TASK_PR_RELAX
+    }
+    //define KaKs method
+    public enum Method{
+        NG,LWL,LPB,MLWL,MLPB,YN,MYN,GY,MS,MA,GNG,GLWL,GMLWL,GLPB,GMLPB,GYN,GMYN,ALL
+    }
+    //define genetic code
+    //refer to: http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c
+    public enum Gencode{
+        u0,Standard,VM,YM,MPCM,IM,CDHN,u7,u8,EFM,EN,BAPP,AYN,AM,AFM,BN,CM,u17,u18,u19,u20,TM,SOM,TM2,PM
+    }
+    
+    
     //set methods
-    public void setCreateDate(String create) {
-        this.task_create = create;
+    public void setCreateDate(Date create) {
+        this.task_create = create;        
     }
 
-    public void setFinishDate(String finish) {
+    public void setFinishDate(Date finish) {
         this.task_finish = finish;
     }
 
-    public void setModifyDate(String modify) {
+    public void setModifyDate(Date modify) {
         this.task_modify = modify;
     }
 
-    public void setDeleteDate(String delete) {
+    public void setDeleteDate(Date delete) {
         this.task_delete = delete;
     }
 
@@ -53,30 +64,28 @@ public class Task implements IsSerializable {
         this.task_id = id;
     }
 
-    public void setStatus(int status) {
-        this.task_status = status;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public void setOwner(int owner) {
-        this.task_owner = owner;
-    }
-    public void setOwnerText(String owner){
-        this.ownerText = owner;
-    }
-    public void setCalculation(int calc) {
-        this.task_calc = calc;
+    public void setOwner(Account owner) {
+        this.owner = owner;
     }
 
-    public void setProjcet(int proj) {
-        this.task_project = proj;
+    public void setCalculation(Calculation calc) {
+        this.calc = calc;
+    }
+
+    public void setProjcet(Project proj) {
+        this.project = proj;
     }
 
     public void setQueueRank(int rank) {
         this.task_QR = rank;
     }
 
-    public void setPriorityRank(int rank) {
-        this.task_PR = rank;
+    public void setPriorityRank(Priority rank) {
+        this.priority = rank;
     }
 
     public void setComment(String comment) {
@@ -96,126 +105,81 @@ public class Task implements IsSerializable {
         return task_comment;
     }
 
-    public int getPriorityRank() {
-        return task_PR;
+    public Priority getPriorityRank() {
+        return priority;
     }
 
     public int getQueueRank() {
         return task_QR;
     }
 
-    public int getOwner() {
-        return task_owner;
-    }
-    public String getOwnerText(){
-        return this.ownerText;
-    }
-    public int getCalculation() {
-        return task_calc;
+    public Account getOwner() {
+        return owner;
     }
 
-    public int getProject() {
-        return task_project;
+    public Calculation getCalculation() {
+        return calc;
     }
 
-    public int getStatus() {
-        return task_status;
+    public Project getProject() {
+        return project;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     public int getId() {
         return task_id;
     }
 
-    public String getCreateDate() {
+    public Date getCreateDate() {
         return task_create;
     }
 
-    public String getFinishDate() {
+    public Date getFinishDate() {
         return task_finish;
     }
 
-    public String getModifyDate() {
+    public Date getModifyDate() {
         return this.task_modify;
     }
 
-    public String getDeleteDate() {
+    public Date getDeleteDate() {
         return this.task_delete;
     }
     
-    //kaks calculation params
-    private int kaks_c;
-    private String kaks_m;
-    
-    public void setKaKsGeneticCode(int c){
-        this.kaks_c = c;
+    public void setKaKsGeneticCode(Gencode code){
+        this.kaks_code = code;
     }
-    public void setKaKsMethod(String m){
-        this.kaks_m = m;
+    public void setKaKsMethod(Method m){
+        this.kaks_method = m;
     }
-    public int getKaKsGeneticCode(){
-        return this.kaks_c;
+    public Gencode getKaKsGeneticCode(){
+        return this.kaks_code;
     }
-    public String getKaKsMethod(){
-        return this.kaks_m;
+    public Method getKaKsMethod(){
+        return this.kaks_method;
     }
     
-    //text description of status, used for UI
-    public static String statusText(int status) {
-        switch (status) {
-            case TASK_NEW:
-                return "TASK_NEW";
-            case TASK_READY:
-                return "TASK_READY";
-            case TASK_RUNNING:
-                return "TASK_RUNNING";
-            case TASK_SUCCESS:
-                return "TASK_SUCCESS";
-            case TASK_ERROR:
-                return "TASK_ERROR";
-            case TASK_STOPPED:
-                return "TASK_STOPPED";
-            case TASK_PAUSED:
-                return "TASK_PAUSED";
-            case TASK_REMOVED:
-                return "TASK_REMOVED";
-            default:
-                return "unknown status";
-        }
-    }
-    
-    public static String priorityText(int priority){
-        switch(priority){
-            case TASK_PR_RELAX:
-                return "TASK_PR_RELAX";
-            case TASK_PR_LOW:
-                return "TASK_PR_LOW";
-            case TASK_PR_NORMAL:
-                return "TASK_PR_NORMAL";
-            case TASK_PR_HIGH:
-                return "TASK_PR_HIGH";
-            case TASK_PR_INTENSE:
-                return "TASK_PR_INTENSE";
-            default:
-                return "unknown priority class";
-        }
-    }
-    
-    public void applySampleData(){
-        this.kaks_c = 1;
-        this.kaks_m = "GYN";
-        this.ownerText = "test";
-        this.task_PR = 1;
-        this.task_QR = 1;
-        this.task_calc = 1;
-        this.task_comment = "this is a sample data";
-        this.task_create = "2000-01-01 12:34:56";
-        this.task_finish = "";
-        this.task_id = 1;
-        this.task_modify = "";
-        this.task_name = "test";
-        this.task_owner = 1;
-        this.task_project = 1;
-        this.task_status = 1;
+    //code below for test purpose
+    public static Task sampleData(){
+        Task sample = new Task();
+        sample.setCalculation(Calculation.sampleData());
+        sample.setComment("this is a sample task");
+        sample.setCreateDate(new Date());
+        sample.setFinishDate(new Date());
+        sample.setId(1);
+        sample.setKaKsGeneticCode(Gencode.Standard);
+        sample.setKaKsMethod(Method.MA);
+        sample.setModifyDate(new Date());
+        sample.setName("test");
+        sample.setOwner(Account.sampleData());
+        sample.setPriorityRank(Priority.TASK_PR_LOW);
+        sample.setProjcet(Project.sampleData());
+        sample.setQueueRank(0);
+        sample.setStatus(Status.TASK_NEW);
+        return sample;
     }
     
 }

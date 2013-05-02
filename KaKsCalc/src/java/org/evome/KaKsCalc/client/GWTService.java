@@ -15,5 +15,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface GWTService extends RemoteService {
 
     public long getServerTime(); //server time in second from 1970-1-1
-    
+    public String randomUUID(); //require the server for a new random UUID
 }

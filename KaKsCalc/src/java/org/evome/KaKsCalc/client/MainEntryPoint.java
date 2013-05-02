@@ -5,6 +5,7 @@
 package org.evome.KaKsCalc.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -13,6 +14,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 import org.evome.KaKsCalc.client.ui.*;
 
+import org.evome.KaKsCalc.client.rpc.*;
 
 
 
@@ -28,6 +30,7 @@ public class MainEntryPoint implements EntryPoint {
     /**
      * Creates a new instance of MainEntryPoint
      */
+    
     
     //session id is generated when browsing the main page
     //session is associated with user and at the server end
@@ -49,4 +52,5 @@ public class MainEntryPoint implements EntryPoint {
         RootPanel.get().add(new Workspace());
         
     }
+
 }

@@ -41,15 +41,15 @@ public class TaskStatus extends Composite {
         this.current = task;
         lblID.setText(Integer.toString(task.getId()));
         lblName.setText(task.getName());
-        lblStatus.setText(Task.statusText(task.getStatus()));
-        lblOwner.setText(task.getOwnerText());
-        lblCalc.setText(Integer.toString(task.getCalculation()));
-        lblProject.setText(Integer.toString(task.getProject()));
+        lblStatus.setText(task.getStatus().name());
+        lblOwner.setText(task.getOwner().getFullName());
+        lblCalc.setText(task.getCalculation().getName());
+        lblProject.setText(task.getProject().getName());
         lblQueueRank.setText(Integer.toString(task.getQueueRank()));
-        lblPriority.setText(Integer.toString(task.getPriorityRank()));
-        lblCreate.setText(task.getCreateDate());
-        lblModify.setText(task.getModifyDate());
-        lblFinish.setText(task.getFinishDate());
+        lblPriority.setText(task.getPriorityRank().name());
+        lblCreate.setText(task.getCreateDate().toString());
+        lblModify.setText(task.getModifyDate().toString());
+        lblFinish.setText(task.getFinishDate().toString());
         lblParam.setText("c=" + task.getKaKsGeneticCode() + "; m=" + task.getKaKsMethod());
         lblComment.setText(task.getComment());
     }

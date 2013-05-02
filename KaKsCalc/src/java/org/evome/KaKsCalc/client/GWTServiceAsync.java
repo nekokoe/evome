@@ -13,5 +13,5 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface GWTServiceAsync {
 
     public void getServerTime(AsyncCallback<Long> callback);
-
+    public void randomUUID(AsyncCallback<String> callback);
 }

@@ -32,8 +32,7 @@ public class TaskUtils extends Composite {
     
     public TaskUtils() {
         initWidget(uiBinder.createAndBindUi(this));
-        Task task = new Task();
-        task.applySampleData();
+        Task task = Task.sampleData();
         panel.add(new TaskStatus(task));
     }
     

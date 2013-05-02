@@ -44,7 +44,7 @@ public class CalculationAdd extends Window {
     @UiHandler("btnSave")
     public void btnSaveClick(SelectEvent event){
         Calculation c = new Calculation();
-        c.setProject(this.project.getId());
+        c.setProject(this.project);
         c.setName(txtName.getValue());
         c.setComment(txtComment.getValue());
         this.hide();

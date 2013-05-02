@@ -19,7 +19,6 @@ public class Calculation implements IsSerializable{
     private Project project;
     private String calc_name, calc_comment;
     private Date create, modify;
-    private String owner_text;
 
     public void setId(int id) {
         this.calc_id = id;
@@ -31,10 +30,6 @@ public class Calculation implements IsSerializable{
 
     public void setOwner(Account owner) {
         this.owner = owner;
-    }
-    
-    public void setOwnerText(String text){
-        this.owner_text = text;
     }
     
     public void setName(String name) {
@@ -65,10 +60,6 @@ public class Calculation implements IsSerializable{
         return this.owner;
     }
     
-    public String getOwnerText(){
-        return this.owner_text;
-    }
-
     public String getName() {
         return this.calc_name;
     }
@@ -83,4 +74,19 @@ public class Calculation implements IsSerializable{
     public Date getModifyTime(){
         return this.modify;
     }
+    
+    
+    //for test purpose
+    public static Calculation sampleData(){
+        Calculation sample = new Calculation();
+        sample.setComment("this is a test calculation");
+        sample.setCreateTime(new Date());
+        sample.setId(1);
+        sample.setModifyTime(new Date());
+        sample.setName("test calculation");
+        sample.setOwner(Account.sampleData());
+        sample.setProject(Project.sampleData());
+        return sample;
+    }
+    
 }

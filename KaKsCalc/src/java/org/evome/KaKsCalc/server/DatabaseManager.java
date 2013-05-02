@@ -24,7 +24,7 @@ import java.util.Date;
 public class DatabaseManager {
     
     private static DBConnector dbconn = new DBConnector();
-    private static SysConfig sysconf = new SysConfig();
+    //private static SysConfig sysconf = new SysConfig();
     
     public static Project getProject(int project_id){
         Project pj = new Project();
@@ -70,8 +70,15 @@ public class DatabaseManager {
         return calc;
     }
     
-    public Task getTask(int task_id){
-        
+    public static Task getTask(int task_id){
+        Task task = new Task();
+        String sql = "SELECT * FROM `task` WHERE id = " + task_id;
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                task.setCalculation(task_id);
+            }
+        }
     }
     
 }
