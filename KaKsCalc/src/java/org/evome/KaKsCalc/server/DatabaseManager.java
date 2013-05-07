@@ -179,7 +179,104 @@ public class DatabaseManager {
         return task_id;
     }
     
-    public static void editProject(Project proj){
-        String 
+    public static boolean editProject(Project proj){
+        //id, owner, create can't be modified
+        String sql = "UPDATE `task` SET ("
+                + "name='" + proj.getName() + "',"
+                + "comment='" + proj.getComment() + "',"
+                + "modify='" + sdf.format(new Date()) + "'"
+                + ") WHERE id = " + proj.getId();
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                return true;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public static boolean editCalculation(Calculation calc){
+        //id, owner, create can't be modified
+        String sql = "UPDATE `calculation` SET ("
+                + "name='" + calc.getName() + "',"
+                + "comment='" + calc.getComment() + "',"
+                + "project='" + calc.getProject().getId() + "',"
+                + "modify='" + sdf.format(new Date()) + "'"
+                + ") WHERE id = " + calc.getId();
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                return true;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;            
+    }
+    
+    public static boolean editTask(Task task){
+        //id, owner, create, finish can't be modified
+        String sql = "UPDATE `task` SET ("
+                + "status='" + task.getStatus().ordinal() + "',"
+                + "calc='" + task.getCalculation().getId() + "',"
+                + "project='" + task.getProject().getId() + "',"
+                + "qrank='" + task.getQueueRank() + "',"
+                + "prank='" + task.getPriorityRank() + "',"
+                + "comment='" + task.getComment() + "',"
+                + "name='" + task.getName() + "',"
+                + "modify='" + sdf.format(new Date()) + "',"
+                + "kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
+                + "kaks_m='" + task.getKaKsMethod().name() + "'"
+                + ") WHERE id = " + task.getId();
+        try {
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                return true;
+            }  
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public static boolean delProject(Project proj){
+        String sql = "DELETE FROM `project` WHERE id = " + proj.getId();
+        try {
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                return true;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public static boolean delCalculation(Calculation calc){
+        String sql = "DELETE FROM `calculation` WHERE id = " + calc.getId();
+        try {
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                return true;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;        
+    }
+    
+    public static boolean delTask(Task task){
+        String sql = "DELETE FROM `task` WHERE id = " + task.getId();
+        try {
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                return true;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;               
     }
 }
