@@ -204,7 +204,7 @@ public class Account implements IsSerializable {
     }
 
     
-    private static String md5sum(String str) {
+    public static String md5sum(String str) {
         String md5str = null;
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
