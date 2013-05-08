@@ -33,9 +33,18 @@ public class Account implements IsSerializable {
     private Date create, access;
     private String uuid;
     private int group;
+    private boolean isAnonymous;
     
     
     public Account() {
+    }
+    
+    public void isAnonymous(boolean b){
+        this.isAnonymous = b;
+    }
+    
+    public boolean isAnonymous(){
+        return this.isAnonymous;
     }
     
     public void setSessionID( String SessionID ) {
@@ -235,4 +244,6 @@ public class Account implements IsSerializable {
         sample.setUUID(shared.randomUUID());
         return sample;
     }
+    
+    
 }
