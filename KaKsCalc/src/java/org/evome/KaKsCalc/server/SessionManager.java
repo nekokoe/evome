@@ -19,8 +19,8 @@ import java.util.ArrayList;
  */
 public class SessionManager {
     
-    private static DBConnector dbconn = new DBConnector();
-    private static SysConfig sysconf = new SysConfig();
+    private static DBConnector dbconn = GWTServiceImpl.getDBConn();
+    private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
     
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     

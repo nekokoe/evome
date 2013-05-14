@@ -16,7 +16,7 @@ import org.evome.KaKsCalc.client.Account;
  */
 public class AccountManager {
     
-    private static DBConnector dbconn = new DBConnector();
+    private static DBConnector dbconn = GWTServiceImpl.getDBConn();
     
     public static Account getAccount(int id){
         Account account = new Account();

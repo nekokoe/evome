@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 public class SysConfig extends RemoteServiceServlet{
     public String 
-            SERVERLET_REAL_PATH, DATA_ROOT_PATH, WORK_ROOT_PATH, 
+            SERVLET_REAL_PATH, DATA_ROOT_PATH, WORK_ROOT_PATH, 
             ACCOUNT_DB, ACCOUNT_DB_USER, ACCOUNT_DB_PASS, ACCOUNT_DB_URL,
             DB_NAME, DB_USER, DB_PASS, DB_URL,
             EMAIL_SERVER, EMAIL_USER, EMAIL_PASS, EMAIL_FROM;
@@ -46,18 +46,20 @@ public class SysConfig extends RemoteServiceServlet{
     
 
     
-    public SysConfig(){
+    public SysConfig(String servletRealPath){
+        this.SERVLET_REAL_PATH = servletRealPath;
         setDefaults();
         readConfig();
     }
+    
     
     private HashMap<String, String> defaults = new HashMap<String, String>();
     private void setDefaults(){
         //defaults values is set here
         defaults.put("serverurl", "jdbc:mysql://127.0.0.1:3306/");
         defaults.put("accountdb_url", "jdbc:mysql://127.0.0.1:3306/");
-        defaults.put("datapath", this.SERVERLET_REAL_PATH + "/data");
-        defaults.put("workpath", this.SERVERLET_REAL_PATH = "/work");
+        defaults.put("datapath", this.SERVLET_REAL_PATH + "/data");
+        defaults.put("workpath", this.SERVLET_REAL_PATH + "/work");
         defaults.put("emailport", "25");
         defaults.put("maxcpu", "8");
         defaults.put("maxmem", "16384");
@@ -66,8 +68,7 @@ public class SysConfig extends RemoteServiceServlet{
     
     private boolean readConfig() {
         HashMap<String, String> config = new HashMap<String, String>();
-        this.SERVERLET_REAL_PATH = getServletContext().getRealPath("/");
-        String conf_file = this.SERVERLET_REAL_PATH + "conf/sys.conf";
+        String conf_file = this.SERVLET_REAL_PATH + "conf/sys.conf";
         boolean isSuccess;
         try {
             Scanner scanner = new Scanner(new FileInputStream(conf_file));
@@ -87,7 +88,7 @@ public class SysConfig extends RemoteServiceServlet{
             for (Iterator<String> it = defaults.keySet().iterator(); it.hasNext();){
                 String key = it.next();
                 if (!config.containsKey(key) || config.get(key).isEmpty()){
-                    config.put(key, defaults.get(key));
+                    config.put(key, defaults.get(key));                    
                 }
             }
             

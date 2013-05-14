@@ -23,11 +23,11 @@ Uncomment this for XHTML entities
                 <button:TextButton ui:field="btnTaskStart" text="Start" icon="{images.add}"/>
                 <button:TextButton ui:field="btnTaskStop" text="Stop" icon="{images.delete}"/>
                 <toolbar:SeparatorToolItem />                
-                <button:TextButton ui:field="btnTaskAdd" text="New Task..." icon="{images.add}"/>
-                <button:TextButton ui:field="btnTaskEdit" text="Edit Task..." icon="{images.list}"/>
-                <button:TextButton ui:field="btnTaskDel" text="Delete Task..." icon="{images.delete}"/>
+                <button:TextButton ui:field="btnTaskAdd" text="New Task" icon="{images.add}"/>
+                <button:TextButton ui:field="btnTaskEdit" text="Edit" icon="{images.list}"/>
+                <button:TextButton ui:field="btnTaskDel" text="Delete" icon="{images.delete}"/>
                 <toolbar:SeparatorToolItem />
-                <button:TextButton ui:field="btnTaskResult" text="Show Result..." icon="{images.text}"/>                   
+                <button:TextButton ui:field="btnTaskResult" text="Show Result" icon="{images.text}"/>                   
             </toolbar:ToolBar>            
         </container:child>
         <container:child layoutData="{defaultVerticalLayout}">

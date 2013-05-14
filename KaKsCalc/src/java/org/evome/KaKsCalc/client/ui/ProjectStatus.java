@@ -8,6 +8,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Label;
 
 import org.evome.KaKsCalc.client.Project;
 /**
@@ -25,7 +28,17 @@ public class ProjectStatus extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
     }
     
-    public ProjectStatus(Project project){
-        initWidget(uiBinder.createAndBindUi(this));        
+    public ProjectStatus(Project p){
+        initWidget(uiBinder.createAndBindUi(this));
+        lblID.setText(String.valueOf(p.getId()));
+        lblName.setText(p.getName());
+        lblOwner.setText(p.getOwner().getFullName());
+        lblCreate.setText(p.getCreateDate().toString());
+        lblModify.setText(p.getModifyDate().toString());
+        lblComment.setText(p.getComment());
     }
+    
+    @UiField
+    Label lblID, lblName, lblOwner, lblCreate, lblModify, lblComment;
+    
 }

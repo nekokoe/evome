@@ -13,8 +13,6 @@ import java.util.Date;
  * @author kudo_s
  */
 public class Account implements IsSerializable {
-    private static Shared shared = new Shared();
-    
     
     //use this once the account is created
     private String SessionID;
@@ -228,11 +226,12 @@ public class Account implements IsSerializable {
     
     //code below is for test purpose
     public static Account sampleData(){
+        
         Account sample = new Account();
         sample.setAccessTime(new Date());
         sample.setAccountKey("test@evome.org", "123456");
         sample.setAccountStatus(false);
-        sample.setActivationCode(shared.randomUUID());
+        sample.setActivationCode("");
         sample.setCreateTime(new Date());
         sample.setEmail("test@evome.org");
         sample.setEmailed(false);
@@ -241,7 +240,8 @@ public class Account implements IsSerializable {
         sample.setInstitute("big");
         sample.setLastName("evome");
         sample.setUserID(1);
-        sample.setUUID(shared.randomUUID());
+        sample.setUUID("");
+        
         return sample;
     }
     

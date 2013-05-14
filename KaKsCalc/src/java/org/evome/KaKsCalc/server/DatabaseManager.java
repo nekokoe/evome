@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.evome.KaKsCalc.client.Account;
 import org.evome.KaKsCalc.client.Task;
 import org.evome.KaKsCalc.client.Job;
 import org.evome.KaKsCalc.client.Project;
@@ -23,14 +24,15 @@ import java.util.Date;
  * @author nekoko
  */
 public class DatabaseManager {
-    
-    private static DBConnector dbconn = new DBConnector();
-    private static SysConfig sysconf = new SysConfig();
+
+    private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
     public static Project getProject(int project_id){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         Project pj = new Project();
         String sql = "SELECT * FROM `project` WHERE id = " + project_id;
+        //String sql = "SELECT * FROM `project` ";
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
@@ -50,6 +52,7 @@ public class DatabaseManager {
     }
     
     public static Calculation getCalculation(int calc_id){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         Calculation calc = new Calculation();
         String sql = "SELECT * FROM `calculation` WHERE id = " + calc_id;
         try{
@@ -73,6 +76,7 @@ public class DatabaseManager {
     }
     
     public static Task getTask(int task_id){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         Task task = new Task();
         String sql = "SELECT * FROM `task` WHERE id = " + task_id;
         try{
@@ -103,6 +107,7 @@ public class DatabaseManager {
     }
     
     public static int addProject(Project proj){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         int proj_id;
         String sql = "INSERT INTO `project` SET ("
                 + "owner='"  + proj.getOwner().getUserID() + "',"
@@ -126,6 +131,7 @@ public class DatabaseManager {
     }
     
     public static int addCalculation(Calculation calc){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         int calc_id;
         String sql = "INSERT INTO `calculation` SET ("
                 + "project='" + calc.getProject().getId() + "',"
@@ -150,6 +156,7 @@ public class DatabaseManager {
     }
     
     public static int addTask(Task task){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         int task_id;
         String sql = "INSERT INTO `task` SET ("
                 + "status='" + task.getStatus().ordinal() + "',"
@@ -180,6 +187,7 @@ public class DatabaseManager {
     }
     
     public static boolean editProject(Project proj){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         //id, owner, create can't be modified
         String sql = "UPDATE `task` SET ("
                 + "name='" + proj.getName() + "',"
@@ -198,6 +206,7 @@ public class DatabaseManager {
     }
     
     public static boolean editCalculation(Calculation calc){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         //id, owner, create can't be modified
         String sql = "UPDATE `calculation` SET ("
                 + "name='" + calc.getName() + "',"
@@ -217,6 +226,7 @@ public class DatabaseManager {
     }
     
     public static boolean editTask(Task task){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         //id, owner, create, finish can't be modified
         String sql = "UPDATE `task` SET ("
                 + "status='" + task.getStatus().ordinal() + "',"
@@ -242,6 +252,7 @@ public class DatabaseManager {
     }
     
     public static boolean delProject(Project proj){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         String sql = "DELETE FROM `project` WHERE id = " + proj.getId();
         try {
             ResultSet rs = dbconn.execQuery(sql);
@@ -255,6 +266,7 @@ public class DatabaseManager {
     }
     
     public static boolean delCalculation(Calculation calc){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         String sql = "DELETE FROM `calculation` WHERE id = " + calc.getId();
         try {
             ResultSet rs = dbconn.execQuery(sql);
@@ -268,6 +280,7 @@ public class DatabaseManager {
     }
     
     public static boolean delTask(Task task){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
         String sql = "DELETE FROM `task` WHERE id = " + task.getId();
         try {
             ResultSet rs = dbconn.execQuery(sql);
@@ -278,5 +291,80 @@ public class DatabaseManager {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;               
+    }
+    
+    public static ArrayList<Project> userProjects(Account account){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
+        ArrayList<Project> projects = new ArrayList<Project>();
+        String sql = "SELECT * FROM `project` WHERE owner = " + account.getUserID();
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while (rs.next()){
+                Project p = new Project();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                p.setCreateDate(rs.getDate("create"));
+                p.setModifyDate(rs.getDate("modify"));
+                projects.add(p);
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(projects.toString());
+        return projects;
+    }
+    
+    public static ArrayList<Calculation> subCalculations(Project project){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
+        ArrayList<Calculation> calcs = new ArrayList<Calculation>();
+        String sql = "SELECT * FROM `calculation` WHERE project = " + project.getId();
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while (rs.next()){
+                Calculation c = new Calculation();
+                c.setComment(rs.getString("comment"));
+                c.setId(rs.getInt("id"));
+                c.setName(rs.getString("name"));
+                c.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                c.setProject(DatabaseManager.getProject(rs.getInt("project")));
+                c.setCreateTime(rs.getDate("create"));
+                c.setModifyTime(rs.getDate("modify"));
+                calcs.add(c);
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return calcs;        
+    }
+    
+    public static ArrayList<Task> subTasks(Calculation calc){
+        DBConnector dbconn = GWTServiceImpl.getDBConn();
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        String sql = "SELECT * FROM `task` WHERE calc = " + calc.getId();
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            while (rs.next()){
+                Task t = new Task();
+                t.setCalculation(DatabaseManager.getCalculation(rs.getInt("calc")));
+                t.setComment(rs.getString("comment"));
+                t.setCreateDate(rs.getDate("create"));
+                t.setFinishDate(rs.getDate("finish"));
+                t.setId(rs.getInt("id"));
+                t.setKaKsGeneticCode(Task.Gencode.values()[rs.getInt("kaks_c")]);
+                t.setKaKsMethod(Task.Method.valueOf(rs.getString("kaks_m")));
+                t.setModifyDate(rs.getDate("modify"));
+                t.setName(rs.getString("name"));
+                t.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                t.setPriorityRank(Task.Priority.values()[rs.getInt("prank")]);
+                t.setProjcet(DatabaseManager.getProject(rs.getInt("project")));
+                t.setQueueRank(rs.getInt("qrank"));
+                t.setStatus(Task.Status.values()[rs.getInt("status")]);
+                tasks.add(t);
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tasks;            
     }
 }

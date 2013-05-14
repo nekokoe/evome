@@ -6,6 +6,7 @@ package org.evome.KaKsCalc.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -17,30 +18,20 @@ public class Shared {
     public static GWTServiceAsync getService(){
         return rpc;
     }
-    
+        
     public String randomUUID(){
-        final RpcDataBasket<String> rdb = new RpcDataBasket<String>();
+        final String[] strs = new String[0];
         rpc.randomUUID(new AsyncCallback<String>(){
             @Override
             public void onFailure(Throwable caught) {//failed 
             }
             @Override
             public void onSuccess(String uuid) {
-                rdb.set(uuid);
+                strs[0] = uuid;
             }
         });
-        return rdb.get();
+        return strs[0];
     }
-    
 
-    //data container used for passing RPC return value
-    private class RpcDataBasket<E>{
-        private E data;    
-        public void set(E set){
-            data = set;
-        }
-        public E get(){
-            return data;
-        }
-    }
+
 }

@@ -17,12 +17,11 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.google.gwt.user.client.ui.SimplePanel;
-import org.evome.KaKsCalc.client.Project;
+
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
-import org.evome.KaKsCalc.client.rpc.GWTServiceAccount;
-import org.evome.KaKsCalc.client.rpc.GWTServiceAccountAsync;
+import org.evome.KaKsCalc.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -34,9 +33,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class ProjectUtils extends Composite {
     
-    private Project current = new Project();
+    private Project myproject = new Project();
 
-    private static GWTServiceAccountAsync rpc_account = GWT.create(GWTServiceAccount.class);
+    private static GWTServiceAsync rpc = Shared.getService();
     private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
     
     interface ProjectUtilsUiBinder extends UiBinder<Widget, ProjectUtils> {
@@ -44,6 +43,25 @@ public class ProjectUtils extends Composite {
     
     public ProjectUtils() {
         initWidget(uiBinder.createAndBindUi(this));
+        this.setProject(Project.sampleData());
+    }
+    
+    public ProjectUtils(Project project){
+        initWidget(uiBinder.createAndBindUi(this));
+        this.setProject(project);
+    }
+    
+    public ProjectUtils(int proj_id){
+        initWidget(uiBinder.createAndBindUi(this));
+        final ProjectUtils projutil = this;
+        rpc.getProject(proj_id, new AsyncCallback<Project>(){
+            @Override
+            public void onSuccess(Project project){
+                projutil.setProject(project);
+            }
+            @Override
+            public void onFailure(Throwable caught){}
+        });        
     }
     
     @UiHandler("btnProjectAdd")
@@ -54,14 +72,14 @@ public class ProjectUtils extends Composite {
     
     @UiHandler("btnProjectEdit")
     public void btnProjectEditClick(SelectEvent event){
-        ProjectEdit edit = new ProjectEdit(current);
+        ProjectEdit edit = new ProjectEdit(myproject);
         edit.show();
     }
     
     @UiHandler("btnProjectDel")
     public void btnProjectDelClick(SelectEvent event){
         ConfirmMessageBox confirm = 
-                new ConfirmMessageBox("Confirm", "Are you sure want to delete : " + current.getName() + " ? <br>"
+                new ConfirmMessageBox("Confirm", "Are you sure want to delete : " + myproject.getName() + " ? <br>"
                 + "All data under this project will be deleted!");
         confirm.addHideHandler(new HideEvent.HideHandler(){
             @Override
@@ -76,19 +94,9 @@ public class ProjectUtils extends Composite {
         confirm.show();
     }
     
-    @UiHandler("btnAddCalc")
-    public void btnAddCalcClick(SelectEvent event){
-//        rpc_account.test(new AsyncCallback<String>(){
-//            @Override
-//            public void onSuccess(String str){
-//                com.google.gwt.user.client.Window.alert(str);
-//            }
-//            @Override
-//            public void onFailure(Throwable caught){
-//                
-//            }
-//        });
-        CalculationAdd add = new CalculationAdd(current);
+    @UiHandler("btnCalcAdd")
+    public void btnCalcAddClick(SelectEvent event){
+        CalculationAdd add = new CalculationAdd(myproject);
         add.show();        
     }
     
@@ -98,10 +106,10 @@ public class ProjectUtils extends Composite {
     SimplePanel panel;
     
     
-    public void setCurrentProject(Project project){
-        this.current = project;
+    public final void setProject(Project project){
+        this.myproject = project;
         panel.clear();
-        panel.add(new ProjectStatus(current));
+        panel.add(new ProjectStatus(project));
     }
     
 }

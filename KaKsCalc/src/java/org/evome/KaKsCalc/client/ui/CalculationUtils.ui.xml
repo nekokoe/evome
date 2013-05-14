@@ -32,13 +32,14 @@ Uncomment this for XHTML entities
     <container:VerticalLayoutContainer>
         <container:child layoutData="{toolBarRowData}">
             <toolbar:ToolBar borders="true">
-                <button:TextButton ui:field="btnCalcStart" text="Start" icon="{images.add}"/>
-                <button:TextButton ui:field="btnCalcStop" text="Stop" icon="{images.delete}"/>
+                <button:TextButton ui:field="btnCalcStart" text="Start All" icon="{images.add}"/>
+                <button:TextButton ui:field="btnCalcStop" text="Stop All" icon="{images.delete}"/>
                 <toolbar:SeparatorToolItem />
-                <button:TextButton ui:field="btnCalcEdit" text="Edit..." icon="{images.list}"/>
-                <button:TextButton ui:field="btnCalcDelete" text="Delete..." icon="{images.delete}"/>
+                <button:TextButton ui:field="btnCalcAdd" text="New Calculation" icon="{images.add}"/>
+                <button:TextButton ui:field="btnCalcEdit" text="Edit" icon="{images.list}"/>
+                <button:TextButton ui:field="btnCalcDelete" text="Delete" icon="{images.delete}"/>
                 <toolbar:SeparatorToolItem />
-                <button:TextButton ui:field="btnCalcResult" text="Calculation Result..." icon="{images.text}"/>                
+                <button:TextButton ui:field="btnTaskAdd" text="New Task..." icon="{images.add}"/>                
             </toolbar:ToolBar>            
         </container:child>
         

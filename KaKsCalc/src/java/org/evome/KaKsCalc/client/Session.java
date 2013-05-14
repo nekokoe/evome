@@ -73,4 +73,17 @@ public class Session implements IsSerializable {
     public void setAccountUUID(String uuid){
         this.acc_uuid = uuid;
     }
+    
+    
+    //code for test purpose
+    public static Session sampleData(){
+        Session s = new Session();
+        s.setSessionID(1);
+        s.setUserID(1);
+        s.setUUID("");
+        s.setAccountUUID("");
+        s.setCreateTime(new Date());
+        s.setLastActiveTime(new Date());
+        return s;
+    }
 }

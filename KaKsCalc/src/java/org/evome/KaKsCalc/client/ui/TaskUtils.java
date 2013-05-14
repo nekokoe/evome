@@ -11,11 +11,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.evome.KaKsCalc.client.Task;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
+import org.evome.KaKsCalc.client.*;
 
 /**
  *
@@ -23,17 +25,46 @@ import com.sencha.gxt.widget.core.client.event.HideEvent;
  */
 public class TaskUtils extends Composite {
     
-    private Task current;
+    private Task mytask;
     
     private static TaskUtilsUiBinder uiBinder = GWT.create(TaskUtilsUiBinder.class);
+    private static GWTServiceAsync rpc = Shared.getService();
     
     interface TaskUtilsUiBinder extends UiBinder<Widget, TaskUtils> {
     }
     
     public TaskUtils() {
         initWidget(uiBinder.createAndBindUi(this));
-        Task task = Task.sampleData();
+        setCurrentTask(Task.sampleData());
+    }
+    
+    public TaskUtils(Task task){
+        initWidget(uiBinder.createAndBindUi(this));
+        setCurrentTask(task);
+    }
+    
+    public TaskUtils(int task_id){
+        initWidget(uiBinder.createAndBindUi(this));
+        final TaskUtils tu = this;
+        rpc.getTask(task_id, new AsyncCallback<Task>(){
+            @Override
+            public void onSuccess(Task task){
+                tu.setCurrentTask(task);
+            }
+            @Override
+            public void onFailure(Throwable caught){}
+        });
+        
+    }
+    
+    public final void setCurrentTask(Task task){
+        this.mytask = task;
+        panel.clear();
         panel.add(new TaskStatus(task));
+    }
+    
+    public Task getCurrentTask(){
+        return this.mytask;
     }
     
     @UiField
@@ -42,6 +73,6 @@ public class TaskUtils extends Composite {
     @UiHandler("btnTaskEdit")
     public void onTaskEditClick(SelectEvent event){
         panel.clear();
-        panel.add(new TaskEdit(current));
+        panel.add(new TaskEdit(mytask));
     }
 }

@@ -15,8 +15,8 @@ import org.evome.KaKsCalc.client.Task;
  */
 public class FileManager {
     
-    private static DBConnector dbconn = new DBConnector();
-    private static SysConfig sysconf = new SysConfig();
+    private static DBConnector dbconn = GWTServiceImpl.getDBConn();
+    private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
 
     
     

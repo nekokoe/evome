@@ -35,11 +35,11 @@ Uncomment this for XHTML entities
     <container:VerticalLayoutContainer>
         <container:child layoutData="{defaultVerticalLayout}">
             <toolbar:ToolBar borders="true">
-                <button:TextButton ui:field="btnAddCalc" text="Add New Calculation..." icon="{images.add}"/>
-                <toolbar:SeparatorToolItem />
-                <button:TextButton ui:field="btnProjectAdd" text="Add New Project..." icon="{images.add}"/>
-                <button:TextButton ui:field="btnProjectEdit" text="Edit Project..." icon="{images.list}"/>
-                <button:TextButton ui:field="btnProjectDel" text="Delete Project..." icon="{images.delete}"/>
+                <button:TextButton ui:field="btnProjectAdd" text="New Project" icon="{images.add}"/>
+                <button:TextButton ui:field="btnProjectEdit" text="Edit" icon="{images.list}"/>
+                <button:TextButton ui:field="btnProjectDel" text="Delete" icon="{images.delete}"/>
+                <toolbar:SeparatorToolItem />                
+                <button:TextButton ui:field="btnCalcAdd" text="New Calculation" icon="{images.add}"/>
             </toolbar:ToolBar>            
         </container:child>
         <container:child layoutData="{contentRowData}">

@@ -21,13 +21,14 @@ import java.util.logging.Logger;
 
 public class DBConnector {
     
-    private Connection conn;
-    private SysConfig conf;
+    private static Connection conn;
+    private static SysConfig conf;
     
-    public DBConnector(){
-        this.conn = getConn();
-        this.conf = new SysConfig();
-    }
+    public DBConnector(SysConfig sysconf){
+        conf = sysconf;
+        conn = getConn();
+    }   
+    
     
     public ResultSet execQuery(String sql) {
         ResultSet rs = null;
@@ -55,9 +56,11 @@ public class DBConnector {
     private Connection getConn() {
         Connection connect = null;
         String driver = "com.mysql.jdbc.Driver";
+        
         try {
             Class.forName(driver).newInstance();
         } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
         }
 
         try {

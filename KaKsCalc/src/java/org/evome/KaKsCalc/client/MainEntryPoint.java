@@ -14,9 +14,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 import org.evome.KaKsCalc.client.ui.*;
 
-import org.evome.KaKsCalc.client.rpc.*;
-
-
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -34,10 +31,13 @@ public class MainEntryPoint implements EntryPoint {
     
     //session id is generated when browsing the main page
     //session is associated with user and at the server end
-    //if session is still alive at the server end, trying to recover thde session data to UI
-    private String sessionID;
+    //if session is still alive at the server end, trying to recover the session data to UI
+    private Session session;
+    private Account account;
     
     public MainEntryPoint() {
+
+        
     }
 
     /**
@@ -46,11 +46,15 @@ public class MainEntryPoint implements EntryPoint {
      */
     @Override
     public void onModuleLoad() {
-        //RootPanel.get().add(example);
-        //Login loginpage = new Login();
-        //RootPanel.get().add(new Login());
-        RootPanel.get().add(new Workspace());
+    
         
+        //add test session
+        Session s = Session.sampleData();
+        
+        Workspace myWorkSpace = new Workspace(s);
+        RootPanel.get().add(myWorkSpace);
+        
+                
     }
 
 }

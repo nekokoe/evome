@@ -21,13 +21,74 @@ import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import java.util.Iterator;
-import org.evome.KaKsCalc.client.Project;
+import org.evome.KaKsCalc.client.*;
 /**
  *
  * @author nekoko
  */
 public class Workspace extends Composite {
+    
+    private static WorkspaceUiBinder uiBinder = GWT.create(WorkspaceUiBinder.class);
 
+    interface WorkspaceUiBinder extends UiBinder<Widget, Workspace> {}
+    
+    private TreeView treeView;
+    
+    public Workspace(Session s){
+        initWidget(uiBinder.createAndBindUi(this));        
+        //workspace binding to a session
+        init();
+        setTreeView(new TreeView(s));
+    }
+    
+    public Workspace() {
+        initWidget(uiBinder.createAndBindUi(this));        
+        init();
+        setTreeView(new TreeView());
+    }
+    
+    private void init(){
+        //set workspace margins
+        outerData.setMargins(new Margins(0, 0, 0, 0));
+        northData.setMargins(new Margins(5));
+        westData.setMargins(new Margins(0, 0, 5, 5));
+        westData.setCollapsible(true);
+        westData.setSplit(true);
+        centerData.setMargins(new Margins(0, 5, 5, 5));
+        //set root container width        
+        conRoot.setWidth(Window.getClientWidth());        
+    }
+    
+    public final void setTreeView(TreeView tv){
+        this.treeView = tv;
+
+        //add selection handler
+        tv.addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewItem>(){
+            @Override
+            public void onSelectionChanged(SelectionChangedEvent<TreeViewItem> event){
+                for(Iterator<TreeViewItem> it = event.getSelection().iterator(); it.hasNext();){
+                    TreeViewItem item = it.next();
+                    pnlWorkSpace.clear();
+                    pnlWorkSpace.setHeadingText(item.getValue());
+                    if (item.getType().equalsIgnoreCase("project")){
+                        pnlWorkSpace.add(new ProjectUtils(item.getId()));
+                    }else if(item.getType().equalsIgnoreCase("calculation")){
+                        pnlWorkSpace.add(new CalculationUtils(item.getId()));
+                    }else if(item.getType().equalsIgnoreCase("task")){
+                        pnlWorkSpace.add(new TaskUtils(item.getId()));
+                    }
+                }
+            }
+        });
+        pnlTreeView.clear();
+        pnlTreeView.add(tv);        
+        tv.treeProject.getSelectionModel().select(0, false);
+    }
+    
+    public TreeView getTreeView(){
+        return this.treeView;
+    }    
+    
     @UiField(provided = true)
     MarginData outerData = new MarginData();
     @UiField(provided = true)
@@ -43,63 +104,11 @@ public class Workspace extends Composite {
 
 
     @UiField
-    ContentPanel pnlTreeView;
+    public ContentPanel pnlTreeView;
     
     @UiField
-    ContentPanel pnlWorkSpace;
+    public ContentPanel pnlWorkSpace;
     
     @UiField
     SimpleContainer conRoot;
-    
-    private static WorkspaceUiBinder uiBinder = GWT.create(WorkspaceUiBinder.class);
-
-    interface WorkspaceUiBinder extends UiBinder<Widget, Workspace> {}
-    
-    public Workspace() {
-        outerData.setMargins(new Margins(0, 0, 0, 0));
-        //workspace margins
-        northData.setMargins(new Margins(5));
-        westData.setMargins(new Margins(0, 0, 5, 5));
-        westData.setCollapsible(true);
-        westData.setSplit(true);
-        centerData.setMargins(new Margins(0, 5, 5, 5));
-        
-        //bind UI
-        initWidget(uiBinder.createAndBindUi(this));
-        //set root container width        
-        conRoot.setWidth(Window.getClientWidth());
-        
-        //declare workspace widget
-        final ProjectUtils project = new ProjectUtils();
-        final CalculationUtils calculation = new CalculationUtils();
-        final TaskUtils task = new TaskUtils();
-        //add Tree View
-        TreeView treeView = new TreeView();
-        
-        treeView.addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewProperties>(){
-            @Override
-            public void onSelectionChanged(SelectionChangedEvent<TreeViewProperties> event){
-                for(Iterator<TreeViewProperties> it = event.getSelection().iterator(); it.hasNext();){
-                    String itemValue = it.next().getValue();
-                    pnlWorkSpace.clear();
-                    pnlWorkSpace.setHeadingText(itemValue);
-                    if (itemValue.startsWith("project")){
-                        pnlWorkSpace.add(project);
-                        project.setCurrentProject(new Project(itemValue));
-                    }else if(itemValue.startsWith("calc")){
-                        pnlWorkSpace.add(calculation);
-                    }else if(itemValue.startsWith("task")){
-                        pnlWorkSpace.add(task);
-                    }
-                }
-            }
-        });
-        pnlTreeView.add(treeView);
-
-        //add project utils
-        pnlWorkSpace.add(project);
-    }
-    
-    
-    
 }

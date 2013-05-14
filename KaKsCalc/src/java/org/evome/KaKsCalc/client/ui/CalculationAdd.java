@@ -36,8 +36,6 @@ public class CalculationAdd extends Window {
         this.project = project;
     }
     
-    
-    
     @UiField
     TextField txtName, txtComment;
     
