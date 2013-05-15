@@ -6,6 +6,7 @@ package org.evome.KaKsCalc.server;
 
 import java.sql.ResultSet;
 import java.util.UUID;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.evome.KaKsCalc.client.Account;
@@ -35,6 +36,7 @@ public class AccountManager {
                 account.setLastName(rs.getString("lastname"));
                 account.setUUID(rs.getString("uuid"));
                 account.setUserID(rs.getInt("id"));
+                account.setEmail(rs.getString("email"));
             }else{
                 account = null;
             }
@@ -63,7 +65,7 @@ public class AccountManager {
                 + "uuid = '" + UUID.randomUUID().toString() + "'"
                 + ")";
         try{
-            ResultSet rs  = dbconn.execQueryReturnGeneratedKeys(sql);
+            ResultSet rs  = dbconn.execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 id = rs.getInt(1);
             }
@@ -84,25 +86,21 @@ public class AccountManager {
         if (!account.getAccountStatus()){  //if user changed the email addr, account should be re-activated
             account.setActivationCode(UUID.randomUUID().toString());
         }
-        String sql = "UPDATE `account` SET ("
-                + "email = '" + account.getEmail() + "',"
-                + "firstname = '" + account.getFirstName() + "',"
-                + "lastname = '" + account.getLastName() + "',"
-                + "institute = '" + account.getInsitute() + "',"
-                + "accountKey = '" + account.getNewAccountKey() + "',"
-                + "access = '" + dbconn.getSQLTime() + "',"
-                + "active = '" + account.getAccountStatus() + "',"
-                + "activationCode = '" + account.getActivationCode() + "'" 
-                + ") WHERE (uuid = '" + account.getUUID() + "' AND id = '" + account.getUserID() + "')";
-        try{
-            ResultSet rs = dbconn.execQuery(sql);
-            if (rs.next()){
-                return true;
-            }
-        }catch(Exception ex){
-            Logger.getLogger(AccountManager.class.getName()).log(Level.SEVERE, null, ex);            
+        String sql = "UPDATE `account` SET "
+                + "account.email = '" + account.getEmail() + "',"
+                + "account.firstname = '" + account.getFirstName() + "',"
+                + "account.lastname = '" + account.getLastName() + "',"
+                + "account.institute = '" + account.getInsitute() + "',"
+                + "account.accountKey = '" + account.getNewAccountKey() + "',"
+                + "account.access = '" + dbconn.getSQLTime() + "',"
+                + "account.active = '" + account.getAccountStatus() + "',"
+                + "account.activationCode = '" + account.getActivationCode() + "'" 
+                + " WHERE (uuid = '" + account.getUUID() + "' AND id = '" + account.getUserID() + "')";
+        if (dbconn.execUpdate(sql) > 0){
+            return true;
+        }else{
+            return false;
         }
-        return false;
     }
     
     public static boolean removeAccount(Account account){
@@ -124,4 +122,46 @@ public class AccountManager {
         return (checkit != null && checkit.getAccountStatus());
     }
     
+    
+    public static Account anonymousAccount(){
+        //create an anonymous account to 'account' with group=65535
+        Account a = new Account();
+        String uuid = UUID.randomUUID().toString();
+        String accountKey = Account.md5sum(uuid);
+        String sql = "INSERT INTO `account` SET ("
+                + "account.email='nobody@home'"
+                + "account.firstname='anonymous',"
+                + "account.lastname='nobody',"
+                + "account.institute='homeless',"
+                + "account.active=1,"
+                + "account.group=65535,"
+                + "account.accountKey='" + accountKey +  "',"
+                + "account.uuid='" + uuid + "',"
+                + "account.create='" + dbconn.getSQLTime() + "',"
+                + "account.access='" + dbconn.getSQLTime() + "'"
+                + ")";
+        try{
+            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
+            if (rs.next()){
+                a.setUserID(rs.getInt(1));
+                a.setAccessTime(new Date());
+                a.setAccountKey(accountKey);
+                a.setAccountStatus(true);
+                a.setActivationCode("");
+                a.setCreateTime(new Date());
+                a.setFirstName("anonymous");
+                a.setGroup(65535);
+                a.setInstitute("homeless");
+                a.setLastName("nobody");
+                a.setUUID(uuid);
+                a.setEmail("nobody@home");
+            }else{
+                a = null;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(AccountManager.class.getName()).log(Level.SEVERE, null, ex);
+            a = null;
+        }
+        return a;
+    }
 }

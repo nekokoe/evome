@@ -26,6 +26,7 @@ public class CalculationUtils extends Composite {
     
     //store current calculation
     private Calculation calc;
+    private TreeViewItem tvi;
     
     private static CalculationUtilsUiBinder uiBinder = GWT.create(CalculationUtilsUiBinder.class);
     private static GWTServiceAsync rpc = Shared.getService();
@@ -43,10 +44,10 @@ public class CalculationUtils extends Composite {
         this.setCurrentCalculation(calc);
     }
     
-    public CalculationUtils(int calc_id){
+    public CalculationUtils(TreeViewItem tvi){
         initWidget(uiBinder.createAndBindUi(this));
         final CalculationUtils cu = this;
-        rpc.getCalculation(calc_id, new AsyncCallback<Calculation>(){
+        rpc.getCalculation(tvi.getId(), new AsyncCallback<Calculation>(){
             @Override
             public void onSuccess(Calculation calc){
                 cu.setCurrentCalculation(calc);
@@ -63,6 +64,7 @@ public class CalculationUtils extends Composite {
         panel.clear();
         panel.add(new CalculationStatus(calc));
     }    
+    
     
     @UiHandler("btnCalcStart")
     public void onCalcStartClick(SelectEvent event){

@@ -9,14 +9,17 @@ Uncomment this for XHTML entities
              xmlns:form="urn:import:com.sencha.gxt.widget.core.client.form"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 >
-    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
-        <ui:attributes width="1" height="-1" />
+    <ui:with field="images" type="org.evome.KaKsCalc.client.widget.resources.ExampleImages"/>
+    
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins10">
+        <ui:attributes top="10" right="10" bottom="10" left="10" />
     </ui:with>
-    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="flexVerticalLayout">
-        <ui:attributes width="1" height="1" />
+    
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
+        <ui:attributes width="1" height="-1" margins="{margins10}"/>
     </ui:with>
     <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData" field="defaultHorizontalLayout">
-        <ui:attributes width="-1" height="1" />
+        <ui:attributes width="-1" height="1" margins="{margins10}"/>
     </ui:with>
     
     <ui:style>
@@ -52,16 +55,13 @@ Uncomment this for XHTML entities
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
-            <container:child layoutData="{flexVerticalLayout}">
-                
-            </container:child>
             <container:child layoutData="{defaultVerticalLayout}">
                 <container:HorizontalLayoutContainer>
                     <container:child layoutData="{defaultHorizontalLayout}">
-                        <button:TextButton ui:field="btnSave">Save</button:TextButton>    
+                        <button:TextButton ui:field="btnSave" icon="{images.add}">Save</button:TextButton>    
                     </container:child>
                     <container:child layoutData="{defaultHorizontalLayout}">
-                        <button:TextButton ui:field="btnCancel">Cancel</button:TextButton>
+                        <button:TextButton ui:field="btnCancel" icon="{images.delete}">Cancel</button:TextButton>
                     </container:child>                    
                 </container:HorizontalLayoutContainer>
             </container:child>

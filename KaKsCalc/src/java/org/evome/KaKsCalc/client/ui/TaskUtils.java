@@ -43,10 +43,10 @@ public class TaskUtils extends Composite {
         setCurrentTask(task);
     }
     
-    public TaskUtils(int task_id){
+    public TaskUtils(TreeViewItem tvi){
         initWidget(uiBinder.createAndBindUi(this));
         final TaskUtils tu = this;
-        rpc.getTask(task_id, new AsyncCallback<Task>(){
+        rpc.getTask(tvi.getId(), new AsyncCallback<Task>(){
             @Override
             public void onSuccess(Task task){
                 tu.setCurrentTask(task);

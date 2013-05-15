@@ -18,6 +18,7 @@ import org.evome.KaKsCalc.client.Job;
 import org.evome.KaKsCalc.client.Project;
 import org.evome.KaKsCalc.client.Calculation;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  *
@@ -27,11 +28,11 @@ public class DatabaseManager {
 
     private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static DBConnector dbconn = GWTServiceImpl.getDBConn();
     
     public static Project getProject(int project_id){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         Project pj = new Project();
-        String sql = "SELECT * FROM `project` WHERE id = " + project_id;
+        String sql = "SELECT * FROM `project` WHERE project.id = " + project_id;
         //String sql = "SELECT * FROM `project` ";
         try{
             ResultSet rs = dbconn.execQuery(sql);
@@ -52,9 +53,8 @@ public class DatabaseManager {
     }
     
     public static Calculation getCalculation(int calc_id){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         Calculation calc = new Calculation();
-        String sql = "SELECT * FROM `calculation` WHERE id = " + calc_id;
+        String sql = "SELECT * FROM `calculation` WHERE calculation.id = " + calc_id;
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
@@ -76,9 +76,8 @@ public class DatabaseManager {
     }
     
     public static Task getTask(int task_id){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         Task task = new Task();
-        String sql = "SELECT * FROM `task` WHERE id = " + task_id;
+        String sql = "SELECT * FROM `task` WHERE task.id = " + task_id;
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
@@ -107,17 +106,15 @@ public class DatabaseManager {
     }
     
     public static int addProject(Project proj){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         int proj_id;
-        String sql = "INSERT INTO `project` SET ("
-                + "owner='"  + proj.getOwner().getUserID() + "',"
-                + "name='" + proj.getName() + "',"
-                + "comment='" + proj.getComment() + "',"
-                + "create='" + sdf.format(new Date()) + "',"
-                + "modify='" + sdf.format(new Date()) + "'"
-                + ")";
+        String sql = "INSERT INTO `project` SET "
+                + "project.owner='"  + proj.getOwner().getUserID() + "',"
+                + "project.name='" + proj.getName() + "',"
+                + "project.comment='" + proj.getComment() + "',"
+                + "project.create='" + sdf.format(new Date()) + "',"
+                + "project.modify='" + sdf.format(new Date()) + "'";
         try{
-            ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
+            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 proj_id = rs.getInt(1);
             }else{
@@ -131,18 +128,16 @@ public class DatabaseManager {
     }
     
     public static int addCalculation(Calculation calc){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         int calc_id;
-        String sql = "INSERT INTO `calculation` SET ("
-                + "project='" + calc.getProject().getId() + "',"
-                + "owner='" + calc.getOwner().getUserID() + "',"
-                + "name='" + calc.getName() + "',"
-                + "comment='" + calc.getComment() + "',"
-                + "create='" + sdf.format(new Date()) + "',"
-                + "modify='" + sdf.format(new Date()) + "'"
-                +")";
+        String sql = "INSERT INTO `calculation` SET "
+                + "calculation.project='" + calc.getProject().getId() + "',"
+                + "calculation.owner='" + calc.getOwner().getUserID() + "',"
+                + "calculation.name='" + calc.getName() + "',"
+                + "calculation.comment='" + calc.getComment() + "',"
+                + "calculation.create='" + sdf.format(new Date()) + "',"
+                + "calculation.modify='" + sdf.format(new Date()) + "'";                
         try{
-            ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
+            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 calc_id = rs.getInt(1);
             }else{
@@ -156,24 +151,22 @@ public class DatabaseManager {
     }
     
     public static int addTask(Task task){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         int task_id;
-        String sql = "INSERT INTO `task` SET ("
-                + "status='" + task.getStatus().ordinal() + "',"
-                + "owner='" + task.getOwner().getUserID() + "',"
-                + "calc='" + task.getCalculation().getId() + "',"
-                + "project='" + task.getProject().getId() + "',"
-                + "qrank='" + task.getQueueRank() + "',"
-                + "prank='" + task.getPriorityRank().ordinal() + "',"
-                + "comment='" + task.getComment() + "',"
-                + "name='" + task.getName() + "',"
-                + "create='" + sdf.format(new Date()) + "',"
-                + "modify='" + sdf.format(new Date()) + "',"
-                + "kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
-                + "kaks_m='" + task.getKaKsMethod().name() + "'"
-                + ")";
+        String sql = "INSERT INTO `task` SET "
+                + "task.status='" + task.getStatus().ordinal() + "',"
+                + "task.owner='" + task.getOwner().getUserID() + "',"
+                + "task.calc='" + task.getCalculation().getId() + "',"
+                + "task.project='" + task.getProject().getId() + "',"
+                + "task.qrank='" + task.getQueueRank() + "',"
+                + "task.prank='" + task.getPriorityRank().ordinal() + "',"
+                + "task.comment='" + task.getComment() + "',"
+                + "task.name='" + task.getName() + "',"
+                + "task.create='" + sdf.format(new Date()) + "',"
+                + "task.modify='" + sdf.format(new Date()) + "',"
+                + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
+                + "task.kaks_m='" + task.getKaKsMethod().name() + "'";
         try{
-            ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
+            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 task_id = rs.getInt(1);
             }else{
@@ -187,116 +180,94 @@ public class DatabaseManager {
     }
     
     public static boolean editProject(Project proj){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         //id, owner, create can't be modified
-        String sql = "UPDATE `task` SET ("
-                + "name='" + proj.getName() + "',"
-                + "comment='" + proj.getComment() + "',"
-                + "modify='" + sdf.format(new Date()) + "'"
-                + ") WHERE id = " + proj.getId();
-        try{
-            ResultSet rs = dbconn.execQuery(sql);
-            if (rs.next()){
-                return true;
-            }
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+        String sql = "UPDATE `task` SET "
+                + "task.name='" + proj.getName() + "',"
+                + "task.comment='" + proj.getComment() + "',"
+                + "task.modify='" + sdf.format(new Date()) + "'"
+                + " WHERE task.id = " + proj.getId();
+        return (dbconn.execUpdate(sql) > 0) ? true : false;   
     }
     
     public static boolean editCalculation(Calculation calc){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         //id, owner, create can't be modified
-        String sql = "UPDATE `calculation` SET ("
-                + "name='" + calc.getName() + "',"
-                + "comment='" + calc.getComment() + "',"
-                + "project='" + calc.getProject().getId() + "',"
-                + "modify='" + sdf.format(new Date()) + "'"
-                + ") WHERE id = " + calc.getId();
-        try{
-            ResultSet rs = dbconn.execQuery(sql);
-            if (rs.next()){
-                return true;
-            }
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;            
+        String sql = "UPDATE `calculation` SET "
+                + "calculation.name='" + calc.getName() + "',"
+                + "calculation.comment='" + calc.getComment() + "',"
+                + "calculation.project='" + calc.getProject().getId() + "',"
+                + "calculation.modify='" + sdf.format(new Date()) + "'"
+                + " WHERE calculation.id = " + calc.getId();
+        return (dbconn.execUpdate(sql) > 0) ? true : false;             
     }
     
-    public static boolean editTask(Task task){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
+    public static boolean editTask(Task task) {
         //id, owner, create, finish can't be modified
-        String sql = "UPDATE `task` SET ("
-                + "status='" + task.getStatus().ordinal() + "',"
-                + "calc='" + task.getCalculation().getId() + "',"
-                + "project='" + task.getProject().getId() + "',"
-                + "qrank='" + task.getQueueRank() + "',"
-                + "prank='" + task.getPriorityRank() + "',"
-                + "comment='" + task.getComment() + "',"
-                + "name='" + task.getName() + "',"
-                + "modify='" + sdf.format(new Date()) + "',"
-                + "kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
-                + "kaks_m='" + task.getKaKsMethod().name() + "'"
-                + ") WHERE id = " + task.getId();
-        try {
-            ResultSet rs = dbconn.execQuery(sql);
-            if (rs.next()){
-                return true;
-            }  
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+        String sql = "UPDATE `task` SET "
+                + "task.status='" + task.getStatus().ordinal() + "',"
+                + "task.calc='" + task.getCalculation().getId() + "',"
+                + "task.project='" + task.getProject().getId() + "',"
+                + "task.qrank='" + task.getQueueRank() + "',"
+                + "task.prank='" + task.getPriorityRank() + "',"
+                + "task.comment='" + task.getComment() + "',"
+                + "task.name='" + task.getName() + "',"
+                + "task.modify='" + sdf.format(new Date()) + "',"
+                + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
+                + "task.kaks_m='" + task.getKaKsMethod().name() + "'"
+                + " WHERE task.id = " + task.getId();
+        return (dbconn.execUpdate(sql) > 0) ? true : false;        
     }
     
     public static boolean delProject(Project proj){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
-        String sql = "DELETE FROM `project` WHERE id = " + proj.getId();
-        try {
-            ResultSet rs = dbconn.execQuery(sql);
-            if (rs.next()){
-                return true;
-            }
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        boolean isSuccess = true;
+        //delete all sub calculations
+        ArrayList<Calculation> calcs = subCalculations(proj);
+        for (Iterator<Calculation> it = calcs.iterator(); it.hasNext();){
+            isSuccess &= delCalculation(it.next());
         }
-        return false;
+        if (isSuccess) { //has deleted all subs
+            String sql = "DELETE FROM `project` WHERE project.id = " + proj.getId();
+            if (dbconn.execUpdate(sql) > 0) {
+                isSuccess = true;
+            } else {
+                isSuccess = false;
+            }
+        }
+        return isSuccess;
     }
     
-    public static boolean delCalculation(Calculation calc){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
-        String sql = "DELETE FROM `calculation` WHERE id = " + calc.getId();
-        try {
-            ResultSet rs = dbconn.execQuery(sql);
-            if (rs.next()){
-                return true;
-            }
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+    public static boolean delCalculation(Calculation calc) {
+        boolean isSuccess = true;
+        //delete all sub tasks
+        ArrayList<Task> tasks = subTasks(calc);
+        for (Iterator<Task> it = tasks.iterator(); it.hasNext();) {
+            isSuccess &= delTask(it.next());
         }
-        return false;        
+        if (isSuccess) {
+            String sql = "DELETE FROM `calculation` WHERE calculation.id = " + calc.getId();
+            if (dbconn.execUpdate(sql) > 0) {
+                isSuccess = true;
+            } else {
+                isSuccess = false;
+            }
+        }
+        return isSuccess;
     }
     
-    public static boolean delTask(Task task){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
-        String sql = "DELETE FROM `task` WHERE id = " + task.getId();
-        try {
-            ResultSet rs = dbconn.execQuery(sql);
-            if (rs.next()){
-                return true;
-            }
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+    public static boolean delTask(Task task) {
+        boolean isSuccess;
+        String sql = "DELETE FROM `task` WHERE task.id = " + task.getId();
+        if (dbconn.execUpdate(sql) > 0) {
+            isSuccess = true;
+        } else {
+            isSuccess = false;
         }
-        return false;               
+        return isSuccess;
     }
     
     public static ArrayList<Project> userProjects(Account account){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
+
         ArrayList<Project> projects = new ArrayList<Project>();
-        String sql = "SELECT * FROM `project` WHERE owner = " + account.getUserID();
+        String sql = "SELECT * FROM `project` WHERE project.owner = " + account.getUserID();
         try{
             ResultSet rs = dbconn.execQuery(sql);
             while (rs.next()){
@@ -316,9 +287,8 @@ public class DatabaseManager {
     }
     
     public static ArrayList<Calculation> subCalculations(Project project){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         ArrayList<Calculation> calcs = new ArrayList<Calculation>();
-        String sql = "SELECT * FROM `calculation` WHERE project = " + project.getId();
+        String sql = "SELECT * FROM `calculation` WHERE calculation.project = " + project.getId();
         try{
             ResultSet rs = dbconn.execQuery(sql);
             while (rs.next()){
@@ -339,9 +309,8 @@ public class DatabaseManager {
     }
     
     public static ArrayList<Task> subTasks(Calculation calc){
-        DBConnector dbconn = GWTServiceImpl.getDBConn();
         ArrayList<Task> tasks = new ArrayList<Task>();
-        String sql = "SELECT * FROM `task` WHERE calc = " + calc.getId();
+        String sql = "SELECT * FROM `task` WHERE task.calc = " + calc.getId();
         try{
             ResultSet rs = dbconn.execQuery(sql);
             while (rs.next()){

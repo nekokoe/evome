@@ -14,20 +14,17 @@ Uncomment this for XHTML entities
     <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins0">
         <ui:attributes top="0" right="0" bottom="0" left="0" />
     </ui:with>
-      <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins10">
-    <ui:attributes top="10" right="10" bottom="10" left="10" />
-  </ui:with>
-  <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
-    <ui:attributes width="1" height="-1" />
-  </ui:with>
-  <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="contentRowData">
-    <ui:attributes width="-1" height="-1" margins="{margins10}"/>      
-  </ui:with>
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins10">
+        <ui:attributes top="10" right="10" bottom="10" left="10" />
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
+        <ui:attributes width="1" height="-1" />
+    </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="contentRowData">
+        <ui:attributes width="-1" height="-1" margins="{margins10}"/>      
+    </ui:with>
 
     <ui:style>
-        .celltext{
-            font-size:22px;
-        }
        
     </ui:style>
     <!-- start of project status page -->

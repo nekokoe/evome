@@ -86,7 +86,6 @@ public class TreeView extends Composite {
         account.setUserID(s.getUserID());
         
         //final RpcDataBasket<ArrayList<Project>> rdbp = new RpcDataBasket<ArrayList<Project>>();
-        final TreeStore ts = store;
         rpc.userProjects(account, new AsyncCallback<ArrayList<Project>>() {
             @Override
             public void onSuccess(ArrayList<Project> projects) {
@@ -94,37 +93,9 @@ public class TreeView extends Composite {
                 for (Iterator<Project> itp = projects.iterator(); itp.hasNext();) {
                     Project p = itp.next();
                     final TreeViewItem tvip = new TreeViewItem("project", p.getId(), p.getName());
-                    ts.add(tvip);
+                    store.add(tvip);
                     //add sub calculations
-                    rpc.subCalculations(p, new AsyncCallback<ArrayList<Calculation>>() {
-                        @Override
-                        public void onSuccess(ArrayList<Calculation> calcs) {
-                            for (Iterator<Calculation> itc = calcs.iterator(); itc.hasNext();) {
-                                Calculation c = itc.next();
-                                final TreeViewItem tvic = new TreeViewItem("calculation", c.getId(), c.getName());
-                                ts.add(tvip, tvic);
-                                //add sub tasks
-                                rpc.subTasks(c, new AsyncCallback<ArrayList<Task>>() {
-                                    @Override
-                                    public void onSuccess(ArrayList<Task> tasks) {
-                                        for (Iterator<Task> itt = tasks.iterator(); itt.hasNext();) {
-                                            Task t = itt.next();
-                                            TreeViewItem tvit = new TreeViewItem("task", t.getId(), t.getName());
-                                            store.add(tvic, tvit);
-                                        }
-                                    }
-                                    @Override
-                                    public void onFailure(Throwable caught) {
-                                        Window.alert(caught.getMessage()); //pending delete, test                                        
-                                    }
-                                });
-                            }
-                        }
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Window.alert(caught.getMessage()); //pending delete, test                            
-                        }
-                    });
+                    addSubCalculations(tvip, p);
                 }
             }
             @Override
@@ -149,6 +120,65 @@ public class TreeView extends Composite {
     public TreeStore<TreeViewItem> getTreeStore(){
         return this.store;
     }
+    
+    public void addSubCalculations(TreeViewItem tvi, Project p) {
+        final TreeViewItem tvip = tvi;
+        rpc.subCalculations(p, new AsyncCallback<ArrayList<Calculation>>() {
+            @Override
+            public void onSuccess(ArrayList<Calculation> calcs) {
+                for (Iterator<Calculation> itc = calcs.iterator(); itc.hasNext();) {
+                    Calculation c = itc.next();
+                    TreeViewItem tvic = new TreeViewItem("calculation", c.getId(), c.getName());
+                    store.add(tvip, tvic);
+                    //add sub tasks
+                    addSubTasks(tvic, c);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert(caught.getMessage()); //pending delete, test                            
+            }
+        });
+    }
+    
+    public void addSubTasks(TreeViewItem tvi, Calculation c){
+        final TreeViewItem tvic = tvi;
+        rpc.subTasks(c, new AsyncCallback<ArrayList<Task>>() {
+            @Override
+            public void onSuccess(ArrayList<Task> tasks) {
+                for (Iterator<Task> itt = tasks.iterator(); itt.hasNext();) {
+                    Task t = itt.next();
+                    TreeViewItem tvit = new TreeViewItem("task", t.getId(), t.getName());
+                    store.add(tvic, tvit);
+                }
+            }
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert(caught.getMessage()); //pending delete, test                                        
+            }
+        });   
+    }
+    
+    public void updateNode(TreeViewItem tvi){
+        //depends on leaf type
+        if (tvi.getType().equals("project")){
+            store.update(tvi);
+            store.removeChildren(tvi);
+            Project p = new Project();
+            p.setId(tvi.getId());
+            addSubCalculations(tvi, p);
+        }else if(tvi.getType().equals("calculation")){
+            store.update(tvi);
+            store.removeChildren(tvi);
+            Calculation c = new Calculation();
+            c.setId(tvi.getId());
+            addSubTasks(tvi, c);
+        }else if(tvi.getType().equals("task")){
+            store.update(tvi);
+        }
+    }
+
     
     private void sampleData(){
         //set treeview

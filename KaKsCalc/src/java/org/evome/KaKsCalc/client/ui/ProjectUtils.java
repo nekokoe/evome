@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.Dialog;
@@ -23,7 +24,8 @@ import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import org.evome.KaKsCalc.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
+import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.info.Info;
 /**
  *
  * @author nekoko
@@ -34,7 +36,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class ProjectUtils extends Composite {
     
     private Project myproject = new Project();
-
+    private TreeStore store = Workspace.getTreeView().getTreeStore(); //the tree store to update
+    
     private static GWTServiceAsync rpc = Shared.getService();
     private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
     
@@ -51,10 +54,10 @@ public class ProjectUtils extends Composite {
         this.setProject(project);
     }
     
-    public ProjectUtils(int proj_id){
+    public ProjectUtils(TreeViewItem tvi){
         initWidget(uiBinder.createAndBindUi(this));
         final ProjectUtils projutil = this;
-        rpc.getProject(proj_id, new AsyncCallback<Project>(){
+        rpc.getProject(tvi.getId(), new AsyncCallback<Project>(){
             @Override
             public void onSuccess(Project project){
                 projutil.setProject(project);
@@ -66,13 +69,15 @@ public class ProjectUtils extends Composite {
     
     @UiHandler("btnProjectAdd")
     public void btnProjectAddClick(SelectEvent event){
-        ProjectEdit edit = new ProjectEdit();
-        edit.show();
+        ProjectEdit add = new ProjectEdit();
+        add.setHeadingText("Add New Project");
+        add.show();
     }
     
     @UiHandler("btnProjectEdit")
     public void btnProjectEditClick(SelectEvent event){
         ProjectEdit edit = new ProjectEdit(myproject);
+        edit.setHeadingText("Edit Project : " + myproject.getName());
         edit.show();
     }
     
@@ -86,8 +91,21 @@ public class ProjectUtils extends Composite {
             public void onHide(HideEvent event){
                 MessageBox source = (MessageBox)event.getSource();
                 if (source.getHideButton() == source.getButtonById(Dialog.PredefinedButton.YES.name())){
-                    //YES clicked
-                    //perform project deletion
+                    rpc.delProject(myproject, new AsyncCallback<Boolean>(){
+                        @Override
+                        public void onSuccess(Boolean b){
+                            if (b){
+                                store.remove(new TreeViewItem("project",myproject.getId(),myproject.getName()));
+                            }else{
+                                Info.display("Error", "Failed to delete " + myproject.getName());
+                            }
+                        }
+                        @Override
+                        public void onFailure(Throwable caught){
+                            Info.display("Error", "Communication with server failed.");
+                        }
+                        
+                    });
                 }
             }
         });

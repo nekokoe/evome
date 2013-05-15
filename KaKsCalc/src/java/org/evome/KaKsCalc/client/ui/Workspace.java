@@ -32,7 +32,7 @@ public class Workspace extends Composite {
 
     interface WorkspaceUiBinder extends UiBinder<Widget, Workspace> {}
     
-    private TreeView treeView;
+    private static TreeView treeView;
     
     public Workspace(Session s){
         initWidget(uiBinder.createAndBindUi(this));        
@@ -60,8 +60,9 @@ public class Workspace extends Composite {
     }
     
     public final void setTreeView(TreeView tv){
-        this.treeView = tv;
-
+        //in workspace, only 1 treeview implemented
+        //set it to static variable to make it visible to other widgets
+        Workspace.treeView = tv;
         //add selection handler
         tv.addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewItem>(){
             @Override
@@ -71,11 +72,11 @@ public class Workspace extends Composite {
                     pnlWorkSpace.clear();
                     pnlWorkSpace.setHeadingText(item.getValue());
                     if (item.getType().equalsIgnoreCase("project")){
-                        pnlWorkSpace.add(new ProjectUtils(item.getId()));
+                        pnlWorkSpace.add(new ProjectUtils(item));
                     }else if(item.getType().equalsIgnoreCase("calculation")){
-                        pnlWorkSpace.add(new CalculationUtils(item.getId()));
+                        pnlWorkSpace.add(new CalculationUtils(item));
                     }else if(item.getType().equalsIgnoreCase("task")){
-                        pnlWorkSpace.add(new TaskUtils(item.getId()));
+                        pnlWorkSpace.add(new TaskUtils(item));
                     }
                 }
             }
@@ -85,9 +86,9 @@ public class Workspace extends Composite {
         tv.treeProject.getSelectionModel().select(0, false);
     }
     
-    public TreeView getTreeView(){
-        return this.treeView;
-    }    
+    public static TreeView getTreeView(){
+        return treeView;
+    }
     
     @UiField(provided = true)
     MarginData outerData = new MarginData();

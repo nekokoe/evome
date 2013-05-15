@@ -22,7 +22,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  * @author nekoko
  */
-public class MainEntryPoint implements EntryPoint {
+public class KaKsCalc implements EntryPoint {
 
     /**
      * Creates a new instance of MainEntryPoint
@@ -32,12 +32,24 @@ public class MainEntryPoint implements EntryPoint {
     //session id is generated when browsing the main page
     //session is associated with user and at the server end
     //if session is still alive at the server end, trying to recover the session data to UI
-    private Session session;
-    private Account account;
+    private static Session session;
+    private static Account account;
     
-    public MainEntryPoint() {
+    public KaKsCalc() {
 
-        
+    }
+    
+    public static Session getSession(){
+        return session;
+    }
+    public static Account getAccount(){
+        return account;
+    }
+    public static void setSession(Session s){
+        session = s;
+    }
+    public static void setAccount(Account a){
+        account = a;
     }
 
     /**
@@ -46,12 +58,11 @@ public class MainEntryPoint implements EntryPoint {
      */
     @Override
     public void onModuleLoad() {
-    
-        
         //add test session
-        Session s = Session.sampleData();
+        session = Session.sampleData();
+        account = Account.sampleData();
         
-        Workspace myWorkSpace = new Workspace(s);
+        Workspace myWorkSpace = new Workspace(session);
         RootPanel.get().add(myWorkSpace);
         
                 

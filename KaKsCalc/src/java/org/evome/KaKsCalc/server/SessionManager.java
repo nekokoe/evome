@@ -26,15 +26,14 @@ public class SessionManager {
     
     public static Session createSession(Account account){
         Session session;
-        String sql = "INSERT INTO `session` SET ("
-                + "uuid='" + UUID.randomUUID().toString() + "',"
-                + "account='" + account.getUserID() + "',"
-                + "account_uuid='" + account.getUUID() + "',"
-                + "create='" + sdf.format(new Date()) + "',"
-                + "lastActive='" + sdf.format(new Date()) + "'"
-                + ")";
+        String sql = "INSERT INTO `session` SET "
+                + "session.uuid='" + UUID.randomUUID().toString() + "',"
+                + "session.account='" + account.getUserID() + "',"
+                + "session.account_uuid='" + account.getUUID() + "',"
+                + "session.create='" + sdf.format(new Date()) + "',"
+                + "session.lastActive='" + sdf.format(new Date()) + "'";
         try{
-            ResultSet rs = dbconn.execQueryReturnGeneratedKeys(sql);
+            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 int id = rs.getInt(1);
                 session = getSessionByID(id);             
@@ -50,7 +49,7 @@ public class SessionManager {
     
     public static Session getSessionByID(int id){
         Session s = new Session();
-        String sql = "SELECT * FROM `session` WHERE id = " + id;
+        String sql = "SELECT * FROM `session` WHERE session.id = " + id;
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
@@ -72,7 +71,7 @@ public class SessionManager {
     
     public static Session getSessionByUUID(String uuid){
         Session s = new Session();
-        String sql = "SELECT * FROM `session` WHERE uuid = " + uuid;
+        String sql = "SELECT * FROM `session` WHERE session.uuid = " + uuid;
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
@@ -95,7 +94,7 @@ public class SessionManager {
     public static ArrayList<Session> getAccountSessionList(Account account){
         //this function enables user to recover broken session or kick off other sessions
         ArrayList<Session> list = new ArrayList<Session>();
-        String sql = "SELECT FROM `session` WHERE account = " + account.getUserID();
+        String sql = "SELECT FROM `session` WHERE session.account = " + account.getUserID();
         try{
             ResultSet rs = dbconn.execQuery(sql);
             while (rs.next()){
@@ -117,18 +116,14 @@ public class SessionManager {
     
     public static void activeSession(Session s){
         //call this to keep session alive
-        String sql = "UPDATE `session` SET (lastActive=NOW()) WHERE id = " + s.getSessionID();
-        ResultSet rs = dbconn.execQuery(sql);
+        String sql = "UPDATE `session` SET session.lastActive = NOW() WHERE session.id = " + s.getSessionID();
+        dbconn.execUpdate(sql);
     }
     
     public static void retireTimeoutSession(){
         //sessions timed out by sysconf.SESSION_TIME_OUT is retired
-        String sql = "DELETE FROM `session` WHERE TIME_TO_SEC(TIMEDIFF(lastActive, NOW())) > " + sysconf.SESSION_TIME_OUT;
-        try{
-            ResultSet rs = dbconn.execQuery(sql);
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);            
-        }
+        String sql = "DELETE FROM `session` WHERE TIME_TO_SEC(TIMEDIFF(session.lastActive, NOW())) > " + sysconf.SESSION_TIME_OUT;
+        dbconn.execUpdate(sql);
     }
     
     public static boolean authenticValidation(Session s, Account a, String clientKey){

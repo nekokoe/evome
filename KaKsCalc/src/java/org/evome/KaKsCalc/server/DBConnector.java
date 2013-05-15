@@ -31,17 +31,29 @@ public class DBConnector {
     
     
     public ResultSet execQuery(String sql) {
-        ResultSet rs = null;
+        //for select
         try {
             PreparedStatement query = conn.prepareStatement(sql);
-            rs = query.executeQuery();
+            ResultSet rs = query.executeQuery();
+            return rs;
         } catch (Exception ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-        }
-        return rs;
+            return null;
+        }        
     }
     
-    public ResultSet execQueryReturnGeneratedKeys(String sql){
+    public int execUpdate(String sql){
+        //for update, insert, delete
+        try {
+            PreparedStatement query = conn.prepareStatement(sql);
+            return query.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        } 
+    }
+    
+    public ResultSet execUpdateReturnGeneratedKeys(String sql){
         ResultSet rs = null;
         try {
             PreparedStatement query = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -80,19 +92,5 @@ public class DBConnector {
         return sdf.format(date);
     }
     
-//    public Connection getAccountDBConn(){
-//        Connection connect = null;
-//        String driver = "com.mysql.jdbc.Driver";
-//        try {
-//            Class.forName(driver).newInstance();
-//        } catch (Exception ex) {
-//        }
-//
-//        try {
-//            connect = DriverManager.getConnection(conf.DB_URL + conf.DB_NAME, conf.DB_USER, conf.DB_PASS);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return connect;        
-//    }
+
 }
