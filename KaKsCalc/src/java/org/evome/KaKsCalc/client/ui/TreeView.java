@@ -121,6 +121,10 @@ public class TreeView extends Composite {
         return this.store;
     }
     
+    public Tree<TreeViewItem, String> getTree(){
+        return this.treeProject;
+    }
+    
     public void addSubCalculations(TreeViewItem tvi, Project p) {
         final TreeViewItem tvip = tvi;
         rpc.subCalculations(p, new AsyncCallback<ArrayList<Calculation>>() {

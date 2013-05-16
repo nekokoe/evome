@@ -61,6 +61,7 @@ public class CalculationUtils extends Composite {
     
     public final void setCurrentCalculation(Calculation calc){
         this.calc = calc;
+        Workspace.getContentPanel().setHeadingText(calc.getName());
         panel.clear();
         panel.add(new CalculationStatus(calc));
     }    

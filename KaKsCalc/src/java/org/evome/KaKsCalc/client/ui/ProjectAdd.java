@@ -7,55 +7,45 @@ package org.evome.KaKsCalc.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.sencha.gxt.data.shared.TreeStore;
+import com.sencha.gxt.widget.core.client.box.ProgressMessageBox;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.form.TextArea;
-import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.sencha.gxt.widget.core.client.Dialog;
-import com.sencha.gxt.widget.core.client.form.FieldLabel;
+import org.evome.KaKsCalc.client.KaKsCalc;
+import org.evome.KaKsCalc.client.Project;
 import com.sencha.gxt.widget.core.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import org.evome.KaKsCalc.client.*;
-import com.sencha.gxt.widget.core.client.box.ProgressMessageBox;
-import com.sencha.gxt.data.shared.TreeStore;
+import org.evome.KaKsCalc.client.GWTServiceAsync;
+import org.evome.KaKsCalc.client.Shared;
+
+import com.google.gwt.user.client.Timer;
+
 /**
  *
  * @author nekoko
  */
-public class ProjectEdit extends Window {
+public class ProjectAdd extends Window {
     
-    private static ProjectEditUiBinder uiBinder = GWT.create(ProjectEditUiBinder.class);
+    private static ProjectAddUiBinder uiBinder = GWT.create(ProjectAddUiBinder.class);
     private static GWTServiceAsync rpc = Shared.getService();
     
     private TreeStore<TreeViewItem> store = Workspace.getTreeView().getTreeStore(); //the tree store to update
-    private Project myproject; //store the project passed in
     
-    interface ProjectEditUiBinder extends UiBinder<Widget, ProjectEdit> {
+    interface ProjectAddUiBinder extends UiBinder<Widget, ProjectAdd> {
     }
     
-    public ProjectEdit(Project project){
+    public ProjectAdd() {
         setWidget(uiBinder.createAndBindUi(this));
         init();
-        this.myproject = project;
-        //fill fields with given project
-        txtProjectID.setValue(Integer.toString(project.getId()));
-        txtProjectOwner.setValue(project.getOwner().getFullName());
-        txtProjectName.setValue(project.getName());
-        txtProjectComment.setValue(project.getComment());
-        //set id and owner read only
-        txtProjectID.setReadOnly(true);
-        txtProjectOwner.setReadOnly(true);                
     }
     
-    public ProjectEdit(){
-        setWidget(uiBinder.createAndBindUi(this));        
-    }
     
     @UiField
-    TextField txtProjectID, txtProjectOwner, txtProjectName;
+    TextField txtProjectName;
     @UiField
     TextArea txtProjectComment;
     
@@ -63,7 +53,6 @@ public class ProjectEdit extends Window {
     public void onSaveClick(SelectEvent event){
         //process data update
         final Project p = new Project();
-        p.setId(myproject.getId());
         p.setName(txtProjectName.getText().replaceAll("'", "&#39"));
         p.setOwner(KaKsCalc.getAccount());
         p.setComment(txtProjectComment.getText().replaceAll("'", "&#39"));
@@ -72,18 +61,24 @@ public class ProjectEdit extends Window {
         pmb.setModal(true);
         pmb.show();
         
-        rpc.editProject(p, new AsyncCallback<Boolean>(){
+        rpc.addNewProject(p, new AsyncCallback<Integer>(){
            @Override
-           public void onSuccess(Boolean b){
+           public void onSuccess(Integer pid){
                pmb.updateProgress(1,"Done.");
-               store.update(new TreeViewItem("project", myproject.getId(), p.getName()));
+               store.add(new TreeViewItem("project",pid, p.getName()));
            }
            @Override
            public void onFailure(Throwable caught){
                
            }
         });
-        pmb.hide();
+        Timer t = new Timer(){
+            @Override
+            public void run(){
+                pmb.hide();
+            }
+        };
+        t.schedule(1000);
         this.hide();
     }
     
@@ -98,6 +93,8 @@ public class ProjectEdit extends Window {
         this.setModal(true);
         this.setMinWidth(360);
         this.setMinHeight(300);
+        txtProjectComment.setHeight(150);
     }
+    
     
 }

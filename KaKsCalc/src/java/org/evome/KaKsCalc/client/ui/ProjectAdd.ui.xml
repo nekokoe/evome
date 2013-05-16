@@ -27,20 +27,7 @@ Uncomment this for XHTML entities
     </ui:style>
         
         <container:VerticalLayoutContainer>
-            <container:child layoutData="{defaultVerticalLayout}">
-                <form:FieldLabel text="Project ID">
-                    <form:widget>
-                        <form:TextField ui:field="txtProjectID" />
-                    </form:widget>
-                </form:FieldLabel>
-            </container:child>
-            <container:child layoutData="{defaultVerticalLayout}">
-                <form:FieldLabel text="Project Owner">
-                    <form:widget>
-                        <form:TextField ui:field="txtProjectOwner"/>
-                    </form:widget>
-                </form:FieldLabel>                
-            </container:child>
+
             <container:child layoutData="{defaultVerticalLayout}">
                 <form:FieldLabel text="Project Name">
                     <form:widget>

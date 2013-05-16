@@ -33,6 +33,7 @@ public class Workspace extends Composite {
     interface WorkspaceUiBinder extends UiBinder<Widget, Workspace> {}
     
     private static TreeView treeView;
+    private static ContentPanel contentPanel;
     
     public Workspace(Session s){
         initWidget(uiBinder.createAndBindUi(this));        
@@ -56,7 +57,9 @@ public class Workspace extends Composite {
         westData.setSplit(true);
         centerData.setMargins(new Margins(0, 5, 5, 5));
         //set root container width        
-        conRoot.setWidth(Window.getClientWidth());        
+        conRoot.setWidth(Window.getClientWidth());
+        //set pnlWorkSpace as default content panel
+        contentPanel = pnlWorkSpace;
     }
     
     public final void setTreeView(TreeView tv){
@@ -70,7 +73,7 @@ public class Workspace extends Composite {
                 for(Iterator<TreeViewItem> it = event.getSelection().iterator(); it.hasNext();){
                     TreeViewItem item = it.next();
                     pnlWorkSpace.clear();
-                    pnlWorkSpace.setHeadingText(item.getValue());
+                    //pnlWorkSpace.setHeadingText(item.getValue());
                     if (item.getType().equalsIgnoreCase("project")){
                         pnlWorkSpace.add(new ProjectUtils(item));
                     }else if(item.getType().equalsIgnoreCase("calculation")){
@@ -88,6 +91,9 @@ public class Workspace extends Composite {
     
     public static TreeView getTreeView(){
         return treeView;
+    }
+    public static ContentPanel getContentPanel(){
+        return contentPanel;
     }
     
     @UiField(provided = true)

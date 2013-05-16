@@ -35,8 +35,8 @@ import com.sencha.gxt.widget.core.client.info.Info;
  */
 public class ProjectUtils extends Composite {
     
-    private Project myproject = new Project();
-    private TreeStore store = Workspace.getTreeView().getTreeStore(); //the tree store to update
+    private Project myproject;
+    private TreeStore<TreeViewItem> store = Workspace.getTreeView().getTreeStore(); //the tree store to update
     
     private static GWTServiceAsync rpc = Shared.getService();
     private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
@@ -56,20 +56,12 @@ public class ProjectUtils extends Composite {
     
     public ProjectUtils(TreeViewItem tvi){
         initWidget(uiBinder.createAndBindUi(this));
-        final ProjectUtils projutil = this;
-        rpc.getProject(tvi.getId(), new AsyncCallback<Project>(){
-            @Override
-            public void onSuccess(Project project){
-                projutil.setProject(project);
-            }
-            @Override
-            public void onFailure(Throwable caught){}
-        });        
+        this.setProject(tvi);
     }
     
     @UiHandler("btnProjectAdd")
     public void btnProjectAddClick(SelectEvent event){
-        ProjectEdit add = new ProjectEdit();
+        ProjectAdd add = new ProjectAdd();
         add.setHeadingText("Add New Project");
         add.show();
     }
@@ -83,6 +75,7 @@ public class ProjectUtils extends Composite {
     
     @UiHandler("btnProjectDel")
     public void btnProjectDelClick(SelectEvent event){
+        final ProjectUtils pu = this;
         ConfirmMessageBox confirm = 
                 new ConfirmMessageBox("Confirm", "Are you sure want to delete : " + myproject.getName() + " ? <br>"
                 + "All data under this project will be deleted!");
@@ -96,6 +89,7 @@ public class ProjectUtils extends Composite {
                         public void onSuccess(Boolean b){
                             if (b){
                                 store.remove(new TreeViewItem("project",myproject.getId(),myproject.getName()));
+                                pu.setProject(Workspace.getTreeView().getTreeStore().getChild(0));
                             }else{
                                 Info.display("Error", "Failed to delete " + myproject.getName());
                             }
@@ -126,8 +120,21 @@ public class ProjectUtils extends Composite {
     
     public final void setProject(Project project){
         this.myproject = project;
+        Workspace.getContentPanel().setHeadingText(project.getName());
         panel.clear();
         panel.add(new ProjectStatus(project));
+    }
+    
+    public final void setProject(TreeViewItem tvi){
+        final ProjectUtils pu = this;        
+        rpc.getProject(tvi.getId(), new AsyncCallback<Project>(){
+            @Override
+            public void onSuccess(Project project){
+                pu.setProject(project);
+            }
+            @Override
+            public void onFailure(Throwable caught){}
+        });          
     }
     
 }

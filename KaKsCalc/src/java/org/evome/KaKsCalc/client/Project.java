@@ -16,7 +16,7 @@ import java.util.Date;
 public class Project implements IsSerializable{
     private int id;
     private Account owner;
-    private String name, ownerText, comment;
+    private String name, comment;
     private Date create, modify;
     
     public Project(String name){//for test purpose

@@ -59,6 +59,7 @@ public class TaskUtils extends Composite {
     
     public final void setCurrentTask(Task task){
         this.mytask = task;
+        Workspace.getContentPanel().setHeadingText(task.getName());
         panel.clear();
         panel.add(new TaskStatus(task));
     }

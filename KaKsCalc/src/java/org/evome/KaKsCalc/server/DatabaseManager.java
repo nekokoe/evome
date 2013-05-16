@@ -41,7 +41,8 @@ public class DatabaseManager {
                 pj.setName(rs.getString("name"));
                 pj.setOwner(AccountManager.getAccount(rs.getInt("owner")));
                 pj.setCreateDate(rs.getDate("create"));
-                pj.setModifyDate(rs.getDate("modify"));                
+                pj.setModifyDate(rs.getDate("modify"));
+                pj.setComment(rs.getString("comment"));
             }else{
                 pj = null;    //return null if no this project or else
             }
