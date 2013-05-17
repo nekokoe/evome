@@ -149,6 +149,10 @@ public class Task implements IsSerializable {
         return this.task_delete;
     }
     
+    public String getClassType(){
+        return "task";
+    }
+    
     public void setKaKsGeneticCode(Gencode code){
         this.kaks_code = code;
     }

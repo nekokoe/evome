@@ -18,20 +18,4 @@ public class Shared {
     public static GWTServiceAsync getService(){
         return rpc;
     }
-        
-    public String randomUUID(){
-        final String[] strs = new String[0];
-        rpc.randomUUID(new AsyncCallback<String>(){
-            @Override
-            public void onFailure(Throwable caught) {//failed 
-            }
-            @Override
-            public void onSuccess(String uuid) {
-                strs[0] = uuid;
-            }
-        });
-        return strs[0];
-    }
-
-
 }

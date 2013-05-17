@@ -45,11 +45,6 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
         return date.getTime();
     }
     
-    @Override
-    public String randomUUID(){
-        return UUID.randomUUID().toString();
-    }
-    
     //==============================ACCOUNT SERVICES============================
     
     @Override

@@ -22,8 +22,10 @@ import com.sencha.gxt.widget.core.client.Window;
 import org.evome.KaKsCalc.client.GWTServiceAsync;
 import org.evome.KaKsCalc.client.Shared;
 
-import com.google.gwt.user.client.Timer;
-
+//import com.google.gwt.user.client.Timer;
+//import com.google.gwt.event.shared.HandlerRegistration;
+//import com.google.gwt.event.shared.EventHandler;
+//import com.google.gwt.event.shared.GwtEvent;
 /**
  *
  * @author nekoko
@@ -33,7 +35,8 @@ public class ProjectAdd extends Window {
     private static ProjectAddUiBinder uiBinder = GWT.create(ProjectAddUiBinder.class);
     private static GWTServiceAsync rpc = Shared.getService();
     
-    private TreeStore<TreeViewItem> store = Workspace.getTreeView().getTreeStore(); //the tree store to update
+    private boolean isUpdated = false;
+    private TreeViewItem mytvi; 
     
     interface ProjectAddUiBinder extends UiBinder<Widget, ProjectAdd> {
     }
@@ -53,9 +56,10 @@ public class ProjectAdd extends Window {
     public void onSaveClick(SelectEvent event){
         //process data update
         final Project p = new Project();
-        p.setName(txtProjectName.getText().replaceAll("'", "&#39"));
+        final ProjectAdd pa = this;
+        p.setName(txtProjectName.getText());
         p.setOwner(KaKsCalc.getAccount());
-        p.setComment(txtProjectComment.getText().replaceAll("'", "&#39"));
+        p.setComment(txtProjectComment.getText());
         
         final ProgressMessageBox pmb = new ProgressMessageBox("In progess", "Communicating with the server, please wait...");
         pmb.setModal(true);
@@ -65,21 +69,18 @@ public class ProjectAdd extends Window {
            @Override
            public void onSuccess(Integer pid){
                pmb.updateProgress(1,"Done.");
-               store.add(new TreeViewItem("project",pid, p.getName()));
+               //store.add(new TreeViewItem("project",pid, p.getName())); //deprecated, this opr. should be handled in ProjectUtils
+               pa.isUpdated = true;
+               pa.mytvi = new TreeViewItem(p.getClassType(), pid, p.getName());
+               pmb.hide();
+               pa.hide();
            }
            @Override
            public void onFailure(Throwable caught){
-               
+               pmb.hide();
+               pa.hide();
            }
         });
-        Timer t = new Timer(){
-            @Override
-            public void run(){
-                pmb.hide();
-            }
-        };
-        t.schedule(1000);
-        this.hide();
     }
     
     @UiHandler("btnCancel")
@@ -89,12 +90,45 @@ public class ProjectAdd extends Window {
     }
     
     
+    
     private void init(){
         this.setModal(true);
-        this.setMinWidth(360);
-        this.setMinHeight(300);
-        txtProjectComment.setHeight(150);
+        this.setMinWidth(400);
+        this.setMinHeight(400);
+        this.setWidth(400);
+        this.setHeight(300);
     }
     
+    public boolean isUpdated(){
+        return this.isUpdated;
+    }
     
+    public TreeViewItem getMyTreeViewItem(){
+        return this.mytvi;
+    }
+    
+//    public interface UpdateHandler extends EventHandler{
+//        void onUpdate(UpdateEvent event);
+//    };
+//    
+//    public class UpdateEvent extends GwtEvent<UpdateHandler>{
+//        Type<UpdateHandler> TYPE = new Type<UpdateHandler>();
+//        @Override
+//        protected void dispatch(UpdateHandler handler) {
+//            handler.onUpdate(this);
+//        }
+//        @Override
+//        @SuppressWarnings({"unchecked", "rawtypes"})
+//        public Type<UpdateHandler> getAssociatedType() {
+//            return (Type) TYPE;
+//        }
+//        @Override
+//        public Window getSource(){
+//            return (Window) super.getSource();
+//        }
+//    }
+//    
+//    public HandlerRegistration addUpdateHandler(UpdateHandler handler){
+//        return this.addHandler(handler, new GwtEvent.Type<UpdateHandler>());
+//    }
 }

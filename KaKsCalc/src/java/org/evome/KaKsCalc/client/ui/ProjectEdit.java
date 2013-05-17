@@ -30,8 +30,9 @@ public class ProjectEdit extends Window {
     private static ProjectEditUiBinder uiBinder = GWT.create(ProjectEditUiBinder.class);
     private static GWTServiceAsync rpc = Shared.getService();
     
-    private TreeStore<TreeViewItem> store = Workspace.getTreeView().getTreeStore(); //the tree store to update
     private Project myproject; //store the project passed in
+    private boolean isUpdated = false;
+    private TreeViewItem mytvi;
     
     interface ProjectEditUiBinder extends UiBinder<Widget, ProjectEdit> {
     }
@@ -61,30 +62,32 @@ public class ProjectEdit extends Window {
     
     @UiHandler("btnSave")
     public void onSaveClick(SelectEvent event){
-        //process data update
-        final Project p = new Project();
+        final ProjectEdit pe = this;
+        final Project p = new Project();        
         p.setId(myproject.getId());
-        p.setName(txtProjectName.getText().replaceAll("'", "&#39"));
-        p.setOwner(KaKsCalc.getAccount());
-        p.setComment(txtProjectComment.getText().replaceAll("'", "&#39"));
+        p.setName(txtProjectName.getText());
+        p.setOwner(myproject.getOwner());
+        p.setComment(txtProjectComment.getText());
         
         final ProgressMessageBox pmb = new ProgressMessageBox("In progess", "Communicating with the server, please wait...");
         pmb.setModal(true);
         pmb.show();
         
         rpc.editProject(p, new AsyncCallback<Boolean>(){
-           @Override
-           public void onSuccess(Boolean b){
-               pmb.updateProgress(1,"Done.");
-               store.update(new TreeViewItem("project", myproject.getId(), p.getName()));
-           }
-           @Override
-           public void onFailure(Throwable caught){
-               
-           }
+            @Override
+            public void onSuccess(Boolean b) {
+                pmb.updateProgress(1, "Done.");
+                pe.isUpdated = b;
+                pe.mytvi = new TreeViewItem("project", p.getId(), p.getName());
+                pmb.hide();
+                pe.hide();
+            }
+            @Override
+            public void onFailure(Throwable caught) {
+                pmb.hide();
+                pe.hide();                
+            }
         });
-        pmb.hide();
-        this.hide();
     }
     
     @UiHandler("btnCancel")
@@ -98,6 +101,14 @@ public class ProjectEdit extends Window {
         this.setModal(true);
         this.setMinWidth(360);
         this.setMinHeight(300);
+    }
+    
+    public boolean isUpdated(){
+        return this.isUpdated;
+    }
+    
+    public TreeViewItem getMyTreeViewItem(){
+        return this.mytvi;
     }
     
 }

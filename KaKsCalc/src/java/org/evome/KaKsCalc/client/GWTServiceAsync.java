@@ -15,7 +15,6 @@ public interface GWTServiceAsync {
     //public void start(AsyncCallback<?> callback);
     
     public void getServerTime(AsyncCallback<Long> callback);
-    public void randomUUID(AsyncCallback<String> callback);
     
     //===========================ACCOUNT SERVICES===============================
     public void createSession(Account account, AsyncCallback<Session> callback);

@@ -9,15 +9,18 @@ Uncomment this for XHTML entities
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 >
+    <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins10">
+        <ui:attributes top="10" right="10" bottom="10" left="10" />
+    </ui:with>
     
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="defaultVerticalLayout">
-        <ui:attributes width="1" height="-1" />
+        <ui:attributes width="1" height="-1" margins="{margins10}" />
     </ui:with>
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="flexVerticalLayout">
-        <ui:attributes width="1" height="1" />
+        <ui:attributes width="1" height="0.9" margins="{margins10}"/>
     </ui:with>
     <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData" field="defaultHorizontalLayout">
-        <ui:attributes width="-1" height="1" />
+        <ui:attributes width="-1" height="1" margins="{margins10}"/>
     </ui:with>
         
     <ui:style>
@@ -31,15 +34,12 @@ Uncomment this for XHTML entities
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
-            <container:child>
+            <container:child layoutData="{flexVerticalLayout}">
                 <form:FieldLabel text="Calculation Details">
                     <form:widget>
-                        <form:TextField ui:field="txtComment"/>
+                        <form:TextArea ui:field="txtComment"/>
                     </form:widget>
                 </form:FieldLabel> 
-            </container:child>
-            <container:child layoutData="{flexVerticalLayout}">
-                
             </container:child>
             <container:child layoutData="{defaultVerticalLayout}">
                 <container:HorizontalLayoutContainer>

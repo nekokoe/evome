@@ -18,7 +18,6 @@ public interface GWTService extends RemoteService {
     //public void start();//rpc init: set sysconf and dbconn into GWTServiceImpl on server side.
     
     public long getServerTime(); //server time in second from 1970-1-1
-    public String randomUUID(); //require the server for a new random UUID
     
     
     

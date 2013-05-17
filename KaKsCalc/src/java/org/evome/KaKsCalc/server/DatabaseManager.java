@@ -110,8 +110,8 @@ public class DatabaseManager {
         int proj_id;
         String sql = "INSERT INTO `project` SET "
                 + "project.owner='"  + proj.getOwner().getUserID() + "',"
-                + "project.name='" + proj.getName() + "',"
-                + "project.comment='" + proj.getComment() + "',"
+                + "project.name='" + proj.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "project.comment='" + proj.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "project.create='" + sdf.format(new Date()) + "',"
                 + "project.modify='" + sdf.format(new Date()) + "'";
         try{
@@ -133,8 +133,8 @@ public class DatabaseManager {
         String sql = "INSERT INTO `calculation` SET "
                 + "calculation.project='" + calc.getProject().getId() + "',"
                 + "calculation.owner='" + calc.getOwner().getUserID() + "',"
-                + "calculation.name='" + calc.getName() + "',"
-                + "calculation.comment='" + calc.getComment() + "',"
+                + "calculation.name='" + calc.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "calculation.comment='" + calc.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "calculation.create='" + sdf.format(new Date()) + "',"
                 + "calculation.modify='" + sdf.format(new Date()) + "'";                
         try{
@@ -160,8 +160,8 @@ public class DatabaseManager {
                 + "task.project='" + task.getProject().getId() + "',"
                 + "task.qrank='" + task.getQueueRank() + "',"
                 + "task.prank='" + task.getPriorityRank().ordinal() + "',"
-                + "task.comment='" + task.getComment() + "',"
-                + "task.name='" + task.getName() + "',"
+                + "task.comment='" + task.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "task.name='" + task.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "task.create='" + sdf.format(new Date()) + "',"
                 + "task.modify='" + sdf.format(new Date()) + "',"
                 + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
@@ -182,19 +182,19 @@ public class DatabaseManager {
     
     public static boolean editProject(Project proj){
         //id, owner, create can't be modified
-        String sql = "UPDATE `task` SET "
-                + "task.name='" + proj.getName() + "',"
-                + "task.comment='" + proj.getComment() + "',"
-                + "task.modify='" + sdf.format(new Date()) + "'"
-                + " WHERE task.id = " + proj.getId();
+        String sql = "UPDATE `project` SET "
+                + "project.name='" + proj.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "project.comment='" + proj.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "project.modify='" + sdf.format(new Date()) + "'"
+                + " WHERE project.id = " + proj.getId();
         return (dbconn.execUpdate(sql) > 0) ? true : false;   
     }
     
     public static boolean editCalculation(Calculation calc){
         //id, owner, create can't be modified
         String sql = "UPDATE `calculation` SET "
-                + "calculation.name='" + calc.getName() + "',"
-                + "calculation.comment='" + calc.getComment() + "',"
+                + "calculation.name='" + calc.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "calculation.comment='" + calc.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "calculation.project='" + calc.getProject().getId() + "',"
                 + "calculation.modify='" + sdf.format(new Date()) + "'"
                 + " WHERE calculation.id = " + calc.getId();
@@ -209,8 +209,8 @@ public class DatabaseManager {
                 + "task.project='" + task.getProject().getId() + "',"
                 + "task.qrank='" + task.getQueueRank() + "',"
                 + "task.prank='" + task.getPriorityRank() + "',"
-                + "task.comment='" + task.getComment() + "',"
-                + "task.name='" + task.getName() + "',"
+                + "task.comment='" + task.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "task.name='" + task.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "task.modify='" + sdf.format(new Date()) + "',"
                 + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
                 + "task.kaks_m='" + task.getKaKsMethod().name() + "'"
@@ -283,7 +283,6 @@ public class DatabaseManager {
         }catch(Exception ex){
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(projects.toString());
         return projects;
     }
     

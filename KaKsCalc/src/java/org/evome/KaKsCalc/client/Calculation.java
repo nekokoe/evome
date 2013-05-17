@@ -75,6 +75,9 @@ public class Calculation implements IsSerializable{
         return this.modify;
     }
     
+    public String getClassType(){
+        return "calculation";
+    }
     
     //for test purpose
     public static Calculation sampleData(){

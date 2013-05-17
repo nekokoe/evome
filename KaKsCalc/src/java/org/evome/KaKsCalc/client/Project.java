@@ -70,6 +70,9 @@ public class Project implements IsSerializable{
         return this.modify;
     }
     
+    public String getClassType(){
+        return "project";
+    }
     
     //code below for test purpose
     public static Project sampleData(){
