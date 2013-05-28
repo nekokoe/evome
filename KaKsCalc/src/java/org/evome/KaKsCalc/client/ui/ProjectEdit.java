@@ -99,8 +99,10 @@ public class ProjectEdit extends Window {
     
     private void init(){
         this.setModal(true);
-        this.setMinWidth(360);
-        this.setMinHeight(300);
+        this.setMinWidth(400);
+        this.setMinHeight(400);
+        this.setWidth(400);
+        this.setHeight(400);
     }
     
     public boolean isUpdated(){

@@ -6,21 +6,20 @@ package org.evome.KaKsCalc.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
-import org.evome.KaKsCalc.client.*;
+import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
-import org.evome.KaKsCalc.client.GWTServiceAsync;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.info.Info;
+import org.evome.KaKsCalc.client.*;
 /**
  *
  * @author nekoko
@@ -137,9 +136,9 @@ public class CalculationUtils extends Composite {
                         @Override
                         public void onSuccess(Boolean b) {
                             if (b) {
-                                cu.store.remove(mytvi);
                                 Workspace.getContentPanel().clear();
                                 Workspace.getContentPanel().add(new ProjectUtils(cu.store.getParent(mytvi)));
+                                cu.store.remove(mytvi);                                
                             } else {
                                 Info.display("Error", "Failed to delete " + mycalc.getName());
                             }
@@ -152,11 +151,14 @@ public class CalculationUtils extends Composite {
                     });
                 }
             }
-        });        
+        });
+        confirm.show();
     }
+    
     @UiHandler("btnTaskAdd")
-    public void onCalcResultClick(SelectEvent event){
-        
+    public void onTaskAddClick(SelectEvent event){
+        panel.clear();        
+        panel.add(new TaskWizard());
     }
     
     @UiField

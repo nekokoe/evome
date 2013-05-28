@@ -21,6 +21,9 @@ Uncomment this for XHTML entities
     <ui:with type="com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData" field="defaultHorizontalLayout">
         <ui:attributes width="-1" height="1" margins="{margins10}"/>
     </ui:with>
+    <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="flexVerticalLayout">
+        <ui:attributes width="1" height="0.9" margins="{margins10}"/>
+    </ui:with>       
     
     <ui:style>
 
@@ -48,7 +51,7 @@ Uncomment this for XHTML entities
                     </form:widget>
                 </form:FieldLabel>
             </container:child>
-            <container:child layoutData="{defaultVerticalLayout}">
+            <container:child layoutData="{flexVerticalLayout}">
                 <form:FieldLabel text="Project Details">
                     <form:widget>
                         <form:TextArea ui:field="txtProjectComment"/>

@@ -14,6 +14,9 @@
 
     <inherits name="com.sencha.gxt.theme.gray.Gray" />
 
+    <!-- Include GWTUpload library; -->
+    <inherits name="gwtupload.GWTUpload"/>
+    
     <entry-point class="org.evome.KaKsCalc.client.KaKsCalc"/>
     
     <public path="resources"/>

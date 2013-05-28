@@ -117,24 +117,27 @@ public class SysConfig extends RemoteServiceServlet{
             //session
             this.SESSION_TIME_OUT = Integer.parseInt(config.get("sessiontimeout"));
             
-            isSuccess = true;
+            isSuccess = checkConfig();
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SysConfig.class.getName()).log(Level.SEVERE, null, ex);
+            isSuccess = false;
+        } catch (Exception ex){
+            Logger.getLogger(SysConfig.class.getName()).log(Level.SEVERE, null, ex);          
             isSuccess = false;
         }
         return isSuccess;
     }
     
-    private boolean checkConfig(){
+    private boolean checkConfig() throws Exception{
         //check userspace path\
         File fck = new File(this.DATA_ROOT_PATH);
         if (!fck.exists() || !fck.isDirectory()){
-            return false;
+            throw new Exception("Data folder does not exists! Check config file");
         }
         fck = new File(this.WORK_ROOT_PATH);
         if (!fck.exists() || !fck.isDirectory()){
-            return false;
+            throw new Exception("Work folder does not exists! Check config file");
         }
         
         return true;

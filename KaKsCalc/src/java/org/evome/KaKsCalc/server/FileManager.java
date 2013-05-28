@@ -8,6 +8,10 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.evome.KaKsCalc.client.Task;
+import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.io.FastaReaderHelper;
+import org.biojava3.core.sequence.io.FastaWriterHelper;
+
 
 /**
  *
@@ -19,16 +23,23 @@ public class FileManager {
     private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
 
     
-    
-    
-    public String getSubDir(String prefix, Task task){
-        return prefix 
-                + "/" + task.getOwner() 
-                + "/" + task.getProject() 
+    private static String getSubDir(String prefix, Task task) {
+        return prefix
+                + "/" + task.getOwner()
+                + "/" + task.getProject()
+                + "/" + task.getCalculation()
                 + "/" + task.getId();
     }
     
-    private boolean initSubDir(String prefix, Task task) {
+    public static String getDataDir(Task task){
+        return getSubDir(sysconf.DATA_ROOT_PATH, task);
+    }
+    
+    public static String getWorkDir(Task task){
+        return getSubDir(sysconf.WORK_ROOT_PATH, task);
+    }
+    
+    private static boolean initSubDir(String prefix, Task task) {
         String path = getSubDir(prefix, task);
         try {
             File dir = new File(path);
@@ -48,20 +59,45 @@ public class FileManager {
                 dir.delete();
             }
             dir.mkdirs();
-            System.out.println(this.getClass().getName() + ", create task dir : " + path);
+            System.out.println(FileManager.class.getName() + ", create task dir : " + path);
             return true;
         } catch (Exception ex) {
-            System.err.println(this.getClass().getName() + ", Cannot create dir: " + path);
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);            
+            System.err.println(FileManager.class.getName() + ", Cannot create dir: " + path);
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);            
             return false;
         }
     }
 
-    public boolean initDataDir(Task task){
+    public static boolean initDataDir(Task task){
         return initSubDir(sysconf.DATA_ROOT_PATH, task);
     }
     
-    public boolean initWorkDir(Task task){
+    public static boolean initWorkDir(Task task){
         return initSubDir(sysconf.WORK_ROOT_PATH, task);
-    } 
+    }
+    
+    public static boolean isFastaFile(File file){
+        try{
+            FastaReaderHelper.readFastaDNASequence(file);
+            return true;
+        }catch(Exception ex){
+            return false;
+        }                    
+    }
+    
+    public static boolean postFileUpload(File tempfile, Task task){
+        //copy tempfile to task dir
+        String target = getDataDir(task);
+        if (tempfile.exists()){
+            try{
+                tempfile.renameTo(new File(target + "/" + tempfile.getName()));
+            }catch(Exception ex){
+                Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        }else{
+            return false;
+        }
+        return true;
+    }
 }

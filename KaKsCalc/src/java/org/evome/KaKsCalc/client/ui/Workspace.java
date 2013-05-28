@@ -7,6 +7,7 @@ package org.evome.KaKsCalc.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,6 +23,8 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import java.util.Iterator;
 import org.evome.KaKsCalc.client.*;
+import com.google.gwt.user.client.ui.Image;
+
 /**
  *
  * @author nekoko
@@ -60,6 +63,8 @@ public class Workspace extends Composite {
         conRoot.setWidth(Window.getClientWidth());
         //set pnlWorkSpace as default content panel
         contentPanel = pnlWorkSpace;
+        Image img = new Image();
+        img.setUrl("images/miku.jpg");
     }
     
     public final void setTreeView(TreeView tv){

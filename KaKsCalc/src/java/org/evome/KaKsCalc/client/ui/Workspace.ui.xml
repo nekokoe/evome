@@ -9,6 +9,7 @@ Uncomment this for XHTML entities
              xmlns:container="urn:import:com.sencha.gxt.widget.core.client.container"
              xmlns:button="urn:import:com.sencha.gxt.widget.core.client.button"
 >
+    
     <ui:with type="com.sencha.gxt.core.client.util.Margins" field="margins5">
         <ui:attributes top="5" right="5" bottom="5" left="5" />
     </ui:with>
@@ -38,7 +39,7 @@ Uncomment this for XHTML entities
     </ui:style>
   
     <!--workspace-->
-    <container:SimpleContainer ui:field="conRoot" height="700" >
+    <container:SimpleContainer ui:field="conRoot" height="700">
         <container:child layoutData="{outerData}">
             
             <container:BorderLayoutContainer ui:field="conWorkspace" borders="true">
@@ -76,7 +77,7 @@ Uncomment this for XHTML entities
                 <container:center layoutData="{centerData}">
                     <gxt:ContentPanel ui:field="pnlWorkSpace" headingText="Working Space">
                         <!-- workspace for child widgets-->
-                    </gxt:ContentPanel>                
+                    </gxt:ContentPanel>
                 </container:center>
                 <container:east layoutData="{eastData}">
                     <!-- leave blank -->
