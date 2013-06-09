@@ -14,6 +14,7 @@ import org.evome.KaKsCalc.client.Account;
 import org.evome.KaKsCalc.client.Calculation;
 import org.evome.KaKsCalc.client.Project;
 import org.evome.KaKsCalc.client.Task;
+import java.io.File;
 
 /**
  *
@@ -29,7 +30,11 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     }
     
     public static DBConnector getDBConn() {
-        return dbconn;
+        if (dbconn.isAlive()){
+            return dbconn;
+        }else{
+            return dbconn = new DBConnector(sysconf);
+        }
     }
     
     @Override
@@ -140,5 +145,15 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     @Override
     public ArrayList<Task> subTasks(Calculation calc){
         return DatabaseManager.subTasks(calc);
+    }
+    
+    
+    
+    
+    //=======================RESOURCES SERVICES=================================
+    @Override
+    public ArrayList<String> parseFastaIDs(String file){
+        return null;
+        //ArrayList<String> ids = FileManager.parseFastaDNASeqs(new File(file))
     }
 }

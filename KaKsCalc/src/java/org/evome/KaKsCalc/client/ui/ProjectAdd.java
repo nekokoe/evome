@@ -69,9 +69,8 @@ public class ProjectAdd extends Window {
            @Override
            public void onSuccess(Integer pid){
                pmb.updateProgress(1,"Done.");
-               //store.add(new TreeViewItem("project",pid, p.getName())); //deprecated, this opr. should be handled in ProjectUtils
                pa.isUpdated = true;
-               pa.mytvi = new TreeViewItem(p.getClassType(), pid, p.getName());
+               pa.mytvi = new TreeViewItem(TreeViewItem.Type.PROJECT, pid, p.getName());
                pmb.hide();
                pa.hide();
            }

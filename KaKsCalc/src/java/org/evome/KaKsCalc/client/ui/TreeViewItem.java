@@ -11,9 +11,13 @@ package org.evome.KaKsCalc.client.ui;
 public class TreeViewItem {
         private int id;
         private String value;
-        private String type;
+        private Type type;
         
-        public TreeViewItem(String type, int id, String value){
+        public enum Type{
+            HOME,PROJECT,CALCULATION,TASK //HOME = home page
+        }
+        
+        public TreeViewItem(Type type, int id, String value){
             this.id = id;
             this.value = value;
             this.type = type;
@@ -24,9 +28,10 @@ public class TreeViewItem {
         }
         public void setKey(String key){
             String[] strs = key.split("_");
-            this.type = strs[0];
+            this.type = Type.valueOf(strs[0]);
             this.id = Integer.parseInt(strs[1]);
         }
+        
         public String getValue(){
             return value;
         }        
@@ -34,10 +39,10 @@ public class TreeViewItem {
             this.value = value;
         }
 
-        public String getType(){
+        public Type getType(){
             return type;
         }        
-        public void setType(String type){
+        public void setType(Type type){
             this.type = type;
         }
         public int getId(){

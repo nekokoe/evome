@@ -78,7 +78,7 @@ public class ProjectEdit extends Window {
             public void onSuccess(Boolean b) {
                 pmb.updateProgress(1, "Done.");
                 pe.isUpdated = b;
-                pe.mytvi = new TreeViewItem("project", p.getId(), p.getName());
+                pe.mytvi = new TreeViewItem(TreeViewItem.Type.PROJECT, p.getId(), p.getName());
                 pmb.hide();
                 pe.hide();
             }

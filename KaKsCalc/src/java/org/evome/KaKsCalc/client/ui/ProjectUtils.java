@@ -25,7 +25,12 @@ import com.sencha.gxt.widget.core.client.event.HideEvent;
 import org.evome.KaKsCalc.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.shared.TreeStore;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.widget.core.client.info.Info;
+import com.sencha.gxt.widget.core.client.container.PortalLayoutContainer;
+import com.sencha.gxt.widget.core.client.Portlet;
+import org.evome.KaKsCalc.client.ui.events.TreeUpdateEvent;
 
 /**
  *
@@ -38,28 +43,32 @@ public class ProjectUtils extends Composite {
 
     private Project myproject;
     private TreeViewItem mytvi;
-    private TreeStore<TreeViewItem> store = Workspace.getTreeView().getTreeStore(); //the tree store to update
     private static GWTServiceAsync rpc = Shared.getService();
     private static ProjectUtilsUiBinder uiBinder = GWT.create(ProjectUtilsUiBinder.class);
 
     interface ProjectUtilsUiBinder extends UiBinder<Widget, ProjectUtils> {
     }
+    
+    @UiField
+    SimplePanel panel;    
+    
+    private PortalLayoutContainer portal = initPortalContainer();
 
     public ProjectUtils() {
         initWidget(uiBinder.createAndBindUi(this));
+        panel.add(portal);
         this.setProject(Project.sampleData());
+
     }
 
     public ProjectUtils(Project project) {
-        initWidget(uiBinder.createAndBindUi(this));
+        this();
         this.setProject(project);
-        this.mytvi = new TreeViewItem(myproject.getClassType(), myproject.getId(), myproject.getName());
     }
 
     public ProjectUtils(TreeViewItem tvi) {
-        initWidget(uiBinder.createAndBindUi(this));
+        this();
         this.setProject(tvi);
-        this.mytvi = tvi;
     }
 
     @UiHandler("btnProjectAdd")
@@ -72,7 +81,7 @@ public class ProjectUtils extends Composite {
             public void onHide(HideEvent event) {
                 if (add.isUpdated()) {
                     Info.display("You have added", add.getMyTreeViewItem().getValue());
-                    pu.store.add(add.getMyTreeViewItem());
+                    KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(add.getMyTreeViewItem(), TreeUpdateEvent.Action.ADD));
                     pu.setProject(add.getMyTreeViewItem());
                 }
             }
@@ -90,7 +99,7 @@ public class ProjectUtils extends Composite {
             public void onHide(HideEvent event) {
                 if (edit.isUpdated()) {
                     Info.display("You have editted", edit.getMyTreeViewItem().getValue());
-                    pu.store.update(edit.getMyTreeViewItem());
+                    KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(edit.getMyTreeViewItem(), TreeUpdateEvent.Action.UPDATE));
                     pu.setProject(edit.getMyTreeViewItem());
                 }
             }
@@ -113,8 +122,7 @@ public class ProjectUtils extends Composite {
                         @Override
                         public void onSuccess(Boolean b) {
                             if (b) {
-                                pu.store.remove(mytvi);
-                                pu.setProject(Workspace.getTreeView().getTreeStore().getChild(0));
+                                KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(mytvi, TreeUpdateEvent.Action.DELETE));                                
                             } else {
                                 Info.display("Error", "Failed to delete " + myproject.getName());
                             }
@@ -139,22 +147,28 @@ public class ProjectUtils extends Composite {
             @Override
             public void onHide(HideEvent event) {
                 if (add.isUpdated()){
+                    KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(mytvi, add.getMyTreeViewItem()));                    
                     Info.display("You have added", add.getMyTreeViewItem().getValue());
-                    store.add(mytvi, add.getMyTreeViewItem());
                 }
             }
         });        
         add.show();
     }
     
-    @UiField
-    SimplePanel panel;
+
 
     public final void setProject(Project project) {
         this.myproject = project;
-        Workspace.getContentPanel().setHeadingText(project.getName());
-        panel.clear();
-        panel.add(new ProjectStatus(project));
+        this.mytvi = new TreeViewItem(TreeViewItem.Type.PROJECT, project.getId(), project.getName());
+
+        //default : add Project Status Grid Portlet to portal
+        //portal.clear();
+        Portlet portlet = new Portlet();
+        portlet.setHeadingText("Project Status");
+        portlet.setCollapsible(true);
+        portlet.setResize(true);
+        //portlet.add(initStatusGrid(project));
+        portal.add(portlet, 0);
     }
 
     public final void setProject(TreeViewItem tvi) {
@@ -164,10 +178,34 @@ public class ProjectUtils extends Composite {
             public void onSuccess(Project project) {
                 pu.setProject(project);
             }
-
             @Override
             public void onFailure(Throwable caught) {
             }
         });
+    }
+    
+    private PortalLayoutContainer initPortalContainer() {
+        PortalLayoutContainer plc = new PortalLayoutContainer(3);
+        plc.setColumnWidth(0, .40);
+        plc.setColumnWidth(1, .30);
+        plc.setColumnWidth(2, .30);
+        return plc;
+    }
+    
+    private Grid initStatusGrid(Project p){
+        Grid status = new Grid(6, 3);
+        status.setText(0, 0, "Project ID");
+        status.setText(0, 1, String.valueOf(p.getId()));
+        status.setText(1, 0, "Project Name");
+        status.setText(1, 1, p.getName());
+        status.setText(2, 0, "Project Owner");
+        status.setText(2, 1, p.getOwner().getFullName());
+        status.setText(3, 0, "Created On");
+        status.setText(3, 1, p.getCreateDate().toString());
+        status.setText(4, 0, "Last Changed");
+        status.setText(4, 1, p.getModifyDate().toString());
+        status.setText(5, 0, "Description");
+        status.setText(5, 1, p.getComment());
+        return status;
     }
 }

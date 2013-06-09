@@ -20,7 +20,6 @@ public interface GWTService extends RemoteService {
     public long getServerTime(); //server time in second from 1970-1-1
     
     
-    
     //==============================ACCOUNT SERVICES============================
     //note: non-safety rpc call, for authentic validation is not enforced on every rpc call
     //could be enforced with requiring an authToken with authenticValidation
@@ -59,4 +58,9 @@ public interface GWTService extends RemoteService {
     public ArrayList<Project> userProjects(Account account);
     public ArrayList<Calculation> subCalculations(Project proj);
     public ArrayList<Task> subTasks(Calculation calc);
+    
+    
+    //=============================RESOURCES OPERATION==========================
+    //get parsed fasta seq id
+    public ArrayList<String> parseFastaIDs(String filename);
 }

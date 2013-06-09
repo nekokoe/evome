@@ -45,4 +45,7 @@ public interface GWTServiceAsync {
     public void userProjects(Account account, AsyncCallback<ArrayList<Project>> callback);
     public void subCalculations(Project proj, AsyncCallback<ArrayList<Calculation>> callback);
     public void subTasks(Calculation calc, AsyncCallback<ArrayList<Task>> callback);
+    
+    //get parsed fasta seq id
+    public void parseFastaIDs(String filename, AsyncCallback<ArrayList<String>> callback);
 }

@@ -67,7 +67,7 @@ public class CalculationAdd extends Window {
             public void onSuccess(Integer cid){
                 pmb.updateProgress(1, "Done.");
                 ca.isUpdated = true;
-                ca.mytvi = new TreeViewItem(c.getClassType(), cid, c.getName());
+                ca.mytvi = new TreeViewItem(TreeViewItem.Type.CALCULATION, cid, c.getName());
                 pmb.hide();
                 ca.hide();
             }

@@ -23,7 +23,12 @@ import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 import java.util.Iterator;
 import org.evome.KaKsCalc.client.*;
-import com.google.gwt.user.client.ui.Image;
+import org.evome.KaKsCalc.client.ui.events.TreeSelectChangeEvent;
+import org.evome.KaKsCalc.client.ui.events.TreeUpdateEvent;
+import com.google.gwt.event.shared.GwtEvent;
+import com.sencha.gxt.widget.core.client.info.Info;
+
+
 
 /**
  *
@@ -35,9 +40,7 @@ public class Workspace extends Composite {
 
     interface WorkspaceUiBinder extends UiBinder<Widget, Workspace> {}
     
-    private static TreeView treeView;
-    private static ContentPanel contentPanel;
-    
+
     public Workspace(Session s){
         initWidget(uiBinder.createAndBindUi(this));        
         //workspace binding to a session
@@ -61,44 +64,43 @@ public class Workspace extends Composite {
         centerData.setMargins(new Margins(0, 5, 5, 5));
         //set root container width        
         conRoot.setWidth(Window.getClientWidth());
-        //set pnlWorkSpace as default content panel
-        contentPanel = pnlWorkSpace;
-        Image img = new Image();
-        img.setUrl("images/miku.jpg");
+        
+        //experimental: add a TreeSelectChangeHandelr to EVENTBUS, see if events could be broadcast and listened
+        //OK!
+        KaKsCalc.EVENT_BUS.addHandler(TreeSelectChangeEvent.TYPE, new TreeSelectChangeEvent.TreeSelectChangeHandler() {
+            @Override
+            public void onTreeSelectChange(TreeSelectChangeEvent event) {
+                for (Iterator<TreeViewItem> it = event.getSelection().iterator(); it.hasNext();) {
+                    TreeViewItem item = it.next();
+                    pnlWorkSpace.clear();
+                    //set pnlWorkSpace heading text
+                    pnlWorkSpace.setHeadingText(item.getValue());
+                    //apply right panel according to item type
+                    switch(item.getType()){
+                        case PROJECT:
+                            pnlWorkSpace.add(new ProjectUtils(item));
+                            break;
+                        case CALCULATION:
+                            pnlWorkSpace.add(new CalculationUtils(item));
+                            break;
+                        case TASK:
+                            pnlWorkSpace.add(new TaskUtils(item));
+                            break;
+                    }
+                }
+            }
+        });
+        
+
+        
     }
     
     public final void setTreeView(TreeView tv){
         //in workspace, only 1 treeview implemented
         //set it to static variable to make it visible to other widgets
-        Workspace.treeView = tv;
-        //add selection handler
-        tv.addSelectionChangedHandler(new SelectionChangedEvent.SelectionChangedHandler<TreeViewItem>(){
-            @Override
-            public void onSelectionChanged(SelectionChangedEvent<TreeViewItem> event){
-                for(Iterator<TreeViewItem> it = event.getSelection().iterator(); it.hasNext();){
-                    TreeViewItem item = it.next();
-                    pnlWorkSpace.clear();
-                    //pnlWorkSpace.setHeadingText(item.getValue());
-                    if (item.getType().equalsIgnoreCase("project")){
-                        pnlWorkSpace.add(new ProjectUtils(item));
-                    }else if(item.getType().equalsIgnoreCase("calculation")){
-                        pnlWorkSpace.add(new CalculationUtils(item));
-                    }else if(item.getType().equalsIgnoreCase("task")){
-                        pnlWorkSpace.add(new TaskUtils(item));
-                    }
-                }
-            }
-        });
         pnlTreeView.clear();
         pnlTreeView.add(tv);        
         tv.treeProject.getSelectionModel().select(0, false);
-    }
-    
-    public static TreeView getTreeView(){
-        return treeView;
-    }
-    public static ContentPanel getContentPanel(){
-        return contentPanel;
     }
     
     @UiField(provided = true)

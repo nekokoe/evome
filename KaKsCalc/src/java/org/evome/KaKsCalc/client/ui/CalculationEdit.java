@@ -79,7 +79,7 @@ public class CalculationEdit extends Window {
             public void onSuccess(Boolean b) {
                 pmb.updateProgress(1, "Done.");
                 ce.isUpdated = b;
-                ce.mytvi = new TreeViewItem(c.getClassType(), c.getId(), c.getName());
+                ce.mytvi = new TreeViewItem(TreeViewItem.Type.CALCULATION, c.getId(), c.getName());
                 pmb.hide();
                 ce.hide();
             }

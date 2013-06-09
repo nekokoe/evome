@@ -11,6 +11,7 @@ import org.evome.KaKsCalc.client.Task;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
+import java.util.LinkedHashMap;
 
 
 /**
@@ -85,7 +86,7 @@ public class FileManager {
         }                    
     }
     
-    public static boolean postFileUpload(File tempfile, Task task){
+    public static boolean moveTempFile2Task(File tempfile, Task task){ 
         //copy tempfile to task dir
         String target = getDataDir(task);
         if (tempfile.exists()){
@@ -99,5 +100,14 @@ public class FileManager {
             return false;
         }
         return true;
+    }
+    
+    public static LinkedHashMap<String, DNASequence> parseFastaDNASeqs(File fasta){
+        try{
+            return FastaReaderHelper.readFastaDNASequence(fasta);
+        }catch(Exception ex){
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 }

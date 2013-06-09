@@ -17,6 +17,7 @@ import org.evome.KaKsCalc.client.Task;
 import org.evome.KaKsCalc.client.Job;
 import org.evome.KaKsCalc.client.Project;
 import org.evome.KaKsCalc.client.Calculation;
+import org.evome.KaKsCalc.client.Resource;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -28,14 +29,18 @@ public class DatabaseManager {
 
     private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static DBConnector dbconn = GWTServiceImpl.getDBConn();
+//    private static DBConnector dbconn = GWTServiceImpl.getDBConn();
+    
+    private static DBConnector conn(){
+        return GWTServiceImpl.getDBConn();
+    }
     
     public static Project getProject(int project_id){
         Project pj = new Project();
         String sql = "SELECT * FROM `project` WHERE project.id = " + project_id;
         //String sql = "SELECT * FROM `project` ";
         try{
-            ResultSet rs = dbconn.execQuery(sql);
+            ResultSet rs = conn().execQuery(sql);
             if (rs.next()){
                 pj.setId(project_id);
                 pj.setName(rs.getString("name"));
@@ -57,7 +62,7 @@ public class DatabaseManager {
         Calculation calc = new Calculation();
         String sql = "SELECT * FROM `calculation` WHERE calculation.id = " + calc_id;
         try{
-            ResultSet rs = dbconn.execQuery(sql);
+            ResultSet rs = conn().execQuery(sql);
             if (rs.next()){
                 calc.setComment(rs.getString("comment"));
                 calc.setId(rs.getInt("id"));
@@ -80,7 +85,7 @@ public class DatabaseManager {
         Task task = new Task();
         String sql = "SELECT * FROM `task` WHERE task.id = " + task_id;
         try{
-            ResultSet rs = dbconn.execQuery(sql);
+            ResultSet rs = conn().execQuery(sql);
             if (rs.next()){
                 task.setCalculation(DatabaseManager.getCalculation(rs.getInt("calc")));
                 task.setComment(rs.getString("comment"));
@@ -105,6 +110,32 @@ public class DatabaseManager {
         }
         return task;
     }
+
+    public static Resource getResource(int id){
+        Resource res = new Resource();
+        String sql = "SELECT * FROM `resource` WHERE resource.id = " + id;
+        try{
+            ResultSet rs = conn().execQuery(sql);
+            if (rs.next()){
+                res.setId(id);
+                res.setName(rs.getString("name"));
+                res.setType(Resource.ResType.values()[rs.getInt("type")]);
+                res.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                res.setGroup(rs.getInt("group"));
+                res.setTask(DatabaseManager.getTask(rs.getInt("task")));
+                res.setUUID(rs.getString("uuid"));
+                res.setCreateDate(rs.getDate("create"));
+                res.setModifyDate(rs.getDate("modify"));
+                res.setComment(rs.getString("comment"));
+            }else{
+                res = null;    //return null if no this project or else
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);            
+            res = null;
+        }
+        return res;        
+    }    
     
     public static int addProject(Project proj){
         int proj_id;
@@ -115,7 +146,7 @@ public class DatabaseManager {
                 + "project.create='" + sdf.format(new Date()) + "',"
                 + "project.modify='" + sdf.format(new Date()) + "'";
         try{
-            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
+            ResultSet rs = conn().execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 proj_id = rs.getInt(1);
             }else{
@@ -138,7 +169,7 @@ public class DatabaseManager {
                 + "calculation.create='" + sdf.format(new Date()) + "',"
                 + "calculation.modify='" + sdf.format(new Date()) + "'";                
         try{
-            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
+            ResultSet rs = conn().execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 calc_id = rs.getInt(1);
             }else{
@@ -167,7 +198,7 @@ public class DatabaseManager {
                 + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
                 + "task.kaks_m='" + task.getKaKsMethod().name() + "'";
         try{
-            ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
+            ResultSet rs = conn().execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 task_id = rs.getInt(1);
             }else{
@@ -179,6 +210,33 @@ public class DatabaseManager {
         }
         return task_id;
     }
+
+    public static int addResource(Resource res){
+        int id;
+        String sql = "INSERT INTO `resource` SET "
+                + "resource.name='" + res.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "resource.type='" + res.getType().ordinal() + "',"
+                + "resource.owner='"  + res.getOwner().getUserID() + "',"
+                + "resource.group=1"  /* to be continued*/
+                + "resource.task='" + res.getTask().getId() + "',"
+                + "resource.uuid='" + res.getUUID() + "',"
+                + "resource.create='" + sdf.format(new Date()) + "',"
+                + "resource.modify='" + sdf.format(new Date()) + "',"
+                + "resource.permission=0"  /* to be continued*/
+                + "resource.comment='" + res.getComment().replaceAll("[\\\\]*'", "\\\\'") + "'";
+        try{
+            ResultSet rs = conn().execUpdateReturnGeneratedKeys(sql);
+            if (rs.next()){
+                id = rs.getInt(1);
+            }else{
+                id = 0;
+            }                
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            id = 0;
+        }
+        return id;        
+    }
     
     public static boolean editProject(Project proj){
         //id, owner, create can't be modified
@@ -187,7 +245,7 @@ public class DatabaseManager {
                 + "project.comment='" + proj.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "project.modify='" + sdf.format(new Date()) + "'"
                 + " WHERE project.id = " + proj.getId();
-        return (dbconn.execUpdate(sql) > 0) ? true : false;   
+        return (conn().execUpdate(sql) > 0) ? true : false;   
     }
     
     public static boolean editCalculation(Calculation calc){
@@ -198,7 +256,7 @@ public class DatabaseManager {
                 + "calculation.project='" + calc.getProject().getId() + "',"
                 + "calculation.modify='" + sdf.format(new Date()) + "'"
                 + " WHERE calculation.id = " + calc.getId();
-        return (dbconn.execUpdate(sql) > 0) ? true : false;             
+        return (conn().execUpdate(sql) > 0) ? true : false;             
     }
     
     public static boolean editTask(Task task) {
@@ -215,8 +273,17 @@ public class DatabaseManager {
                 + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
                 + "task.kaks_m='" + task.getKaKsMethod().name() + "'"
                 + " WHERE task.id = " + task.getId();
-        return (dbconn.execUpdate(sql) > 0) ? true : false;        
+        return (conn().execUpdate(sql) > 0) ? true : false;        
     }
+    
+    public static boolean editResource(Resource res){
+        //id, owner, create can't be modified
+        String sql = "UPDATE `resource` SET "
+                + "resource.comment='" + res.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "resource.modify='" + sdf.format(new Date()) + "'"
+                + " WHERE resource.id = " + res.getId();
+        return (conn().execUpdate(sql) > 0) ? true : false;   
+    }    
     
     public static boolean delProject(Project proj){
         boolean isSuccess = true;
@@ -227,7 +294,7 @@ public class DatabaseManager {
         }
         if (isSuccess) { //has deleted all subs
             String sql = "DELETE FROM `project` WHERE project.id = " + proj.getId();
-            if (dbconn.execUpdate(sql) > 0) {
+            if (conn().execUpdate(sql) > 0) {
                 isSuccess = true;
             } else {
                 isSuccess = false;
@@ -245,7 +312,7 @@ public class DatabaseManager {
         }
         if (isSuccess) {
             String sql = "DELETE FROM `calculation` WHERE calculation.id = " + calc.getId();
-            if (dbconn.execUpdate(sql) > 0) {
+            if (conn().execUpdate(sql) > 0) {
                 isSuccess = true;
             } else {
                 isSuccess = false;
@@ -257,7 +324,7 @@ public class DatabaseManager {
     public static boolean delTask(Task task) {
         boolean isSuccess;
         String sql = "DELETE FROM `task` WHERE task.id = " + task.getId();
-        if (dbconn.execUpdate(sql) > 0) {
+        if (conn().execUpdate(sql) > 0) {
             isSuccess = true;
         } else {
             isSuccess = false;
@@ -265,12 +332,23 @@ public class DatabaseManager {
         return isSuccess;
     }
     
+    public static boolean delResource(Resource res){
+        boolean isSuccess;
+        String sql = "DELETE FROM `resource` WHERE resource.id = " + res.getId();
+        if (conn().execUpdate(sql) > 0) {
+            isSuccess = true;
+        } else {
+            isSuccess = false;
+        }
+        return isSuccess;        
+    }
+    
     public static ArrayList<Project> userProjects(Account account){
 
         ArrayList<Project> projects = new ArrayList<Project>();
         String sql = "SELECT * FROM `project` WHERE project.owner = " + account.getUserID();
         try{
-            ResultSet rs = dbconn.execQuery(sql);
+            ResultSet rs = conn().execQuery(sql);
             while (rs.next()){
                 Project p = new Project();
                 p.setId(rs.getInt("id"));
@@ -290,7 +368,7 @@ public class DatabaseManager {
         ArrayList<Calculation> calcs = new ArrayList<Calculation>();
         String sql = "SELECT * FROM `calculation` WHERE calculation.project = " + project.getId();
         try{
-            ResultSet rs = dbconn.execQuery(sql);
+            ResultSet rs = conn().execQuery(sql);
             while (rs.next()){
                 Calculation c = new Calculation();
                 c.setComment(rs.getString("comment"));
@@ -312,7 +390,7 @@ public class DatabaseManager {
         ArrayList<Task> tasks = new ArrayList<Task>();
         String sql = "SELECT * FROM `task` WHERE task.calc = " + calc.getId();
         try{
-            ResultSet rs = dbconn.execQuery(sql);
+            ResultSet rs = conn().execQuery(sql);
             while (rs.next()){
                 Task t = new Task();
                 t.setCalculation(DatabaseManager.getCalculation(rs.getInt("calc")));
@@ -336,4 +414,8 @@ public class DatabaseManager {
         }
         return tasks;            
     }
+    
+
+    
+
 }

@@ -20,6 +20,7 @@ import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.info.Info;
 import org.evome.KaKsCalc.client.*;
+import org.evome.KaKsCalc.client.ui.events.TreeUpdateEvent;
 /**
  *
  * @author nekoko
@@ -29,7 +30,6 @@ public class CalculationUtils extends Composite {
     //store current calculation
     private Calculation mycalc;
     private TreeViewItem mytvi;
-    private TreeStore<TreeViewItem> store = Workspace.getTreeView().getTreeStore(); //the tree store to update
     
     private static CalculationUtilsUiBinder uiBinder = GWT.create(CalculationUtilsUiBinder.class);
     private static GWTServiceAsync rpc = Shared.getService();
@@ -45,18 +45,17 @@ public class CalculationUtils extends Composite {
     public CalculationUtils(Calculation calc){
         initWidget(uiBinder.createAndBindUi(this));
         this.setCalculation(calc);
-        this.mytvi = new TreeViewItem(mycalc.getClassType(), mycalc.getId(), mycalc.getName());
+
     }
     
     public CalculationUtils(TreeViewItem tvi){
         initWidget(uiBinder.createAndBindUi(this));
         this.setCalculation(tvi);
-        this.mytvi = tvi;
     }
     
     public final void setCalculation(Calculation calc){
         this.mycalc = calc;
-        Workspace.getContentPanel().setHeadingText(calc.getName());
+        this.mytvi = new TreeViewItem(TreeViewItem.Type.CALCULATION, calc.getId(),calc.getName());        
         panel.clear();
         panel.add(new CalculationStatus(calc));
     }    
@@ -91,11 +90,11 @@ public class CalculationUtils extends Composite {
         add.addHideHandler(new HideEvent.HideHandler() {
             @Override
             public void onHide(HideEvent event) {
-                if (add.isUpdated()){
+                if (add.isUpdated()) {
                     Info.display("You have added", add.getMyTreeViewItem().getValue());
                     Project p = mycalc.getProject();
-                    cu.store.add(new TreeViewItem(p.getClassType(), p.getId(), p.getName()),
-                            add.getMyTreeViewItem());
+                    KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(
+                            new TreeViewItem(TreeViewItem.Type.PROJECT, p.getId(), p.getName()), add.getMyTreeViewItem()));
                     cu.setCalculation(add.getMyTreeViewItem());
                 }
             }
@@ -104,21 +103,21 @@ public class CalculationUtils extends Composite {
     }    
     
     @UiHandler("btnCalcEdit")
-    public void onCalcEditClick(SelectEvent event){
+    public void onCalcEditClick(SelectEvent event) {
         final CalculationUtils cu = this;
         final CalculationEdit edit = new CalculationEdit(mycalc);
         edit.setHeadingText("Edit Calculation : " + mycalc.getName());
         edit.addHideHandler(new HideEvent.HideHandler() {
             @Override
             public void onHide(HideEvent event) {
-                if (edit.isUpdated()){
+                if (edit.isUpdated()) {
                     Info.display("You have editted", edit.getMyTreeViewItem().getValue());
-                    cu.store.update(edit.getMyTreeViewItem());
+                    KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(edit.getMyTreeViewItem(), TreeUpdateEvent.Action.UPDATE));
                     cu.setCalculation(edit.getMyTreeViewItem());
                 }
             }
         });
-        edit.show();        
+        edit.show();
     }
     
     @UiHandler("btnCalcDelete")
@@ -136,9 +135,7 @@ public class CalculationUtils extends Composite {
                         @Override
                         public void onSuccess(Boolean b) {
                             if (b) {
-                                Workspace.getContentPanel().clear();
-                                Workspace.getContentPanel().add(new ProjectUtils(cu.store.getParent(mytvi)));
-                                cu.store.remove(mytvi);                                
+                                KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(mytvi, TreeUpdateEvent.Action.DELETE));
                             } else {
                                 Info.display("Error", "Failed to delete " + mycalc.getName());
                             }
@@ -158,7 +155,7 @@ public class CalculationUtils extends Composite {
     @UiHandler("btnTaskAdd")
     public void onTaskAddClick(SelectEvent event){
         panel.clear();        
-        panel.add(new TaskWizard());
+        panel.add(new TaskWizard(mycalc));
     }
     
     @UiField

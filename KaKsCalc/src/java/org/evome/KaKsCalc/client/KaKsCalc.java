@@ -11,6 +11,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
+
 
 import org.evome.KaKsCalc.client.ui.*;
 
@@ -27,6 +30,9 @@ public class KaKsCalc implements EntryPoint {
     /**
      * Creates a new instance of MainEntryPoint
      */
+    
+    //register EventBus, for universal event dispatching
+    public static EventBus EVENT_BUS = GWT.create(SimpleEventBus.class);
     
     
     //session id is generated when browsing the main page

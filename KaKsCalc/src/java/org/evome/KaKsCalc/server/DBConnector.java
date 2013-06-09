@@ -92,5 +92,13 @@ public class DBConnector {
         return sdf.format(date);
     }
     
+    public boolean isAlive(){
+        try{
+            return conn.isValid(0);
+        }catch(SQLException ex){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
 
 }
