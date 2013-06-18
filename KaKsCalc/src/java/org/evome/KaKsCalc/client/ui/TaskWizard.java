@@ -54,10 +54,6 @@ import org.evome.KaKsCalc.client.*;
  */
 public class TaskWizard extends Composite {
     
-//    private static TaskWizardUiBinder uiBinder = GWT.create(TaskWizardUiBinder.class);
-//    
-//    interface TaskWizardUiBinder extends UiBinder<Widget, TaskWizard> {
-//    }
     
     private final ArrayList<String> filelist = new ArrayList<String>();
     private final ArrayList<DNAPair> pairlist = new ArrayList<DNAPair>(); 
@@ -67,7 +63,7 @@ public class TaskWizard extends Composite {
     private final FramedPanel select = initSelectPanel();
     private final FramedPanel param = initParamPanel();
     private final FramedPanel confirm = initConfirmPanel();
-    private final MarginData margin = new MarginData(20);
+    private final MarginData margin = new MarginData(0);
     private final Task mytask = new Task();
     
     public TaskWizard(){
@@ -86,10 +82,9 @@ public class TaskWizard extends Composite {
     private FramedPanel initAttribPanel(){
         //set task basic info
         FramedPanel panel = new FramedPanel();
-        panel.setWidth(400);
+        panel.setHeaderVisible(false);
+//        panel.setWidth(400);
         panel.setHeight(400);
-        panel.setHeadingText("Step 1 : add new task");
-        panel.getElement().setMargins(20);
         //set vertical layout
         VerticalLayoutContainer vertical = new VerticalLayoutContainer();
         VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10));
@@ -104,6 +99,7 @@ public class TaskWizard extends Composite {
         final TextArea commentfield = new TextArea();
         commentlabel.setText("Description");        
         commentlabel.setWidget(commentfield);
+        vertical.add(new Label("Step 1 : add new task"), layout);
         vertical.add(namelabel, layout);
         vertical.add(commentlabel, new VerticalLayoutContainer.VerticalLayoutData(1, 1, new Margins(10)));
         //add buttons

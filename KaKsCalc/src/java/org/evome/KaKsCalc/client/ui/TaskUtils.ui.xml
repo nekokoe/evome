@@ -31,9 +31,9 @@ Uncomment this for XHTML entities
             </toolbar:ToolBar>            
         </container:child>
         <container:child layoutData="{defaultVerticalLayout}">
-            <g:VerticalPanel ui:field="panel">
+            <g:SimplePanel ui:field="panel">
                 
-            </g:VerticalPanel>
+            </g:SimplePanel>
         </container:child>
     </container:VerticalLayoutContainer>
 </ui:UiBinder>
