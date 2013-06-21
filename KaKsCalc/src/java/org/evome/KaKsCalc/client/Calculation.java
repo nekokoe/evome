@@ -18,6 +18,7 @@ public class Calculation implements IsSerializable{
     private Account owner;
     private Project project;
     private String calc_name, calc_comment;
+    private String uuid, parent;
     private Date create, modify;
 
     public void setId(int id) {
@@ -46,7 +47,12 @@ public class Calculation implements IsSerializable{
     public void setModifyTime(Date date){
         this.modify = date;
     }
-    
+    public void setUUID(String uuid){
+        this.uuid = uuid;
+    }
+    public void setParentUUID(String uuid){
+        this.parent = uuid;
+    }
 
     public int getId() {
         return this.calc_id;
@@ -74,9 +80,11 @@ public class Calculation implements IsSerializable{
     public Date getModifyTime(){
         return this.modify;
     }
-    
-    public String getClassType(){
-        return "calculation";
+    public String getUUID(){
+        return this.uuid;
+    }
+    public String getParentUUID(){
+        return this.parent;
     }
     
     //for test purpose

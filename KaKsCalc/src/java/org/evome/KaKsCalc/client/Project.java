@@ -17,14 +17,8 @@ public class Project implements IsSerializable{
     private int id;
     private Account owner;
     private String name, comment;
+    private String uuid, parent;
     private Date create, modify;
-    
-    public Project(String name){//for test purpose
-        this.name = name;
-    }
-    public Project(){
-        
-    }
     
     public void setId(int id){
         this.id = id;
@@ -46,6 +40,12 @@ public class Project implements IsSerializable{
     }
     public void setModifyDate(Date modify){
         this.modify = modify;
+    }
+    public void setUUID(String uuid){
+        this.uuid = uuid;
+    }
+    public void setParentUUID(String uuid){
+        this.parent = uuid;
     }
     
     public int getId(){
@@ -69,11 +69,12 @@ public class Project implements IsSerializable{
     public Date getModifyDate(){
         return this.modify;
     }
-    
-    public String getClassType(){
-        return "project";
+    public String getUUID(){
+        return this.uuid;
     }
-    
+    public String getParentUUID(){
+        return this.parent;
+    }
     //code below for test purpose
     public static Project sampleData(){
         Project sample = new Project();

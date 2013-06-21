@@ -8,40 +8,40 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.evome.KaKsCalc.client.Task;
+import org.evome.KaKsCalc.client.Resource;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 
 
 /**
  *
  * @author nekoko
  */
-public class FileManager {
+public class ResourceManager {
     
     private static DBConnector dbconn = GWTServiceImpl.getDBConn();
     private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
 
+    private static String getResourcePath(String prefix, Resource res){
+        //path is built as prefix/parent/.../res
+        String path = res.getName();
+        UUID child = UUID.fromString(res.getUUID());
+        while(true) {
+            UUID parent = DatabaseManager.getParentUUID(child);
+            if (parent == null){
+                break;
+            }
+            path = parent.toString() + "/" + path;
+            child = parent;
+        }
+        return prefix + "/" + path;
+    }        
     
-    private static String getSubDir(String prefix, Task task) {
-        return prefix
-                + "/" + task.getOwner()
-                + "/" + task.getProject()
-                + "/" + task.getCalculation()
-                + "/" + task.getId();
-    }
-    
-    public static String getDataDir(Task task){
-        return getSubDir(sysconf.DATA_ROOT_PATH, task);
-    }
-    
-    public static String getWorkDir(Task task){
-        return getSubDir(sysconf.WORK_ROOT_PATH, task);
-    }
-    
-    private static boolean initSubDir(String prefix, Task task) {
-        String path = getSubDir(prefix, task);
+    private static boolean initResourcePath(String prefix, Resource res) {
+        String path = getResourcePath(prefix, res);
         try {
             File dir = new File(path);
             if (dir.exists()) {
@@ -60,23 +60,14 @@ public class FileManager {
                 dir.delete();
             }
             dir.mkdirs();
-            System.out.println(FileManager.class.getName() + ", create task dir : " + path);
+            System.out.println(ResourceManager.class.getName() + ", create task dir : " + path);
             return true;
         } catch (Exception ex) {
-            System.err.println(FileManager.class.getName() + ", Cannot create dir: " + path);
-            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);            
             return false;
         }
     }
 
-    public static boolean initDataDir(Task task){
-        return initSubDir(sysconf.DATA_ROOT_PATH, task);
-    }
-    
-    public static boolean initWorkDir(Task task){
-        return initSubDir(sysconf.WORK_ROOT_PATH, task);
-    }
-    
     public static boolean isFastaFile(File file){
         try{
             FastaReaderHelper.readFastaDNASequence(file);
@@ -86,14 +77,14 @@ public class FileManager {
         }                    
     }
     
-    public static boolean moveTempFile2Task(File tempfile, Task task){ 
+    public static boolean tempFileAsResource(File tempfile, String prefix, Resource res){ 
         //copy tempfile to task dir
-        String target = getDataDir(task);
+        String target = getResourcePath(prefix, res);
         if (tempfile.exists()){
             try{
-                tempfile.renameTo(new File(target + "/" + tempfile.getName()));
+                tempfile.renameTo(new File(target + "/" + res.getName()));
             }catch(Exception ex){
-                Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
         }else{
@@ -106,7 +97,7 @@ public class FileManager {
         try{
             return FastaReaderHelper.readFastaDNASequence(fasta);
         }catch(Exception ex){
-            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }

@@ -10,10 +10,7 @@ import org.evome.KaKsCalc.client.GWTService;
 import org.evome.KaKsCalc.client.Session;
 import java.util.Date;
 import java.util.UUID;
-import org.evome.KaKsCalc.client.Account;
-import org.evome.KaKsCalc.client.Calculation;
-import org.evome.KaKsCalc.client.Project;
-import org.evome.KaKsCalc.client.Task;
+import org.evome.KaKsCalc.client.*;
 import java.io.File;
 
 /**
@@ -148,12 +145,15 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     }
     
     
-    
-    
     //=======================RESOURCES SERVICES=================================
     @Override
     public ArrayList<String> parseFastaIDs(String file){
         return null;
         //ArrayList<String> ids = FileManager.parseFastaDNASeqs(new File(file))
+    }
+    
+    @Override
+    public ArrayList<Resource> childResources(String uuid){
+        return DatabaseManager.childResources(UUID.fromString(uuid));
     }
 }

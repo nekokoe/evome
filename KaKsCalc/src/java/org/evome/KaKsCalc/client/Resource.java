@@ -18,7 +18,8 @@ public class Resource implements IsSerializable{
     private int id, group, permission;
     private Task task;
     private Account owner;
-    private String name, uuid, comment;
+    private String name, comment;
+    private String uuid, parent;
     private Date create, modify;
     private ResType type;
     //type enum
@@ -48,6 +49,9 @@ public class Resource implements IsSerializable{
     }
     public String getUUID(){
         return this.uuid;
+    }
+    public String getParentUUID(){
+        return this.parent;
     }
     public Date getCreateDate(){
         return this.create;
@@ -82,6 +86,9 @@ public class Resource implements IsSerializable{
     }
     public void setUUID(String uuid){
         this.uuid = uuid;
+    }
+    public void setParentUUID(String uuid){
+        this.parent = uuid;
     }
     public void setCreateDate(Date create){
         this.create= create;

@@ -94,7 +94,7 @@ public class CalculationUtils extends Composite {
         statuslet.setCollapsible(true);
         statuslet.setResize(true);
         statuslet.setWidget(initStatusGrid(calc));
-        uploadlet.setHeadingText("File Uploader");
+        uploadlet.setHeadingText("Sequence Uploader");
         uploadlet.setWidget(initFileUploader(calc));
     }
 

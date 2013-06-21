@@ -15,6 +15,7 @@ public class Task implements IsSerializable {
     //vars
     private int task_id, task_QR;
     private String task_comment, task_name;
+    private String uuid, parent;
     private Date task_create, task_finish, task_modify, task_delete;
     private Project project;
     private Calculation calc;
@@ -95,6 +96,12 @@ public class Task implements IsSerializable {
     public void setName(String name) {
         this.task_name = name;
     }
+    public void setUUID(String uuid){
+        this.uuid = uuid;
+    }
+    public void setParentUUID(String uuid){
+        this.parent = uuid;
+    }
 
     //read methods
     public String getName() {
@@ -148,9 +155,11 @@ public class Task implements IsSerializable {
     public Date getDeleteDate() {
         return this.task_delete;
     }
-    
-    public String getClassType(){
-        return "task";
+    public String getUUID(){
+        return this.uuid;
+    }
+    public String getParentUUID(){
+        return this.parent;
     }
     
     public void setKaKsGeneticCode(Gencode code){

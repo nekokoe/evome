@@ -63,4 +63,5 @@ public interface GWTService extends RemoteService {
     //=============================RESOURCES OPERATION==========================
     //get parsed fasta seq id
     public ArrayList<String> parseFastaIDs(String filename);
+    public ArrayList<Resource> childResources(String uuid);
 }

@@ -48,4 +48,5 @@ public interface GWTServiceAsync {
     
     //get parsed fasta seq id
     public void parseFastaIDs(String filename, AsyncCallback<ArrayList<String>> callback);
+    public void childResources(String uuid, AsyncCallback<ArrayList<Resource>> callback);    
 }

@@ -20,6 +20,7 @@ import org.evome.KaKsCalc.client.Calculation;
 import org.evome.KaKsCalc.client.Resource;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -43,6 +44,8 @@ public class DatabaseManager {
             ResultSet rs = conn().execQuery(sql);
             if (rs.next()){
                 pj.setId(project_id);
+                pj.setUUID(rs.getString("uuid"));
+                pj.setParentUUID(rs.getString("parent"));
                 pj.setName(rs.getString("name"));
                 pj.setOwner(AccountManager.getAccount(rs.getInt("owner")));
                 pj.setCreateDate(rs.getDate("create"));
@@ -58,6 +61,31 @@ public class DatabaseManager {
         return pj;
     }
     
+    public static Project getProjectByUUID(String uuid){
+        Project p = new Project();
+        String sql = "SELECT * FROM `project` WHERE project.uuid='" + uuid + "'";
+        //String sql = "SELECT * FROM `project` ";
+        try{
+            ResultSet rs = conn().execQuery(sql);
+            if (rs.next()){
+                p.setId(rs.getInt("id"));
+                p.setUUID(rs.getString("uuid"));
+                p.setParentUUID(rs.getString("parent"));                
+                p.setName(rs.getString("name"));
+                p.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                p.setCreateDate(rs.getDate("create"));
+                p.setModifyDate(rs.getDate("modify"));
+                p.setComment(rs.getString("comment"));
+            }else{
+                p = null;    //return null if no this project or else
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);            
+            p = null;
+        }
+        return p;        
+    }
+    
     public static Calculation getCalculation(int calc_id){
         Calculation calc = new Calculation();
         String sql = "SELECT * FROM `calculation` WHERE calculation.id = " + calc_id;
@@ -66,6 +94,8 @@ public class DatabaseManager {
             if (rs.next()){
                 calc.setComment(rs.getString("comment"));
                 calc.setId(rs.getInt("id"));
+                calc.setUUID(rs.getString("uuid"));
+                calc.setParentUUID(rs.getString("parent"));                
                 calc.setName(rs.getString("name"));
                 calc.setOwner(AccountManager.getAccount(rs.getInt("owner")));
                 calc.setProject(DatabaseManager.getProject(rs.getInt("project")));
@@ -80,6 +110,30 @@ public class DatabaseManager {
         }
         return calc;
     }
+    public static Calculation getCalculationByUUID(String uuid){
+        Calculation calc = new Calculation();
+        String sql = "SELECT * FROM `calculation` WHERE calculation.uuid='" + uuid + "'";
+        try{
+            ResultSet rs = conn().execQuery(sql);
+            if (rs.next()){
+                calc.setComment(rs.getString("comment"));
+                calc.setId(rs.getInt("id"));
+                calc.setUUID(rs.getString("uuid"));
+                calc.setParentUUID(rs.getString("parent"));
+                calc.setName(rs.getString("name"));
+                calc.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                calc.setProject(DatabaseManager.getProject(rs.getInt("project")));
+                calc.setCreateTime(rs.getDate("create"));
+                calc.setModifyTime(rs.getDate("modify"));
+            }else{
+                calc = null;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            calc = null;
+        }
+        return calc;
+    }    
     
     public static Task getTask(int task_id){
         Task task = new Task();
@@ -92,6 +146,8 @@ public class DatabaseManager {
                 task.setCreateDate(rs.getDate("create"));
                 task.setFinishDate(rs.getDate("finish"));
                 task.setId(rs.getInt("id"));
+                task.setUUID(rs.getString("uuid"));
+                task.setParentUUID(rs.getString("parent"));                
                 task.setKaKsGeneticCode(Task.Gencode.values()[rs.getInt("kaks_c")]);
                 task.setKaKsMethod(Task.Method.valueOf(rs.getString("kaks_m")));
                 task.setModifyDate(rs.getDate("modify"));
@@ -110,6 +166,37 @@ public class DatabaseManager {
         }
         return task;
     }
+    public static Task getTaskByUUID(String uuid){
+        Task task = new Task();
+        String sql = "SELECT * FROM `task` WHERE task.uuid='" + uuid + "'";
+        try{
+            ResultSet rs = conn().execQuery(sql);
+            if (rs.next()){
+                task.setCalculation(DatabaseManager.getCalculation(rs.getInt("calc")));
+                task.setComment(rs.getString("comment"));
+                task.setCreateDate(rs.getDate("create"));
+                task.setFinishDate(rs.getDate("finish"));
+                task.setId(rs.getInt("id"));
+                task.setUUID(rs.getString("uuid"));
+                task.setParentUUID(rs.getString("parent"));
+                task.setKaKsGeneticCode(Task.Gencode.values()[rs.getInt("kaks_c")]);
+                task.setKaKsMethod(Task.Method.valueOf(rs.getString("kaks_m")));
+                task.setModifyDate(rs.getDate("modify"));
+                task.setName(rs.getString("name"));
+                task.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                task.setPriorityRank(Task.Priority.values()[rs.getInt("prank")]);
+                task.setProjcet(DatabaseManager.getProject(rs.getInt("project")));
+                task.setQueueRank(rs.getInt("qrank"));
+                task.setStatus(Task.Status.values()[rs.getInt("status")]);
+            }else{
+                task = null;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            task = null;
+        }
+        return task;
+    }    
 
     public static Resource getResource(int id){
         Resource res = new Resource();
@@ -117,7 +204,9 @@ public class DatabaseManager {
         try{
             ResultSet rs = conn().execQuery(sql);
             if (rs.next()){
-                res.setId(id);
+                res.setId(rs.getInt("id"));
+                res.setUUID(rs.getString("uuid"));
+                res.setParentUUID(rs.getString("parent"));
                 res.setName(rs.getString("name"));
                 res.setType(Resource.ResType.values()[rs.getInt("type")]);
                 res.setOwner(AccountManager.getAccount(rs.getInt("owner")));
@@ -135,7 +224,33 @@ public class DatabaseManager {
             res = null;
         }
         return res;        
-    }    
+    }
+    public static Resource getResourceByUUID(String uuid){
+        Resource res = new Resource();
+        String sql = "SELECT * FROM `resource` WHERE resource.uuid='" + uuid + "'";
+        try{
+            ResultSet rs = conn().execQuery(sql);
+            if (rs.next()){
+                res.setId(rs.getInt("id"));
+                res.setUUID(rs.getString("uuid"));
+                res.setParentUUID(rs.getString("parent"));
+                res.setName(rs.getString("name"));
+                res.setType(Resource.ResType.values()[rs.getInt("type")]);
+                res.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                res.setGroup(rs.getInt("group"));
+                res.setTask(DatabaseManager.getTask(rs.getInt("task")));
+                res.setCreateDate(rs.getDate("create"));
+                res.setModifyDate(rs.getDate("modify"));
+                res.setComment(rs.getString("comment"));
+            }else{
+                res = null;    //return null if no this project or else
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);            
+            res = null;
+        }
+        return res;        
+    }     
     
     public static int addProject(Project proj){
         int proj_id;
@@ -144,6 +259,8 @@ public class DatabaseManager {
                 + "project.name='" + proj.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "project.comment='" + proj.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "project.create='" + sdf.format(new Date()) + "',"
+                + "project.uuid='" + UUID.randomUUID().toString() + "',"
+                + "project.parent='" + proj.getOwner().getUUID() + "',"
                 + "project.modify='" + sdf.format(new Date()) + "'";
         try{
             ResultSet rs = conn().execUpdateReturnGeneratedKeys(sql);
@@ -167,6 +284,8 @@ public class DatabaseManager {
                 + "calculation.name='" + calc.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "calculation.comment='" + calc.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "calculation.create='" + sdf.format(new Date()) + "',"
+                + "calculation.uuid='" + UUID.randomUUID().toString() + "',"
+                + "calculation.parent='" + calc.getProject().getUUID() + "',"
                 + "calculation.modify='" + sdf.format(new Date()) + "'";                
         try{
             ResultSet rs = conn().execUpdateReturnGeneratedKeys(sql);
@@ -195,6 +314,8 @@ public class DatabaseManager {
                 + "task.name='" + task.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "task.create='" + sdf.format(new Date()) + "',"
                 + "task.modify='" + sdf.format(new Date()) + "',"
+                + "task.uuid='" + UUID.randomUUID().toString() + "',"
+                + "task.parent='" + task.getCalculation().getUUID() + "',"
                 + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
                 + "task.kaks_m='" + task.getKaKsMethod().name() + "'";
         try{
@@ -222,6 +343,8 @@ public class DatabaseManager {
                 + "resource.uuid='" + res.getUUID() + "',"
                 + "resource.create='" + sdf.format(new Date()) + "',"
                 + "resource.modify='" + sdf.format(new Date()) + "',"
+                + "resource.uuid='" + UUID.randomUUID().toString() + "',"
+                + "resource.parent='" + res.getParentUUID() + "',"      //this field must be set on client if you need to associate resource to any elements
                 + "resource.permission=0"  /* to be continued*/
                 + "resource.comment='" + res.getComment().replaceAll("[\\\\]*'", "\\\\'") + "'";
         try{
@@ -244,7 +367,7 @@ public class DatabaseManager {
                 + "project.name='" + proj.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "project.comment='" + proj.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "project.modify='" + sdf.format(new Date()) + "'"
-                + " WHERE project.id = " + proj.getId();
+                + " WHERE project.id=" + proj.getId() + " OR project.uuid='" + proj.getUUID() + "";
         return (conn().execUpdate(sql) > 0) ? true : false;   
     }
     
@@ -255,7 +378,7 @@ public class DatabaseManager {
                 + "calculation.comment='" + calc.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "calculation.project='" + calc.getProject().getId() + "',"
                 + "calculation.modify='" + sdf.format(new Date()) + "'"
-                + " WHERE calculation.id = " + calc.getId();
+                + " WHERE calculation.id=" + calc.getId() + " OR calculation.uuid='" + calc.getUUID() + "'";
         return (conn().execUpdate(sql) > 0) ? true : false;             
     }
     
@@ -272,7 +395,7 @@ public class DatabaseManager {
                 + "task.modify='" + sdf.format(new Date()) + "',"
                 + "task.kaks_c='" + task.getKaKsGeneticCode().ordinal() + "',"
                 + "task.kaks_m='" + task.getKaKsMethod().name() + "'"
-                + " WHERE task.id = " + task.getId();
+                + " WHERE task.id=" + task.getId() + " OR task.uuid='" + task.getUUID()+"'";
         return (conn().execUpdate(sql) > 0) ? true : false;        
     }
     
@@ -281,7 +404,7 @@ public class DatabaseManager {
         String sql = "UPDATE `resource` SET "
                 + "resource.comment='" + res.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "resource.modify='" + sdf.format(new Date()) + "'"
-                + " WHERE resource.id = " + res.getId();
+                + " WHERE resource.id=" + res.getId() + " OR resource.uuid='" + res.getUUID() + "'";
         return (conn().execUpdate(sql) > 0) ? true : false;   
     }    
     
@@ -293,7 +416,7 @@ public class DatabaseManager {
             isSuccess &= delCalculation(it.next());
         }
         if (isSuccess) { //has deleted all subs
-            String sql = "DELETE FROM `project` WHERE project.id = " + proj.getId();
+            String sql = "DELETE FROM `project` WHERE project.id=" + proj.getId() + " OR project.uuid='" + proj.getUUID() + "'";
             if (conn().execUpdate(sql) > 0) {
                 isSuccess = true;
             } else {
@@ -311,7 +434,7 @@ public class DatabaseManager {
             isSuccess &= delTask(it.next());
         }
         if (isSuccess) {
-            String sql = "DELETE FROM `calculation` WHERE calculation.id = " + calc.getId();
+            String sql = "DELETE FROM `calculation` WHERE calculation.id=" + calc.getId() + " OR calculation.uuid='" + calc.getUUID() + "'";
             if (conn().execUpdate(sql) > 0) {
                 isSuccess = true;
             } else {
@@ -323,7 +446,7 @@ public class DatabaseManager {
     
     public static boolean delTask(Task task) {
         boolean isSuccess;
-        String sql = "DELETE FROM `task` WHERE task.id = " + task.getId();
+        String sql = "DELETE FROM `task` WHERE task.id=" + task.getId() + " OR task.uuid='" + task.getUUID() + "'";
         if (conn().execUpdate(sql) > 0) {
             isSuccess = true;
         } else {
@@ -334,7 +457,7 @@ public class DatabaseManager {
     
     public static boolean delResource(Resource res){
         boolean isSuccess;
-        String sql = "DELETE FROM `resource` WHERE resource.id = " + res.getId();
+        String sql = "DELETE FROM `resource` WHERE resource.id=" + res.getId() + " OR resource.uuid='" + res.getUUID() + "'";
         if (conn().execUpdate(sql) > 0) {
             isSuccess = true;
         } else {
@@ -346,12 +469,14 @@ public class DatabaseManager {
     public static ArrayList<Project> userProjects(Account account){
 
         ArrayList<Project> projects = new ArrayList<Project>();
-        String sql = "SELECT * FROM `project` WHERE project.owner = " + account.getUserID();
+        String sql = "SELECT * FROM `project` WHERE project.owner=" + account.getUserID() + " OR project.parent='" + account.getUUID() + "'";
         try{
             ResultSet rs = conn().execQuery(sql);
             while (rs.next()){
                 Project p = new Project();
                 p.setId(rs.getInt("id"));
+                p.setUUID(rs.getString("uuid"));
+                p.setParentUUID(rs.getString("parent"));
                 p.setName(rs.getString("name"));
                 p.setOwner(AccountManager.getAccount(rs.getInt("owner")));
                 p.setCreateDate(rs.getDate("create"));
@@ -373,6 +498,8 @@ public class DatabaseManager {
                 Calculation c = new Calculation();
                 c.setComment(rs.getString("comment"));
                 c.setId(rs.getInt("id"));
+                c.setUUID(rs.getString("uuid"));
+                c.setParentUUID(rs.getString("parent"));                
                 c.setName(rs.getString("name"));
                 c.setOwner(AccountManager.getAccount(rs.getInt("owner")));
                 c.setProject(DatabaseManager.getProject(rs.getInt("project")));
@@ -398,6 +525,8 @@ public class DatabaseManager {
                 t.setCreateDate(rs.getDate("create"));
                 t.setFinishDate(rs.getDate("finish"));
                 t.setId(rs.getInt("id"));
+                t.setUUID(rs.getString("uuid"));
+                t.setParentUUID(rs.getString("parent"));                
                 t.setKaKsGeneticCode(Task.Gencode.values()[rs.getInt("kaks_c")]);
                 t.setKaKsMethod(Task.Method.valueOf(rs.getString("kaks_m")));
                 t.setModifyDate(rs.getDate("modify"));
@@ -415,7 +544,46 @@ public class DatabaseManager {
         return tasks;            
     }
     
-
+    public static ArrayList<Resource> childResources(UUID uuid){
+        ArrayList<Resource> reslist = new ArrayList<Resource>();
+        String sql = "SELECT * FROM `resource` WHERE resource.parent='" + uuid.toString() + "'";
+        try{
+            ResultSet rs = conn().execQuery(sql);
+            while (rs.next()){
+                Resource r = new Resource();
+                r.setId(rs.getInt("id"));
+                r.setUUID(rs.getString("uuid"));
+                r.setParentUUID(rs.getString("parent"));
+                r.setName(rs.getString("name"));
+                r.setType(Resource.ResType.values()[rs.getInt("type")]);
+                r.setOwner(AccountManager.getAccount(rs.getInt("owner")));
+                r.setGroup(rs.getInt("group"));
+                r.setTask(DatabaseManager.getTask(rs.getInt("task")));
+                r.setCreateDate(rs.getDate("create"));
+                r.setModifyDate(rs.getDate("modify"));
+                r.setComment(rs.getString("comment"));
+                reslist.add(r);
+            }
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return reslist;           
+    }
     
-
+    public static UUID getParentUUID(UUID uuid){
+        //return null if no parent or error
+        String sql = "SELECT * FROM 'account','calculation','project','task' WHERE uuid='" + uuid.toString() + "'";
+        try{
+            ResultSet rs = conn().execQuery(sql);
+            if (rs.next()){
+                return UUID.fromString(rs.getString("parent"));
+            }else{
+                return null;
+            }            
+        }catch(Exception ex){
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);            
+            return null;        
+        }
+        
+    }
 }

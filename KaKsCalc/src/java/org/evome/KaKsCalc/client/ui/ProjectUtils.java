@@ -177,19 +177,21 @@ public class ProjectUtils extends Composite {
     }
 
     private Grid initStatusGrid(Project p) {
-        Grid status = new Grid(6, 3);
+        Grid status = new Grid(7, 3);
         status.setText(0, 0, "ID");
         status.setText(0, 1, String.valueOf(p.getId()));
-        status.setText(1, 0, "Name");
-        status.setText(1, 1, p.getName());
-        status.setText(2, 0, "Owner");
-        status.setText(2, 1, p.getOwner().getFullName());
-        status.setText(3, 0, "Created");
-        status.setText(3, 1, p.getCreateDate().toString());
-        status.setText(4, 0, "Modified");
-        status.setText(4, 1, p.getModifyDate().toString());
-        status.setText(5, 0, "Description");
-        status.setText(5, 1, p.getComment());
+        status.setText(1, 0, "UUID");
+        status.setText(1, 1, p.getUUID());
+        status.setText(2, 0, "Name");
+        status.setText(2, 1, p.getName());
+        status.setText(3, 0, "Owner");
+        status.setText(3, 1, p.getOwner().getFullName());
+        status.setText(4, 0, "Created");
+        status.setText(4, 1, p.getCreateDate().toString());
+        status.setText(5, 0, "Modified");
+        status.setText(5, 1, p.getModifyDate().toString());
+        status.setText(6, 0, "Description");
+        status.setText(6, 1, p.getComment());
         return status;
     }
 
@@ -266,7 +268,7 @@ public class ProjectUtils extends Composite {
 
     public class EditProject extends Window {
 
-        private Label projectID = new Label(), projectOwner = new Label();
+        private Label projectID = new Label(), projectUUID = new Label(), projectOwner = new Label();
         private TextField projectName = new TextField();
         private TextArea projectComment = new TextArea();
 
@@ -284,6 +286,9 @@ public class ProjectUtils extends Composite {
             FieldLabel fldID = new FieldLabel();
             fldID.setText("Project ID");
             fldID.setWidget(projectID);
+//            FieldLabel fldUUID = new FieldLabel();
+//            fldUUID.setText("UUID");
+//            fldUUID.setWidget(projectUUID);            
             FieldLabel fldOwner = new FieldLabel();
             fldOwner.setText("Project Owner");
             fldOwner.setWidget(projectOwner);
@@ -294,12 +299,14 @@ public class ProjectUtils extends Composite {
             fldComment.setText("Project Details");
             fldComment.setWidget(projectComment);
             container.add(fldID, layout);
+//            container.add(fldUUID, layout);
             container.add(fldOwner, layout);
             container.add(fldName, layout);
             container.add(fldComment, layout2);
             this.add(container);
             //init current values
             projectID.setText(Integer.toString(myproject.getId()));
+//            projectUUID.setText(myproject.getUUID());
             projectOwner.setText(myproject.getOwner().getFullName());
             projectName.setValue(myproject.getName());
             projectComment.setValue(myproject.getComment());

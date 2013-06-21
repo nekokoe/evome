@@ -10,17 +10,16 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  *
  * @author nekoko
  */
-public class Job implements IsSerializable{
+public class Job implements IsSerializable {
 
     //sql data
     private int job_id, job_task, job_queue, job_status, job_prank, job_qrank;
     private int job_req_cpu, job_req_mem;
     private String job_name;
     private String job_submit;
+    private String uuid, parent;
     //runtime data
     private Calculation job_calc;
-    
-    
     //define queue job status
     public static final int JOB_QUEUE = 1,
             JOB_RUN = 2,
@@ -60,16 +59,25 @@ public class Job implements IsSerializable{
     public void setSubmitDate(String submit) {
         this.job_submit = submit;
     }
-    
-    public void setReqCPU(int cpu){
+
+    public void setReqCPU(int cpu) {
         this.job_req_cpu = cpu;
     }
-    public void setReqMem(int mem){
+
+    public void setReqMem(int mem) {
         this.job_req_mem = mem;
     }
 
-    public void setCalculation(Calculation calc){
+    public void setCalculation(Calculation calc) {
         this.job_calc = calc;
+    }
+
+    public void setUUID(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setParentUUID(String uuid) {
+        this.parent = uuid;
     }
 
     public int getId() {
@@ -104,15 +112,23 @@ public class Job implements IsSerializable{
         return this.job_submit;
     }
 
-    public int getReqCPU(){
+    public int getReqCPU() {
         return this.job_req_cpu;
     }
-    
-    public int getReqMem(){
+
+    public int getReqMem() {
         return this.job_req_mem;
     }
-    
-    public Calculation getCalculation(){
+
+    public Calculation getCalculation() {
         return this.job_calc;
+    }
+
+    public String getUUID() {
+        return this.uuid;
+    }
+
+    public String getParentUUID() {
+        return this.parent;
     }
 }

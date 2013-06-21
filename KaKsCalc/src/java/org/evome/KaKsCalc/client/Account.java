@@ -240,7 +240,7 @@ public class Account implements IsSerializable {
         sample.setInstitute("big");
         sample.setLastName("evome");
         sample.setUserID(1);
-        sample.setUUID("");
+        sample.setUUID("48039105-e1d2-4a94-9b18-c091de4bba4e"); //what's this?!
         
         return sample;
     }

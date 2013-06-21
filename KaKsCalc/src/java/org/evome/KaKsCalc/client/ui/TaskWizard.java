@@ -66,6 +66,8 @@ public class TaskWizard extends Composite {
     private final MarginData margin = new MarginData(0);
     private final Task mytask = new Task();
     
+    private int step = 1;   //counter of steps
+    
     public TaskWizard(){
         //initWidget(uiBinder.createAndBindUi(this));
         initWidget(container);
@@ -99,7 +101,8 @@ public class TaskWizard extends Composite {
         final TextArea commentfield = new TextArea();
         commentlabel.setText("Description");        
         commentlabel.setWidget(commentfield);
-        vertical.add(new Label("Step 1 : add new task"), layout);
+        //add widgets 2 container
+        vertical.add(new Label("Step " + step + " : add new task"), layout);
         vertical.add(namelabel, layout);
         vertical.add(commentlabel, new VerticalLayoutContainer.VerticalLayoutData(1, 1, new Margins(10)));
         //add buttons
@@ -107,6 +110,7 @@ public class TaskWizard extends Composite {
         next.addSelectHandler(new SelectEvent.SelectHandler(){
            @Override
            public void onSelect(SelectEvent event){
+               step++;
                mytask.setName(namefield.getText());
                mytask.setComment(commentfield.getText());
                container.clear();
@@ -119,9 +123,9 @@ public class TaskWizard extends Composite {
     
     private FramedPanel initUploadPanel(){
         FramedPanel panel = new FramedPanel();
-        panel.setWidth(400);
+//        panel.setWidth(400);
         panel.setHeight(400);
-        panel.setHeadingText("Step 2 : upload sequence");
+//        panel.setHeadingText("Step 2 : upload sequence");
         panel.getElement().setMargins(20);
         //add vertical layout
         VerticalLayoutContainer vertical = new VerticalLayoutContainer();
@@ -167,7 +171,8 @@ public class TaskWizard extends Composite {
             }
         });
         
-        //add uploader and filelist to container
+        //add widgets to container
+        vertical.add(new Label("Step " + step + " : upload sequence file"), layout);
         vertical.add(uploader, layout);
         vertical.add(fileListView, layout);
         
@@ -178,6 +183,7 @@ public class TaskWizard extends Composite {
         btnBack.addSelectHandler(new SelectEvent.SelectHandler(){
            @Override
            public void onSelect(SelectEvent event){
+               step++;
                container.clear();
                container.add(attrib, margin);
            }
@@ -199,16 +205,15 @@ public class TaskWizard extends Composite {
     
     private FramedPanel initSelectPanel(){
         FramedPanel panel = new FramedPanel();
-        panel.setWidth(400);
+        //panel.setWidth(400);
         panel.setHeight(400);
-        panel.setHeadingText("Step 3 : select gene pairs for calculation");
+        //panel.setHeadingText("Step 3 : select gene pairs for calculation");
         panel.getElement().setMargins(20);
         //add vertical layout
         VerticalLayoutContainer vertical = new VerticalLayoutContainer();
         VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(10));
         panel.add(vertical);
-        
-        
+        //
         vertical.add(new Label("Select gene pairs for kaks calculation"), layout);
         //add button
         TextButton btnBack = new TextButton("back");
@@ -290,4 +295,10 @@ public class TaskWizard extends Composite {
         return panel;
     }
     
+    private class WizFlow {
+        private ArrayList<Widget> wizFlow;
+        //wizFlow controls the workflow of wizard, could be changed on demand, but please note:
+        //1. the create panel will create a task which is needed for other steps. It is forced placing on the first.
+        //2. the confirm panel will check params and end the wizard, steps after it will be ignored        
+    }
 }
