@@ -8,10 +8,11 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.ArrayList;
 import org.evome.KaKsCalc.client.GWTService;
 import org.evome.KaKsCalc.client.Session;
+import org.evome.KaKsCalc.client.shared.UploadInfo;
 import java.util.Date;
 import java.util.UUID;
 import org.evome.KaKsCalc.client.*;
-import java.io.File;
+import java.nio.file.*;
 
 /**
  *
@@ -88,6 +89,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     @Override
     public int addNewTask(Task task){
         return DatabaseManager.addTask(task);
+    }    
+    @Override
+    public int addResource(Resource res){
+        return DatabaseManager.addResource(res);
     }
     
     //edit functions return if succeed
@@ -103,6 +108,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     public boolean editTask(Task task){
         return DatabaseManager.editTask(task);
     }
+    @Override
+    public boolean editResource(Resource res){
+        return DatabaseManager.editResource(res);
+    }
     
     @Override
     public boolean delProject(Project project){
@@ -115,6 +124,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     @Override
     public boolean delTask(Task task){
         return DatabaseManager.delTask(task);
+    }
+    @Override
+    public boolean delResource(Resource res){
+        return DatabaseManager.delResource(res);
     }
     
     //get database instances by passing IDs
@@ -129,6 +142,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     @Override
     public Task getTask(int task_id){
         return DatabaseManager.getTask(task_id);
+    }
+    @Override
+    public Resource getResource(int res_id){
+        return DatabaseManager.getResource(res_id);
     }
     
     @Override
@@ -155,5 +172,10 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     @Override
     public ArrayList<Resource> childResources(String uuid){
         return DatabaseManager.childResources(UUID.fromString(uuid));
+    }
+    
+    @Override
+    public Resource uploadAsResource(UploadInfo info){
+        return ResourceManager.uploadAsResource(info);        
     }
 }

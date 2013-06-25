@@ -36,7 +36,7 @@ public class SessionManager {
             ResultSet rs = dbconn.execUpdateReturnGeneratedKeys(sql);
             if (rs.next()){
                 int id = rs.getInt(1);
-                session = getSessionByID(id);             
+                session = getSession(id);             
             }else{
                 session = null;
             }                    
@@ -47,13 +47,13 @@ public class SessionManager {
         return session;
     }
     
-    public static Session getSessionByID(int id){
+    public static Session getSession(int id){
         Session s = new Session();
         String sql = "SELECT * FROM `session` WHERE session.id = " + id;
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
-                s.setAccountUUID(rs.getString("account_uuid"));
+                s.setAccount(AccountManager.getAccount(rs.getInt("account")));
                 s.setCreateTime(rs.getDate("create"));
                 s.setLastActiveTime(rs.getDate("lastActive"));
                 s.setSessionID(rs.getInt("id"));
@@ -69,13 +69,13 @@ public class SessionManager {
         return s;
     }
     
-    public static Session getSessionByUUID(String uuid){
+    public static Session getSession(UUID uuid){
         Session s = new Session();
-        String sql = "SELECT * FROM `session` WHERE session.uuid = " + uuid;
+        String sql = "SELECT * FROM `session` WHERE session.uuid = '" + uuid.toString() + "'";
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
-                s.setAccountUUID(rs.getString("account_uuid"));
+                s.setAccount(AccountManager.getAccount(rs.getInt("account")));
                 s.setCreateTime(rs.getDate("create"));
                 s.setLastActiveTime(rs.getDate("lastActive"));
                 s.setSessionID(rs.getInt("id"));
@@ -99,7 +99,7 @@ public class SessionManager {
             ResultSet rs = dbconn.execQuery(sql);
             while (rs.next()){
                 Session s = new Session();
-                s.setAccountUUID(rs.getString("account_uuid"));
+                s.setAccount(AccountManager.getAccount(rs.getInt("account")));
                 s.setCreateTime(rs.getDate("create"));
                 s.setLastActiveTime(rs.getDate("lastActive"));
                 s.setSessionID(rs.getInt("id"));
@@ -129,7 +129,7 @@ public class SessionManager {
     public static boolean authenticValidation(Session s, Account a, String clientKey){
         //this function validates clientkey against session and account in database
         //true: OK, false: failed
-        Session ss = SessionManager.getSessionByID(s.getSessionID());
+        Session ss = SessionManager.getSession(s.getSessionID());
         Account aa = AccountManager.getAccount(a.getUserID());
         //1.generate valkey from ss.uuid and aa.accountkey stored server-end
         String serverKey = Account.md5sum(ss.getUUID() + aa.getAccountKey());

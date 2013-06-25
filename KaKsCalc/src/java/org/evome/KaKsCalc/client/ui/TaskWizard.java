@@ -26,8 +26,8 @@ import gwtupload.client.SingleUploader;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import java.util.ArrayList;
 import com.sencha.gxt.widget.core.client.info.Info;
-import org.evome.KaKsCalc.client.Shared.DNAPair;
-import org.evome.KaKsCalc.client.Shared.Sequence;
+import org.evome.KaKsCalc.client.shared.Sequence;
+import org.evome.KaKsCalc.client.shared.SequencePair;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -56,7 +56,7 @@ public class TaskWizard extends Composite {
     
     
     private final ArrayList<String> filelist = new ArrayList<String>();
-    private final ArrayList<DNAPair> pairlist = new ArrayList<DNAPair>(); 
+    private final ArrayList<SequencePair> pairlist = new ArrayList<SequencePair>(); 
     private final SimpleContainer container = new SimpleContainer();
     private final FramedPanel attrib = initAttribPanel();
     private final FramedPanel upload = initUploadPanel();

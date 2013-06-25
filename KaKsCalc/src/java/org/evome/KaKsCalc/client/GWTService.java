@@ -7,6 +7,7 @@ package org.evome.KaKsCalc.client;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import java.util.ArrayList;
+import org.evome.KaKsCalc.client.shared.UploadInfo;
 
 /**
  *
@@ -40,21 +41,25 @@ public interface GWTService extends RemoteService {
     public int addNewProject(Project project);
     public int addNewCalculation(Calculation calc);
     public int addNewTask(Task task);
+    public int addResource(Resource res);
     
     public boolean editProject(Project project);
     public boolean editCalculation(Calculation calc);
     public boolean editTask(Task task);
+    public boolean editResource(Resource res);
     
     public boolean delProject(Project project);
     public boolean delCalculation(Calculation calc);
     public boolean delTask(Task task);
+    public boolean delResource(Resource res);
     
     //get database instances by passing IDs
     public Project getProject(int project_id);
     public Calculation getCalculation(int calc_id);
     public Task getTask(int task_id);
+    public Resource getResource(int res_id);
     
-    //get child for TreeView
+    //get sub nodes for TreeView
     public ArrayList<Project> userProjects(Account account);
     public ArrayList<Calculation> subCalculations(Project proj);
     public ArrayList<Task> subTasks(Calculation calc);
@@ -64,4 +69,5 @@ public interface GWTService extends RemoteService {
     //get parsed fasta seq id
     public ArrayList<String> parseFastaIDs(String filename);
     public ArrayList<Resource> childResources(String uuid);
+    public Resource uploadAsResource(UploadInfo info); 
 }

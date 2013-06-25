@@ -21,7 +21,7 @@ public class AccountManager {
     
     public static Account getAccount(int id){
         Account account = new Account();
-        String sql = "SELECT * FROM `account` WHERE id = "+ id;
+        String sql = "SELECT * FROM `account` WHERE account.id = "+ id;
         try{
             ResultSet rs = dbconn.execQuery(sql);
             if (rs.next()){
@@ -45,6 +45,34 @@ public class AccountManager {
             account = null;
         }
         return account;
+    }
+    
+    public static Account getAccount(UUID uuid){
+        Account account = new Account();
+        String sql = "SELECT * FROM `account` WHERE account.uuid = '"+ uuid.toString() + "'";
+        try{
+            ResultSet rs = dbconn.execQuery(sql);
+            if (rs.next()){
+                account.setAccessTime(rs.getDate("access"));
+                account.setAccountKey(rs.getString("accountKey"));
+                account.setAccountStatus(rs.getBoolean("active"));
+                account.setActivationCode(rs.getString("activationCode"));
+                account.setCreateTime(rs.getDate("create"));
+                account.setFirstName(rs.getString("firstname"));
+                account.setGroup(rs.getInt("group"));
+                account.setInstitute(rs.getString("institute"));
+                account.setLastName(rs.getString("lastname"));
+                account.setUUID(rs.getString("uuid"));
+                account.setUserID(rs.getInt("id"));
+                account.setEmail(rs.getString("email"));
+            }else{
+                account = null;
+            }
+        }catch(Exception ex){
+            Logger.getLogger(AccountManager.class.getName()).log(Level.SEVERE, null, ex);    
+            account = null;
+        }
+        return account;        
     }
     
     public static int createAccount(Account account){

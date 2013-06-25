@@ -22,8 +22,10 @@ public class Session implements IsSerializable {
      */
 
     private int sessionID, userID;
-    private String uuid, acc_uuid;
+    private String uuid;
     private Date create, lastActive;
+    private String authKey;     //for server, check if session valid
+    private Account account;
     
     
     public int getSessionID() {
@@ -46,8 +48,8 @@ public class Session implements IsSerializable {
         return this.uuid;
     }
 
-    public String getAccountUUID(){
-        return this.acc_uuid;
+    public Account getAccount(){
+        return this.account;
     }
     
     public void setSessionID(int id) {
@@ -70,8 +72,8 @@ public class Session implements IsSerializable {
         this.uuid = uuid;
     }
     
-    public void setAccountUUID(String uuid){
-        this.acc_uuid = uuid;
+    public void setAccount(Account account){
+        this.account = account;
     }
     
     
@@ -81,7 +83,7 @@ public class Session implements IsSerializable {
         s.setSessionID(1);
         s.setUserID(1);
         s.setUUID("");
-        s.setAccountUUID("");
+        s.setAccount(Account.sampleData());
         s.setCreateTime(new Date());
         s.setLastActiveTime(new Date());
         return s;

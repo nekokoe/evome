@@ -338,14 +338,14 @@ public class DatabaseManager {
                 + "resource.name='" + res.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "resource.type='" + res.getType().ordinal() + "',"
                 + "resource.owner='"  + res.getOwner().getUserID() + "',"
-                + "resource.group=1"  /* to be continued*/
-                + "resource.task='" + res.getTask().getId() + "',"
-                + "resource.uuid='" + res.getUUID() + "',"
+                + "resource.group=1,"  /* to be continued*/
+                //+ "resource.task='" + res.getTask().getId() + "',"
+                //+ "resource.uuid='" + res.getUUID() + "',"
                 + "resource.create='" + sdf.format(new Date()) + "',"
                 + "resource.modify='" + sdf.format(new Date()) + "',"
                 + "resource.uuid='" + UUID.randomUUID().toString() + "',"
                 + "resource.parent='" + res.getParentUUID() + "',"      //this field must be set on client if you need to associate resource to any elements
-                + "resource.permission=0"  /* to be continued*/
+                + "resource.permission=0,"  /* to be continued*/
                 + "resource.comment='" + res.getComment().replaceAll("[\\\\]*'", "\\\\'") + "'";
         try{
             ResultSet rs = conn().execUpdateReturnGeneratedKeys(sql);
@@ -403,6 +403,10 @@ public class DatabaseManager {
         //id, owner, create can't be modified
         String sql = "UPDATE `resource` SET "
                 + "resource.comment='" + res.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
+                + "resource.type='" + res.getType().ordinal() + "',"
+                + "resource.owner='" + res.getOwner().getUserID() + "',"
+                + "resource.permission='" + res.getPermission() + "',"
+                + "resource.parent='" + res.getParentUUID() + "',"
                 + "resource.modify='" + sdf.format(new Date()) + "'"
                 + " WHERE resource.id=" + res.getId() + " OR resource.uuid='" + res.getUUID() + "'";
         return (conn().execUpdate(sql) > 0) ? true : false;   
@@ -570,20 +574,4 @@ public class DatabaseManager {
         return reslist;           
     }
     
-    public static UUID getParentUUID(UUID uuid){
-        //return null if no parent or error
-        String sql = "SELECT * FROM 'account','calculation','project','task' WHERE uuid='" + uuid.toString() + "'";
-        try{
-            ResultSet rs = conn().execQuery(sql);
-            if (rs.next()){
-                return UUID.fromString(rs.getString("parent"));
-            }else{
-                return null;
-            }            
-        }catch(Exception ex){
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);            
-            return null;        
-        }
-        
-    }
 }

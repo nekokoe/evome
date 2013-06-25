@@ -5,6 +5,7 @@
 package org.evome.KaKsCalc.server;
 
 import java.io.File;
+import java.nio.file.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.evome.KaKsCalc.client.Task;
@@ -14,6 +15,10 @@ import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.ArrayList;
+import org.evome.KaKsCalc.client.Account;
+import org.evome.KaKsCalc.client.shared.UploadInfo;
+
 
 
 /**
@@ -26,72 +31,90 @@ public class ResourceManager {
     private static SysConfig sysconf = GWTServiceImpl.getSysConfig();
 
     private static String getResourcePath(String prefix, Resource res){
-        //path is built as prefix/parent/.../res
-        String path = res.getName();
-        UUID child = UUID.fromString(res.getUUID());
-        while(true) {
-            UUID parent = DatabaseManager.getParentUUID(child);
-            if (parent == null){
-                break;
-            }
-            path = parent.toString() + "/" + path;
-            child = parent;
+        //Path is build as prefix/ParentUUID/resName
+        res = DatabaseManager.getResource(res.getId()); //read database
+        File path = new File(prefix + File.separator + res.getParentUUID());
+        if (!path.exists()){
+            path.mkdirs();
+            System.out.println("ResourceManager : create task dir : " + path);            
         }
-        return prefix + "/" + path;
+        return path.getPath() + File.separator + res.getName();
     }        
     
-    private static boolean initResourcePath(String prefix, Resource res) {
-        String path = getResourcePath(prefix, res);
-        try {
-            File dir = new File(path);
-            if (dir.exists()) {
-                //task dir exists, check if empty
-                if (dir.isDirectory()) {
-                    File[] list = dir.listFiles();
-                    if (list.length > 0) {
-                        //cannot use this dir
-                        return false;
-                    }
-                } else {
-                    //is here, but regular file
-                    return false;
-                }
-                //now safe to remove it
-                dir.delete();
+    
+    public static Resource uploadAsResource(UploadInfo info){
+        Resource res = null;
+        Path source = Paths.get(info.path);
+        if (Files.exists(source)) {
+            try {
+                res = new Resource();
+                res.setParentUUID(info.UUID);
+                res.setName(info.name);
+                res.setComment("");
+                res.setType(checkResourceType(source));
+                res.setOwner(info.account);
+                res = DatabaseManager.getResource(DatabaseManager.addResource(res));
+                Path target = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res));
+                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);                
+            } catch (Exception ex) {
+                Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
+                res = null;
             }
-            dir.mkdirs();
-            System.out.println(ResourceManager.class.getName() + ", create task dir : " + path);
-            return true;
-        } catch (Exception ex) {
-            Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);            
-            return false;
         }
+        return res;        
+    }
+    
+    public static Resource fileAsResource(Path source, UUID parent){ 
+        //copy tempfile to task dir
+        Resource res = null;
+        if (Files.exists(source)) {
+            try {
+                res = new Resource();
+                res.setParentUUID(parent.toString());
+                res.setName(source.getFileName().toString());
+                res.setComment("");
+                res.setType(checkResourceType(source));
+/*TEST ONLY*/   res.setOwner(Account.sampleData());
+                res = DatabaseManager.getResource(DatabaseManager.addResource(res));
+                Path target = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res));
+                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);                
+            } catch (Exception ex) {
+                Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
+                res = null;
+            }
+        }
+        return res;
+    }
+    
+    public static Resource.ResType checkResourceType(Path file) {
+        Resource.ResType type = Resource.ResType.REGULAR;
+        if (Files.exists(file)) {
+            if (isDNAFastaFile(file.toFile())) {
+                type = Resource.ResType.DNA;
+            }
+        } else {
+            type = Resource.ResType.UNKNOW;
+        }
+        return type;
+    }
+    
+    public static Resource.ResType checkResourceType(Resource res){
+        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res) + res.getName());
+        return checkResourceType(file);
     }
 
-    public static boolean isFastaFile(File file){
+    public static boolean isDNAFastaFile(File file){
         try{
             FastaReaderHelper.readFastaDNASequence(file);
             return true;
         }catch(Exception ex){
+            System.out.println(ex.toString());
             return false;
-        }                    
-    }
-    
-    public static boolean tempFileAsResource(File tempfile, String prefix, Resource res){ 
-        //copy tempfile to task dir
-        String target = getResourcePath(prefix, res);
-        if (tempfile.exists()){
-            try{
-                tempfile.renameTo(new File(target + "/" + res.getName()));
-            }catch(Exception ex){
-                Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
-                return false;
-            }
-        }else{
+        }catch(Error err){
+            System.out.println(err.toString());
             return false;
         }
-        return true;
-    }
+    }    
     
     public static LinkedHashMap<String, DNASequence> parseFastaDNASeqs(File fasta){
         try{

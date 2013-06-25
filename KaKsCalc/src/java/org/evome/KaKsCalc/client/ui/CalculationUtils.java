@@ -44,6 +44,7 @@ import gwtupload.client.IUploadStatus;
 import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
 import org.evome.KaKsCalc.client.widget.resources.ExampleImages;
+import org.evome.KaKsCalc.client.shared.UploadInfo;
 
 
 /**
@@ -255,10 +256,25 @@ public class CalculationUtils extends Composite {
         uploader.addOnFinishUploadHandler(new IUploader.OnFinishUploaderHandler() {
             @Override
             public void onFinish(IUploader uploader) {
-                if (uploader.getStatus() == IUploadStatus.Status.SUCCESS){
+                if (uploader.getStatus() == IUploadStatus.Status.SUCCESS) {
                     IUploader.UploadedInfo info = uploader.getServerInfo();
                     Info.display("Upload Success", "Finished uploading file " + info.name);
                     fileListView.getStore().add(info.name);
+                    //register upload as resource
+                    rpc.uploadAsResource(new UploadInfo(info.message, info.name, mycalc.getUUID(), mycalc.getOwner()), new AsyncCallback<Resource>() {
+                        @Override
+                        public void onSuccess(Resource res) {
+                            if (res == null){
+                                Info.display("Error", "Failed to register file as resource");
+                            }
+                            Info.display("Resource", "uploaded file registered as " +  res.getUUID());
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Info.display("Error", "Communication with server failed.");
+                        }
+                    });
                 }
             }
         });

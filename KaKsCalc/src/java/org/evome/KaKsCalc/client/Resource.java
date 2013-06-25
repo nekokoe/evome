@@ -22,12 +22,16 @@ public class Resource implements IsSerializable{
     private String uuid, parent;
     private Date create, modify;
     private ResType type;
+    
+    private String message; //used to return server message when getting with RPC calls    
     //type enum
     public enum ResType{
+        UNKNOW,
         REGULAR,BINARY,URL,TEMP,
         CONFIG,XML,JSON,
         DNA,RNA,PROTEIN,MUSCLE,AXT,KAKS,GRAPH
     }
+
     
     public int getId(){
         return this.id;
@@ -66,6 +70,11 @@ public class Resource implements IsSerializable{
         return this.comment;
     }
     
+    public String getMessage(){
+        return this.message;
+    }
+    
+    //sets
     public void setId(int id){
         this.id = id;
     }
@@ -101,5 +110,8 @@ public class Resource implements IsSerializable{
     }
     public void setComment(String comment){
         this.comment = comment;
+    }
+    public void setMessage(String message){
+        this.message = message;
     }
 }

@@ -12,9 +12,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This is an example of how to use UploadAction class.
@@ -42,6 +44,7 @@ public class FileUploadServlet extends UploadAction {
     @Override
     public String executeAction(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
         String response = null;
+        ArrayList<String> responseList = new ArrayList<String>();
         int cont = 0;
         for (FileItem item : sessionFiles) {
             if (false == item.isFormField()) {
@@ -67,8 +70,8 @@ public class FileUploadServlet extends UploadAction {
                     receivedContentTypes.put(item.getFieldName(), item.getContentType());
 
                     /// Send a customized message to the client.
+                    //responseList.add(file.getAbsolutePath());
                     response = file.getAbsolutePath();
-
                 } catch (Exception e) {
                     throw new UploadActionException(e);
                 }
@@ -79,6 +82,8 @@ public class FileUploadServlet extends UploadAction {
         removeSessionFileItems(request);
 
         /// Send your customized message to the client.
+        //response = StringUtils.join(responseList.iterator(), "::");
+        
         return response; // only return the file path on server        
     }
 
