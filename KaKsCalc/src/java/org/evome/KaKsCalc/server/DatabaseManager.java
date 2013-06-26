@@ -225,7 +225,7 @@ public class DatabaseManager {
         }
         return res;        
     }
-    public static Resource getResourceByUUID(String uuid){
+    public static Resource getResource(String uuid){
         Resource res = new Resource();
         String sql = "SELECT * FROM `resource` WHERE resource.uuid='" + uuid + "'";
         try{
@@ -459,15 +459,11 @@ public class DatabaseManager {
         return isSuccess;
     }
     
-    public static boolean delResource(Resource res){
-        boolean isSuccess;
+    public static boolean delResource(Resource res) {
+        res = getResource(res.getUUID());
+        ResourceManager.delResourceFile(res);   //remove file first
         String sql = "DELETE FROM `resource` WHERE resource.id=" + res.getId() + " OR resource.uuid='" + res.getUUID() + "'";
-        if (conn().execUpdate(sql) > 0) {
-            isSuccess = true;
-        } else {
-            isSuccess = false;
-        }
-        return isSuccess;        
+        return (conn().execUpdate(sql) > 0) ? true : false;
     }
     
     public static ArrayList<Project> userProjects(Account account){
@@ -562,7 +558,7 @@ public class DatabaseManager {
                 r.setType(Resource.ResType.values()[rs.getInt("type")]);
                 r.setOwner(AccountManager.getAccount(rs.getInt("owner")));
                 r.setGroup(rs.getInt("group"));
-                r.setTask(DatabaseManager.getTask(rs.getInt("task")));
+                //r.setTask(DatabaseManager.getTask(rs.getInt("task")));
                 r.setCreateDate(rs.getDate("create"));
                 r.setModifyDate(rs.getDate("modify"));
                 r.setComment(rs.getString("comment"));

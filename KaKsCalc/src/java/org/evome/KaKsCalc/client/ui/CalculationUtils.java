@@ -5,6 +5,8 @@
 package org.evome.KaKsCalc.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -20,32 +22,36 @@ import com.sencha.gxt.core.client.dom.ScrollSupport;
 import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.Portlet;
+import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
+import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.button.ToolButton;
 import com.sencha.gxt.widget.core.client.container.PortalLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.info.Info;
-import org.evome.KaKsCalc.client.*;
-import org.evome.KaKsCalc.client.ui.events.TreeUpdateEvent;
-import com.sencha.gxt.widget.core.client.button.ToolButton;
-import com.sencha.gxt.widget.core.client.Window;
-import com.sencha.gxt.widget.core.client.box.ProgressMessageBox;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
-import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.form.TextArea;
-import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.form.TextField;
+import com.sencha.gxt.widget.core.client.info.Info;
+import com.sencha.gxt.widget.core.client.menu.Item;
+import com.sencha.gxt.widget.core.client.menu.Menu;
+import com.sencha.gxt.widget.core.client.menu.MenuItem;
 import gwtupload.client.IUploadStatus;
 import gwtupload.client.IUploader;
 import gwtupload.client.SingleUploader;
-import org.evome.KaKsCalc.client.widget.resources.ExampleImages;
+import org.evome.KaKsCalc.client.*;
+import org.evome.KaKsCalc.client.shared.TreeViewItem;
+import org.evome.KaKsCalc.client.shared.ListViewItem;
 import org.evome.KaKsCalc.client.shared.UploadInfo;
-
+import org.evome.KaKsCalc.client.ui.events.TreeUpdateEvent;
+import org.evome.KaKsCalc.client.widget.resources.ExampleImages;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -227,29 +233,87 @@ public class CalculationUtils extends Composite {
         VerticalLayoutContainer vertical = new VerticalLayoutContainer();
         vertical.setScrollMode(ScrollSupport.ScrollMode.AUTO);
         VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10));
+        
         //set file list
-        final ListView<String, String> fileListView = new ListView<String, String>(new ListStore<String>(new ModelKeyProvider<String>(){
+        final ListView<ListViewItem, String> fileListView = new ListView<ListViewItem, String>(new ListStore<ListViewItem>(new ModelKeyProvider<ListViewItem>(){
             @Override
-            public String getKey(String key){
-                return key;
+            public String getKey(ListViewItem item){
+                return item.getUUID();
             }
-        }), new ValueProvider<String, String>(){
+        }), new ValueProvider<ListViewItem, String>(){
             @Override
-            public String getValue(String s){
-                return s;
+            public String getValue(ListViewItem item){
+                return item.getValue();
             }
             @Override
-            public void setValue(String s, String value){
+            public void setValue(ListViewItem item, String value){
+                item.setValue(value);
             }
             @Override
             public String getPath(){
                 return "key";
             }
         });
-        fileListView.getSelectionModel().setSelectionMode(Style.SelectionMode.SIMPLE);
-        //get existing file list for calculation
         
+        //set listview mode
+        fileListView.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+        
+        //set listview context menu
+        Menu contextMenu = new Menu();
+        MenuItem delete = new MenuItem();
+        delete.setText("Delete This File");
+        delete.setIcon(images.delete());
+        delete.addSelectionHandler(new SelectionHandler<Item>(){
+           @Override
+            public void onSelection(SelectionEvent<Item> event) {
+                final ListViewItem select = fileListView.getSelectionModel().getSelectedItem();
+                ConfirmMessageBox confirm =
+                        new ConfirmMessageBox("Confirm", "Are you sure want to delete : " + select.getValue() + " ?");
+                confirm.addHideHandler(new HideEvent.HideHandler() {
+                    @Override
+                    public void onHide(HideEvent event) {
+                        MessageBox source = (MessageBox) event.getSource();
+                        if (source.getHideButton() == source.getButtonById(Dialog.PredefinedButton.YES.name())) {
+                            rpc.delResource(new Resource(select.getUUID()), new AsyncCallback<Boolean>() {
+                                @Override
+                                public void onSuccess(Boolean b) {
+                                    if (b) {
+                                        fileListView.getStore().remove(select);
+                                        Info.display("Success", select.getValue() + " has been deleted.");
+                                    } else {
+                                        Info.display("Error", "Failed to delete " + select.getValue());
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Throwable caught) {
+                                    Info.display("Error", "Communication with server failed.");
+                                }
+                            });
+                        }
+                    }
+                });
+                confirm.show();
+            }
+        });
+        contextMenu.add(delete);
+        fileListView.setContextMenu(contextMenu);
+        
+        //get existing file list for calculation
+        rpc.childResources(mycalc.getUUID(), new AsyncCallback<ArrayList<Resource>>() {
+            @Override
+            public void onSuccess(ArrayList<Resource> list) {
+                for (Iterator<Resource> it = list.iterator(); it.hasNext();){
+                    Resource res = it.next();
+                    fileListView.getStore().add(new ListViewItem(ListViewItem.Type.RES, res.getUUID(), res.getName()));
+                }
+            }
 
+            @Override
+            public void onFailure(Throwable caught) {
+                Info.display("Error", "Communication with server failed");
+            }
+        });
+ 
         //set uploader
         SingleUploader uploader = new SingleUploader();
         uploader.avoidRepeatFiles(true);
@@ -259,7 +323,6 @@ public class CalculationUtils extends Composite {
                 if (uploader.getStatus() == IUploadStatus.Status.SUCCESS) {
                     IUploader.UploadedInfo info = uploader.getServerInfo();
                     Info.display("Upload Success", "Finished uploading file " + info.name);
-                    fileListView.getStore().add(info.name);
                     //register upload as resource
                     rpc.uploadAsResource(new UploadInfo(info.message, info.name, mycalc.getUUID(), mycalc.getOwner()), new AsyncCallback<Resource>() {
                         @Override
@@ -267,6 +330,7 @@ public class CalculationUtils extends Composite {
                             if (res == null){
                                 Info.display("Error", "Failed to register file as resource");
                             }
+                            fileListView.getStore().add(new ListViewItem(ListViewItem.Type.RES, res.getUUID(), res.getName()));                            
                             Info.display("Resource", "uploaded file registered as " +  res.getUUID());
                         }
 

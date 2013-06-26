@@ -6,7 +6,7 @@ package org.evome.KaKsCalc.client.ui.events;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
-import org.evome.KaKsCalc.client.ui.TreeViewItem;
+import org.evome.KaKsCalc.client.shared.TreeViewItem;
 
 /**
  *    //this event broadcat the TreeViewItem to be updated or removed

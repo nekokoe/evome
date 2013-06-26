@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.evome.KaKsCalc.client.ui;
+package org.evome.KaKsCalc.client.shared;
 
 /**
  *
@@ -10,8 +10,10 @@ package org.evome.KaKsCalc.client.ui;
  */
 public class TreeViewItem {
         private int id;
+        private String uuid;
         private String value;
         private Type type;
+        
         
         public enum Type{
             HOME,PROJECT,CALCULATION,TASK //HOME = home page

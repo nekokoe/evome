@@ -4,6 +4,7 @@
  */
 package org.evome.KaKsCalc.client.ui;
 
+import org.evome.KaKsCalc.client.shared.TreeViewItem;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

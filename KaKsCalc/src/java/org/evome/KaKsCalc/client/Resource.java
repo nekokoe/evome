@@ -32,6 +32,13 @@ public class Resource implements IsSerializable{
         DNA,RNA,PROTEIN,MUSCLE,AXT,KAKS,GRAPH
     }
 
+    public Resource(){
+        
+    }
+    
+    public Resource(String uuid){
+        this.uuid = uuid;
+    }
     
     public int getId(){
         return this.id;

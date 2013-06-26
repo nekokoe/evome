@@ -8,7 +8,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import java.util.ArrayList;
 import java.util.List;
-import org.evome.KaKsCalc.client.ui.TreeViewItem;
+import org.evome.KaKsCalc.client.shared.TreeViewItem;
 
 /**
  *

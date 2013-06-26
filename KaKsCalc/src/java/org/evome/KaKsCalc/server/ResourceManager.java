@@ -64,26 +64,14 @@ public class ResourceManager {
         return res;        
     }
     
-    public static Resource fileAsResource(Path source, UUID parent){ 
-        //copy tempfile to task dir
-        Resource res = null;
-        if (Files.exists(source)) {
-            try {
-                res = new Resource();
-                res.setParentUUID(parent.toString());
-                res.setName(source.getFileName().toString());
-                res.setComment("");
-                res.setType(checkResourceType(source));
-/*TEST ONLY*/   res.setOwner(Account.sampleData());
-                res = DatabaseManager.getResource(DatabaseManager.addResource(res));
-                Path target = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res));
-                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);                
-            } catch (Exception ex) {
-                Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
-                res = null;
-            }
+    public static boolean delResourceFile(Resource res) {
+        String path = getResourcePath(sysconf.DATA_ROOT_PATH, res);
+        try{
+            return Files.deleteIfExists(Paths.get(path));
+        }catch(Exception ex){
+            Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);            
+            return false;
         }
-        return res;
     }
     
     public static Resource.ResType checkResourceType(Path file) {
