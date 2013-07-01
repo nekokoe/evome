@@ -69,9 +69,8 @@ public class KaKsCalc implements EntryPoint {
         account = Account.sampleData();
         
         Workspace myWorkSpace = new Workspace(session);
-        RootPanel.get().add(myWorkSpace);
-        
-        RootPanel.get().getElement().setAttribute("top", "0");        
+        myWorkSpace.getElement().setAttribute("style", "position:absolute; top:0px;");
+        RootPanel.get().add(myWorkSpace);        
     }
 
 }

@@ -65,6 +65,7 @@ public class Workspace extends Composite {
         centerData.setMargins(new Margins(0, 5, 5, 5));
         //set root container width        
         conRoot.setWidth(Window.getClientWidth());
+        conRoot.setHeight(Window.getClientHeight());
         
         //experimental: add a TreeSelectChangeHandelr to EVENTBUS, see if events could be broadcast and listened
         //OK!

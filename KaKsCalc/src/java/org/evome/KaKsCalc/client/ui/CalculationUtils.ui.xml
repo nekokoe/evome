@@ -22,16 +22,17 @@ Uncomment this for XHTML entities
         <ui:attributes width="1" height="-1" />
     </ui:with>
     <ui:with type="com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData" field="contentRowData">
-        <ui:attributes width="-1" height="-1" margins="{margins10}"/>      
+        <ui:attributes width="-1" height="-1"/>      
     </ui:with>
     
 
     <ui:style>
 
     </ui:style>
-    <container:VerticalLayoutContainer>
+    
+    <container:VerticalLayoutContainer height="100%">
         <container:child layoutData="{toolBarRowData}">
-            <toolbar:ToolBar borders="true">
+            <toolbar:ToolBar borders="true" ui:field="toolbar">
                 <button:TextButton ui:field="btnTaskAdd" text="New Task..." icon="{images.add}"/>
                 <toolbar:SeparatorToolItem />
                 <button:TextButton ui:field="btnCalcStartAll" text="Start All" icon="{images.add}"/>
@@ -47,9 +48,9 @@ Uncomment this for XHTML entities
         
         
         <container:child layoutData="{contentRowData}">
-            <g:SimplePanel ui:field="panel">
+            <container:SimpleContainer ui:field="container">
                 
-            </g:SimplePanel>
+            </container:SimpleContainer>
         </container:child>
         
     </container:VerticalLayoutContainer>
