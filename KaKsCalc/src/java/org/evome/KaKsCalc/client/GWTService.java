@@ -37,10 +37,10 @@ public interface GWTService extends RemoteService {
     
     //==============================DATABASE SERVICES===========================
     //Database services of KaKsCalc
-    //add operations returns the generated ID, failed if 0 returned
+    //add operations returns the final instance on server side, null if failed
     public int addNewProject(Project project);
     public int addNewCalculation(Calculation calc);
-    public int addNewTask(Task task);
+    public Task addNewTask(Task task);
     public int addResource(Resource res);
     
     public boolean editProject(Project project);
@@ -67,7 +67,7 @@ public interface GWTService extends RemoteService {
     
     //=============================RESOURCES OPERATION==========================
     //get parsed fasta seq id
-    public ArrayList<String> parseFastaIDs(String filename);
+    public ArrayList<String> parseSeqIDs(Resource res);
     public ArrayList<Resource> childResources(String uuid);
     public Resource uploadAsResource(UploadInfo info); 
 }

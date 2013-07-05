@@ -28,7 +28,7 @@ public interface GWTServiceAsync {
     //===========================DATABASE SERVICES==============================
     public void addNewProject(Project project, AsyncCallback<Integer> callback);
     public void addNewCalculation(Calculation calc, AsyncCallback<Integer> callback);
-    public void addNewTask(Task task, AsyncCallback<Integer> callback);
+    public void addNewTask(Task task, AsyncCallback<Task> callback);
     public void addResource(Resource res, AsyncCallback<Integer> callback);
     
     public void editProject(Project project, AsyncCallback<Boolean> callback);
@@ -52,7 +52,7 @@ public interface GWTServiceAsync {
     public void subTasks(Calculation calc, AsyncCallback<ArrayList<Task>> callback);
     
     //get parsed fasta seq id
-    public void parseFastaIDs(String filename, AsyncCallback<ArrayList<String>> callback);
+    public void parseSeqIDs(Resource res, AsyncCallback<ArrayList<String>> callback);
     public void childResources(String uuid, AsyncCallback<ArrayList<Resource>> callback);    
     public void uploadAsResource(UploadInfo info, AsyncCallback<Resource> callback);
 }

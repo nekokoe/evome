@@ -8,10 +8,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.widget.core.client.Component;
 import com.sencha.gxt.widget.core.client.Portlet;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.button.ToolButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import org.evome.KaKsCalc.client.KaKsCalc;
 
 /**
  *
@@ -58,7 +60,7 @@ public class PortletWizard extends Portlet {
         updateUI();
     }
     public void finish(){
-        
+        this.removeFromParent();
     }
     
     public void cancel(){
@@ -84,7 +86,9 @@ public class PortletWizard extends Portlet {
         //switch stepwig
         this.setWidget(stepWigs.get(step));
         //set heading text
-        this.setHeadingText(stepText.get(step));        
+        this.setHeadingText(stepText.get(step));
+        //this is very useful to redraw layout appearance
+        this.forceLayout();
     }
     
     public interface NextStepHandler{
@@ -122,6 +126,15 @@ public class PortletWizard extends Portlet {
     private void initWizardPanel(){
         this.setHeight(400);
         this.getElement().setMargins(10);
+        //set headbar button
+        this.getHeader().addTool(new ToolButton(ToolButton.CLOSE, new SelectEvent.SelectHandler() {
+            @Override
+            public void onSelect(SelectEvent event) {
+                cancelHandler.onCancel();                
+                cancel();    
+            }
+        }));       
+        
         //add bottom buttons
         TextButton prev = new TextButton("back");
         TextButton next = new TextButton("next");
@@ -141,29 +154,41 @@ public class PortletWizard extends Portlet {
         prev.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
+                try{
+                    prevHandlers.get(stepWigs.get(step)).onPrevStep();
+                }catch(Exception ex){
+                    
+                }
                 back();
-                prevHandlers.get(stepWigs.get(step)).onPrevStep();
             }
         });
         next.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                next();
-                nextHandlers.get(stepWigs.get(step)).onNextStep();
+                try{
+                    nextHandlers.get(stepWigs.get(step)).onNextStep();
+                }catch(Exception ex){
+                    
+                }                       
+                next();                
             }
         });
         finish.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
+                try{
+                    finishHandler.onFinish();                
+                }catch(Exception ex){
+                    
+                }
                 finish();
-                finishHandler.onFinish();
             }
         });
         cancel.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                cancel();
                 cancelHandler.onCancel();                
+                cancel();
             }
         });                
     }

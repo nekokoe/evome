@@ -27,7 +27,7 @@ public class Resource implements IsSerializable{
     //type enum
     public enum ResType{
         UNKNOW,
-        REGULAR,BINARY,URL,TEMP,
+        REGULAR,DIRECTORY,BINARY,URL,TEMP,
         CONFIG,XML,JSON,
         DNA,RNA,PROTEIN,MUSCLE,AXT,KAKS,GRAPH
     }

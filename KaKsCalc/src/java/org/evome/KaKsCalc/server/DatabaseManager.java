@@ -61,7 +61,7 @@ public class DatabaseManager {
         return pj;
     }
     
-    public static Project getProjectByUUID(String uuid){
+    public static Project getProject(String uuid){
         Project p = new Project();
         String sql = "SELECT * FROM `project` WHERE project.uuid='" + uuid + "'";
         //String sql = "SELECT * FROM `project` ";
@@ -110,7 +110,7 @@ public class DatabaseManager {
         }
         return calc;
     }
-    public static Calculation getCalculationByUUID(String uuid){
+    public static Calculation getCalculation(String uuid){
         Calculation calc = new Calculation();
         String sql = "SELECT * FROM `calculation` WHERE calculation.uuid='" + uuid + "'";
         try{
@@ -166,7 +166,7 @@ public class DatabaseManager {
         }
         return task;
     }
-    public static Task getTaskByUUID(String uuid){
+    public static Task getTask(String uuid){
         Task task = new Task();
         String sql = "SELECT * FROM `task` WHERE task.uuid='" + uuid + "'";
         try{
@@ -301,7 +301,7 @@ public class DatabaseManager {
         return calc_id;
     }
     
-    public static int addTask(Task task){
+    public static Task addTask(Task task){
         int task_id;
         String sql = "INSERT INTO `task` SET "
                 + "task.status='" + task.getStatus().ordinal() + "',"
@@ -329,11 +329,16 @@ public class DatabaseManager {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
             task_id = 0;
         }
-        return task_id;
+        //return task_id;
+        return getTask(task_id);
     }
 
     public static int addResource(Resource res){
         int id;
+        String randomUUID = UUID.randomUUID().toString();
+        if (res.getName().isEmpty()){
+            res.setName(randomUUID);            //if no name, using the UUID
+        }
         String sql = "INSERT INTO `resource` SET "
                 + "resource.name='" + res.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "resource.type='" + res.getType().ordinal() + "',"
@@ -343,7 +348,7 @@ public class DatabaseManager {
                 //+ "resource.uuid='" + res.getUUID() + "',"
                 + "resource.create='" + sdf.format(new Date()) + "',"
                 + "resource.modify='" + sdf.format(new Date()) + "',"
-                + "resource.uuid='" + UUID.randomUUID().toString() + "',"
+                + "resource.uuid='" + randomUUID + "',"
                 + "resource.parent='" + res.getParentUUID() + "',"      //this field must be set on client if you need to associate resource to any elements
                 + "resource.permission=0,"  /* to be continued*/
                 + "resource.comment='" + res.getComment().replaceAll("[\\\\]*'", "\\\\'") + "'";
@@ -389,7 +394,7 @@ public class DatabaseManager {
                 + "task.calc='" + task.getCalculation().getId() + "',"
                 + "task.project='" + task.getProject().getId() + "',"
                 + "task.qrank='" + task.getQueueRank() + "',"
-                + "task.prank='" + task.getPriorityRank() + "',"
+                + "task.prank='" + task.getPriorityRank().ordinal() + "',"
                 + "task.comment='" + task.getComment().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "task.name='" + task.getName().replaceAll("[\\\\]*'", "\\\\'") + "',"
                 + "task.modify='" + sdf.format(new Date()) + "',"

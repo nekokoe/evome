@@ -87,7 +87,7 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
         return DatabaseManager.addCalculation(calc);
     }
     @Override
-    public int addNewTask(Task task){
+    public Task addNewTask(Task task){
         return DatabaseManager.addTask(task);
     }    
     @Override
@@ -164,9 +164,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     
     //=======================RESOURCES SERVICES=================================
     @Override
-    public ArrayList<String> parseFastaIDs(String file){
-        return null;
-        //ArrayList<String> ids = FileManager.parseFastaDNASeqs(new File(file))
+    public ArrayList<String> parseSeqIDs(Resource res){
+        ArrayList<String> id_list = new ArrayList<String>();
+        if (res.getType() == Resource.ResType.DNA || res.getType() == Resource.ResType.PROTEIN){
+            id_list.addAll(ResourceManager.parseFastaDNASeqs(res).keySet());
+        }
+        return id_list;
     }
     
     @Override
@@ -176,6 +179,12 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     
     @Override
     public Resource uploadAsResource(UploadInfo info){
-        return ResourceManager.uploadAsResource(info);        
+        switch (info.type){
+            case TEXT:
+                return ResourceManager.textAsResource(info);
+            case FILE:
+            default: 
+                return ResourceManager.uploadAsResource(info);                   
+        }     
     }
 }

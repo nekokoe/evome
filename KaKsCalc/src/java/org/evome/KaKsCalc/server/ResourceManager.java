@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 import org.evome.KaKsCalc.client.Task;
 import org.evome.KaKsCalc.client.Resource;
 import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.RNASequence;
+import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 import java.util.LinkedHashMap;
@@ -18,7 +20,12 @@ import java.util.UUID;
 import java.util.ArrayList;
 import org.evome.KaKsCalc.client.Account;
 import org.evome.KaKsCalc.client.shared.UploadInfo;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 /**
@@ -51,7 +58,7 @@ public class ResourceManager {
                 res.setParentUUID(info.UUID);
                 res.setName(info.name);
                 res.setComment("");
-                res.setType(checkResourceType(source));
+                res.setType(checkFileType(source));
                 res.setOwner(info.account);
                 res = DatabaseManager.getResource(DatabaseManager.addResource(res));
                 Path target = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res));
@@ -64,6 +71,32 @@ public class ResourceManager {
         return res;        
     }
     
+    public static Resource textAsResource(UploadInfo info){
+        //save text on client side as a plain text file and reg. as Resource
+        //text is transferred as info.text
+        Resource res = null;
+        try{
+            res = new Resource();
+            res.setParentUUID(info.UUID);
+            res.setName(info.name);
+            res.setComment("");
+            res.setType(Resource.ResType.REGULAR);
+            res.setOwner(info.account);
+            res = DatabaseManager.getResource(DatabaseManager.addResource(res)); 
+            Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile()));
+            String text = info.getText();
+            text = text.replaceAll("\r", "");
+            text = text.replaceAll("\n", System.getProperty("line.separator"));
+            writer.write(text);
+            writer.close();
+        }catch(Exception ex){
+            Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
+            res = null;
+        }
+        return res;
+    }
+    
     public static boolean delResourceFile(Resource res) {
         String path = getResourcePath(sysconf.DATA_ROOT_PATH, res);
         try{
@@ -74,42 +107,54 @@ public class ResourceManager {
         }
     }
     
-    public static Resource.ResType checkResourceType(Path file) {
-        Resource.ResType type = Resource.ResType.REGULAR;
-        if (Files.exists(file)) {
-            if (isDNAFastaFile(file.toFile())) {
-                type = Resource.ResType.DNA;
-            }
-        } else {
-            type = Resource.ResType.UNKNOW;
+    public static Resource.ResType checkFileType(Path path){
+        if (!Files.exists(path)) {
+            return Resource.ResType.UNKNOW;
         }
-        return type;
-    }
-    
-    public static Resource.ResType checkResourceType(Resource res){
-        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res) + res.getName());
-        return checkResourceType(file);
-    }
-
-    public static boolean isDNAFastaFile(File file){
+        //is DNA?
         try{
-            FastaReaderHelper.readFastaDNASequence(file);
-            return true;
+            FastaReaderHelper.readFastaDNASequence(path.toFile());
+            return Resource.ResType.DNA;
         }catch(Exception ex){
-            System.out.println(ex.toString());
-            return false;
+            System.out.println(ex.toString());            
         }catch(Error err){
             System.out.println(err.toString());
-            return false;
         }
-    }    
-    
-    public static LinkedHashMap<String, DNASequence> parseFastaDNASeqs(File fasta){
+        //is RNA?
         try{
-            return FastaReaderHelper.readFastaDNASequence(fasta);
+            FastaReaderHelper.readFastaProteinSequence(path.toFile());
+            return Resource.ResType.PROTEIN;
+        }catch(Exception ex){
+            System.out.println(ex.toString());            
+        }catch(Error err){
+            System.out.println(err.toString());
+        }
+        //is dir?
+        if (Files.isDirectory(path)){
+            return Resource.ResType.DIRECTORY;
+        }
+        //is regular file?
+        if (Files.isRegularFile(path)){
+            return Resource.ResType.REGULAR;
+        }
+        //don't know what is this
+        return Resource.ResType.UNKNOW;
+    }
+    
+    
+    public static Resource.ResType checkResourceType(Resource res) {
+        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res) + res.getName());
+        return checkFileType(file);    
+    }
+    
+    public static LinkedHashMap<String, DNASequence> parseFastaDNASeqs(Resource res){
+        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res) + res.getName());
+        try{
+            return FastaReaderHelper.readFastaDNASequence(file.toFile());
         }catch(Exception ex){
             Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
+    
 }

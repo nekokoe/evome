@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.evome.KaKsCalc.client.shared.TreeViewItem;
 
 /**
- *    //this event broadcat the TreeViewItem to be updated or removed
+ *    //this event broadcast the TreeViewItem to be updated or removed
  * @author nekoko
  */
 public class TreeUpdateEvent extends GwtEvent<TreeUpdateEvent.TreeUpdateEventHandler>{
@@ -30,11 +30,11 @@ public class TreeUpdateEvent extends GwtEvent<TreeUpdateEvent.TreeUpdateEventHan
     private TreeViewItem tvi, parent;   //parent is used only for ADD action
     private Action action;
     public enum Action{
-        SELECT,RELOAD,ADD,UPDATE,DELETE
+        SELECT,RELOAD,ADD,UPDATE,DELETE,REBORN;         //REBORN = rebuid the whole tree
     }
     //constructor
     public TreeUpdateEvent(){
-        
+        this.action = Action.REBORN;
     }    
     public TreeUpdateEvent(TreeViewItem node, TreeUpdateEvent.Action action){
         this.tvi = node;

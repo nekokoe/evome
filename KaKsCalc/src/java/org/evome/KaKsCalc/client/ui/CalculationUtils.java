@@ -85,6 +85,9 @@ public class CalculationUtils extends Composite {
 
     public CalculationUtils() {
         initWidget(uiBinder.createAndBindUi(this));
+        //set portals collapsable
+        statuslet.setCollapsible(true);
+        uploadlet.setCollapsible(true);
         portal.add(statuslet,2);
         portal.add(uploadlet, 0);
         container.add(portal);
@@ -196,13 +199,6 @@ public class CalculationUtils extends Composite {
     @UiHandler("btnTaskAdd")
     public void onTaskAddClick(SelectEvent event) {
         final TaskWizard wizard = new TaskWizard(mycalc);
-        //wizard.setHeadingText("Create a new Task");
-        wizard.getHeader().addTool(new ToolButton(ToolButton.CLOSE, new SelectEvent.SelectHandler() {
-            @Override
-            public void onSelect(SelectEvent event) {
-                wizard.removeFromParent();
-            }
-        }));
         portal.add(wizard, 0);
     }
 

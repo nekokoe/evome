@@ -36,6 +36,7 @@ import org.evome.KaKsCalc.client.ui.events.TreeUpdateEvent;
 public class TreeView extends Composite {
     
     private static GWTServiceAsync rpc = Shared.getService();
+    private static Session mysession;
     
     @UiField(provided=true)
     TreeStore<TreeViewItem> store = new TreeStore<TreeViewItem>(new ModelKeyProvider<TreeViewItem>(){
@@ -79,8 +80,9 @@ public class TreeView extends Composite {
     public TreeView(Session s){
         initWidget(uiBinder.createAndBindUi(this));
         
-        Account account = new Account();    //tricky, only for test
-        account.setUserID(s.getUserID());   //tricky, only for test
+        mysession = s;
+        Account account = new Account();    //tricky, only for beta test
+        account.setUserID(s.getUserID());   //tricky, only for beta test
         
         initTree();
         
@@ -118,6 +120,9 @@ public class TreeView extends Composite {
                         break;
                     case DELETE:
                         removeNode(event.getTreeViewItem());
+                        break;
+                    case REBORN:
+                        reborn();
                         break;
                 }
             }
@@ -236,7 +241,12 @@ public class TreeView extends Composite {
         store.removeChildren(node);
         store.remove(node);
     }
-
+    
+    private void reborn(){
+        treeProject.getStore().clear();
+        addUserProjects(mysession.getAccount());
+        treeProject.expandAll();
+    }
     
     private void sampleData(){
         //set treeview

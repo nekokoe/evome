@@ -32,6 +32,7 @@ public class DBConnector {
     
     public ResultSet execQuery(String sql) {
         //for select
+        //System.out.println(sql);//FOR DEBUG        
         try {
             PreparedStatement query = conn.prepareStatement(sql);
             ResultSet rs = query.executeQuery();
@@ -44,6 +45,7 @@ public class DBConnector {
     
     public int execUpdate(String sql){
         //for update, insert, delete
+        //System.out.println(sql);//FOR DEBUG
         try {
             PreparedStatement query = conn.prepareStatement(sql);
             return query.executeUpdate();
@@ -54,6 +56,7 @@ public class DBConnector {
     }
     
     public ResultSet execUpdateReturnGeneratedKeys(String sql){
+        //System.out.println(sql);//FOR DEBUG                
         ResultSet rs = null;
         try {
             PreparedStatement query = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

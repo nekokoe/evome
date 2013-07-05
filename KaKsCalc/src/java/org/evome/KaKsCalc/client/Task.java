@@ -44,6 +44,15 @@ public class Task implements IsSerializable {
     }
     
     
+    //set default values
+    public Task(){
+        this.kaks_code = Gencode.Standard;
+        this.kaks_method = Method.MA;
+        this.priority = Priority.TASK_PR_LOW;
+        this.task_QR = 0;
+        this.status = Status.TASK_NEW;
+    }
+    
     //set methods
     public void setCreateDate(Date create) {
         this.task_create = create;        
