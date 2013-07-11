@@ -6,13 +6,13 @@ package org.evome.KaKsCalc.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.ArrayList;
-import org.evome.KaKsCalc.client.GWTService;
-import org.evome.KaKsCalc.client.Session;
-import org.evome.KaKsCalc.client.shared.UploadInfo;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
 import org.evome.KaKsCalc.client.*;
-import java.nio.file.*;
+import org.evome.KaKsCalc.client.shared.*;
+
 
 /**
  *
@@ -164,14 +164,21 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
     
     //=======================RESOURCES SERVICES=================================
     @Override
-    public ArrayList<String> parseSeqIDs(Resource res){
-        ArrayList<String> id_list = new ArrayList<String>();
-        if (res.getType() == Resource.ResType.DNA || res.getType() == Resource.ResType.PROTEIN){
-            id_list.addAll(ResourceManager.parseFastaDNASeqs(res).keySet());
+    public ArrayList<Sequence> parseSeqIDs(Resource res) {
+        ArrayList<Sequence> id_list = new ArrayList<Sequence>();
+        if (res.getType() == Resource.ResType.DNA || res.getType() == Resource.ResType.PROTEIN) {
+            Set<String> keyset = ResourceManager.parseFastaDNASeqs(res).keySet();
+            if (keyset != null) {       //seems to be a fasta file
+                for (Iterator<String> it = ResourceManager.parseFastaDNASeqs(res).keySet().iterator(); it.hasNext();) {
+                    id_list.add(new Sequence(it.next(), "", res.getUUID())); //seq is ignored for remote transfer, real seq should be obtained by other means
+                }
+            }else{                      //seems not
+                id_list.add(new Sequence(res.getName() + " is not a fasta file, or some error(s) occured", "", res.getUUID())); //tricky...
+            }
         }
         return id_list;
     }
-    
+
     @Override
     public ArrayList<Resource> childResources(String uuid){
         return DatabaseManager.childResources(UUID.fromString(uuid));
@@ -187,4 +194,8 @@ public class GWTServiceImpl extends RemoteServiceServlet implements GWTService {
                 return ResourceManager.uploadAsResource(info);                   
         }     
     }
+    
+    
+    
+    //===========================OTHERS=========================================
 }

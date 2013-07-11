@@ -7,8 +7,21 @@ package org.evome.KaKsCalc.client.shared;
 /**
  *
  * @author nekoko
+ * 
+ * A Pair could be :
+ * 1.two sequences anonymous
+ * 2.two sequences with name and source
  */
-public class Pair {
+
+import com.google.gwt.editor.client.Editor;
+import com.google.gwt.user.client.rpc.IsSerializable;
+import com.sencha.gxt.core.client.ValueProvider;
+import com.sencha.gxt.data.shared.LabelProvider;
+import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.data.shared.PropertyAccess;
+import org.evome.KaKsCalc.client.Resource;
+
+public class Pair implements IsSerializable{
 
     private String name, parent;
     private Sequence a, b;
@@ -60,4 +73,15 @@ public class Pair {
     public String getKey(){
         return this.parent + this.name;
     }
+    
+    public interface PairProperties extends PropertyAccess<Resource> {
+
+        ModelKeyProvider<Pair> key();
+
+        ValueProvider<Pair, String> name();
+
+        @Editor.Path("name")
+        LabelProvider<Pair> label();
+    }
+ 
 }

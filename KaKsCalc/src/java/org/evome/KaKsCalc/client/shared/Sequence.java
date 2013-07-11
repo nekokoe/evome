@@ -4,15 +4,36 @@
  */
 package org.evome.KaKsCalc.client.shared;
 
+
 /**
  *
  * @author nekoko
  */
-public class Sequence {
+
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+
+
+public class Sequence implements IsSerializable{
 
     private String id, seq;
     private String parent;  //store where the sequence comes from, in general parent = ResourceUUID
 
+    public Sequence(){
+        
+    }
+    
+    public Sequence(String id, String seq){
+        this.id = id;
+        this.seq = seq;
+    }
+    
+    public Sequence(String id, String seq, String parent){
+        this.id = id;
+        this.seq = seq;
+        this.parent = parent;
+    }
+    
     public void setId(String id) {
         this.id = id;
     }
@@ -41,4 +62,5 @@ public class Sequence {
     public String getKey(){
         return (this.parent + this.id);
     }
+   
 }

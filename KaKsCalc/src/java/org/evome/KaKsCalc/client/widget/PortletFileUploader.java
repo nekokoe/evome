@@ -156,7 +156,7 @@ public class PortletFileUploader extends Portlet{
                     IUploader.UploadedInfo info = uploader.getServerInfo();
                     Info.display("Upload Success", "Finished uploading file " + info.name);
                     //register upload as resource
-                    rpc.uploadAsResource(new UploadInfo(info.message, info.name, uuid, owner), new AsyncCallback<Resource>() {
+                    rpc.uploadAsResource(new UploadInfo(info.message, info.name, uuid, owner, UploadInfo.Type.FILE), new AsyncCallback<Resource>() {
                         @Override
                         public void onSuccess(Resource res) {
                             if (res == null){

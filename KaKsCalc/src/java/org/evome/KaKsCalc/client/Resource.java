@@ -15,6 +15,8 @@ import java.util.Date;
  * @author nekoko
  */
 public class Resource implements IsSerializable{
+    private static int count = 0;
+    
     private int id, group, permission;
     private Task task;
     private Account owner;
@@ -33,7 +35,7 @@ public class Resource implements IsSerializable{
     }
 
     public Resource(){
-        
+        count++;
     }
     
     public Resource(String uuid){
@@ -81,6 +83,10 @@ public class Resource implements IsSerializable{
         return this.message;
     }
     
+    public String getDefaultName(){
+        return "noname" + count;
+    }
+    
     //sets
     public void setId(int id){
         this.id = id;
@@ -121,4 +127,6 @@ public class Resource implements IsSerializable{
     public void setMessage(String message){
         this.message = message;
     }
+    
+
 }

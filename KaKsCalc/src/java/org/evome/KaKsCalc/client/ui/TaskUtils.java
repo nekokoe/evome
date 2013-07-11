@@ -16,13 +16,18 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.sencha.gxt.widget.core.client.Dialog;
 import com.sencha.gxt.widget.core.client.Portlet;
+import com.sencha.gxt.widget.core.client.box.ConfirmMessageBox;
+import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.container.PortalLayoutContainer;
 import org.evome.KaKsCalc.client.Task;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.HideEvent;
+import com.sencha.gxt.widget.core.client.info.Info;
 import org.evome.KaKsCalc.client.*;
+import org.evome.KaKsCalc.client.ui.events.TreeUpdateEvent;
 
 /**
  *
@@ -95,7 +100,33 @@ public class TaskUtils extends Composite {
     
     @UiHandler("btnTaskDel")
     public void onTaskDelClick(SelectEvent event){
-        
+        ConfirmMessageBox confirm =
+                new ConfirmMessageBox("Confirm", "Are you sure want to delete : " + mytask.getName() + " ? <br>"
+                + "All data under this task will be deleted!");
+        confirm.addHideHandler(new HideEvent.HideHandler() {
+            @Override
+            public void onHide(HideEvent event) {
+                MessageBox source = (MessageBox) event.getSource();
+                if (source.getHideButton() == source.getButtonById(Dialog.PredefinedButton.YES.name())) {
+                    rpc.delTask(mytask, new AsyncCallback<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean b) {
+                            if (b) {
+                                KaKsCalc.EVENT_BUS.fireEvent(new TreeUpdateEvent(mytvi, TreeUpdateEvent.Action.DELETE));
+                            } else {
+                                Info.display("Error", "Failed to delete " + mytask.getName());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Info.display("Error", "Communication with server failed.");
+                        }
+                    });
+                }
+            }
+        });
+        confirm.show();        
     }
     
     

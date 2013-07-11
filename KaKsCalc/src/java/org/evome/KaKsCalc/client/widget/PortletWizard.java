@@ -187,7 +187,11 @@ public class PortletWizard extends Portlet {
         cancel.addSelectHandler(new SelectEvent.SelectHandler() {
             @Override
             public void onSelect(SelectEvent event) {
-                cancelHandler.onCancel();                
+                try{
+                    cancelHandler.onCancel();
+                }catch(Exception ex){
+                    
+                }                
                 cancel();
             }
         });                

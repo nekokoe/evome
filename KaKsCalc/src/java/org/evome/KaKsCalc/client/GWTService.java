@@ -7,12 +7,13 @@ package org.evome.KaKsCalc.client;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import java.util.ArrayList;
-import org.evome.KaKsCalc.client.shared.UploadInfo;
+import org.evome.KaKsCalc.client.shared.*;
 
 /**
  *
  * @author nekoko
  */
+
 @RemoteServiceRelativePath("gwtservice")
 public interface GWTService extends RemoteService {
 
@@ -67,7 +68,11 @@ public interface GWTService extends RemoteService {
     
     //=============================RESOURCES OPERATION==========================
     //get parsed fasta seq id
-    public ArrayList<String> parseSeqIDs(Resource res);
+    public ArrayList<Sequence> parseSeqIDs(Resource res);
     public ArrayList<Resource> childResources(String uuid);
     public Resource uploadAsResource(UploadInfo info); 
+    
+    
+    //=============================miscellaneous================================
+
 }

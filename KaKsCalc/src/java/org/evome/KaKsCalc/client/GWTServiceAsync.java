@@ -5,8 +5,9 @@
 package org.evome.KaKsCalc.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import org.evome.KaKsCalc.client.shared.UploadInfo;
 import java.util.ArrayList;
+import org.evome.KaKsCalc.client.shared.*;
+
 
 /**
  *
@@ -51,8 +52,13 @@ public interface GWTServiceAsync {
     public void subCalculations(Project proj, AsyncCallback<ArrayList<Calculation>> callback);
     public void subTasks(Calculation calc, AsyncCallback<ArrayList<Task>> callback);
     
+    
+    //===========================RESOURCE OPERATIONS============================
     //get parsed fasta seq id
-    public void parseSeqIDs(Resource res, AsyncCallback<ArrayList<String>> callback);
+    public void parseSeqIDs(Resource res, AsyncCallback<ArrayList<Sequence>> callback);
     public void childResources(String uuid, AsyncCallback<ArrayList<Resource>> callback);    
     public void uploadAsResource(UploadInfo info, AsyncCallback<Resource> callback);
+    
+    //==========================OTHERS==========================================
+    
 }

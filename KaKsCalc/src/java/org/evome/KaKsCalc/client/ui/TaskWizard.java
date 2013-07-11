@@ -23,6 +23,12 @@ import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.event.HideEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.sencha.gxt.core.client.Style;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 import com.sencha.gxt.widget.core.client.form.TextField;
@@ -37,10 +43,12 @@ import org.evome.KaKsCalc.client.shared.*;
 import com.sencha.gxt.widget.core.client.form.DualListField;
 import com.sencha.gxt.widget.core.client.form.ComboBox;
 import com.sencha.gxt.data.shared.PropertyAccess;
+import com.sencha.gxt.widget.core.client.button.ToolButton;
 import org.evome.KaKsCalc.client.KaKsCalc;
 import org.evome.KaKsCalc.client.ui.events.*;
 import org.evome.KaKsCalc.client.widget.resources.ExampleImages;
-
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -205,14 +213,18 @@ public class TaskWizard extends PortletWizard{
             }
         });
         
-        //PairSelect : 
+        //PairSelect : next
+        
+        //PairSelect : back
+        
+        //
     }
     
     
     
     
     
-    
+    //==============================================================================
     private class PropertyUI {
 
         VerticalLayoutContainer ui = new VerticalLayoutContainer();
@@ -238,10 +250,12 @@ public class TaskWizard extends PortletWizard{
         }
     }
     
+    //==============================================================================
     private class PasteSeqUI {
 
         VerticalLayoutContainer ui = new VerticalLayoutContainer();
-        VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10));
+        VerticalLayoutContainer.VerticalLayoutData layout = 
+                new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10));
         FieldLabel seqlabel = new FieldLabel();
         TextArea sequences = new TextArea();
 
@@ -256,27 +270,31 @@ public class TaskWizard extends PortletWizard{
         }
     }
     
+    //==============================================================================
     private class PairSelectUI {
+        //data store
+        ArrayList<Pair> pairlist = new ArrayList<Pair>();
+        //ui layouts
         VerticalLayoutContainer ui = new VerticalLayoutContainer();
         VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(10));
         //Property access
-        PairProperties pairs = GWT.create(PairProperties.class);
+        SequenceSetProperties setprops = GWT.create(SequenceSetProperties.class);
         //list store
-        ListStore<Pair> store = new ListStore<Pair>(pairs.key());
+        ListStore<SequenceSet> store = new ListStore<SequenceSet>(setprops.key());
         //UI widgets
         ToolBar toolbar = new ToolBar();
         TextButton add = new TextButton("Add");
         TextButton delete = new TextButton("Delete");
         TextButton edit = new TextButton("Edit");
         //pair list
-        ListView<Pair, String> view = new ListView<Pair, String> (store, pairs.name());
+        ListView<SequenceSet, String> seqsetlist = new ListView<SequenceSet, String> (store, setprops.name());
         
         
         public PairSelectUI() {
             ui.setScrollMode(ScrollSupport.ScrollMode.AUTO);
             ui.add(new Label("Select gene pairs for calculation"), layout);
             ui.add(toolbar, layout);
-            ui.add(view, new VerticalLayoutContainer.VerticalLayoutData(1, 1, new Margins(10)));
+            ui.add(seqsetlist, new VerticalLayoutContainer.VerticalLayoutData(1, 1, new Margins(10)));
             
             add.setIcon(images.add());
             delete.setIcon(images.delete());
@@ -284,14 +302,58 @@ public class TaskWizard extends PortletWizard{
             toolbar.add(add);
             toolbar.add(delete);
             toolbar.add(edit);
+            //set seqsetlist selection mode
+            seqsetlist.getSelectionModel().setSelectionMode(Style.SelectionMode.SINGLE);
+            
+            //add button handlers
+            add.addSelectHandler(new SelectEvent.SelectHandler() {
+
+                @Override
+                public void onSelect(SelectEvent event) {
+                    final PairSelector selector = new PairSelector();
+                    selector.addHideHandler(new HideEvent.HideHandler() {
+
+                        @Override
+                        public void onHide(HideEvent event) {
+                            //add generated seqset to list
+                            seqsetlist.getStore().add(selector.myseqset);
+                        }
+                    });
+                    selector.show();                            
+                }
+            });
+            edit.addSelectHandler(new SelectEvent.SelectHandler() {
+
+                @Override
+                public void onSelect(SelectEvent event) {
+                    final PairSelector selector = new PairSelector(seqsetlist.getSelectionModel().getSelectedItem());
+                    selector.addHideHandler(new HideEvent.HideHandler() {
+
+                        @Override
+                        public void onHide(HideEvent event) {
+                            seqsetlist.getStore().update(selector.myseqset);
+                        }
+                    });
+                    selector.show();
+                }   
+            });
+            delete.addSelectHandler(new SelectEvent.SelectHandler() {
+
+                @Override
+                public void onSelect(SelectEvent event) {
+                    seqsetlist.getStore().remove(seqsetlist.getSelectionModel().getSelectedItem());
+                }
+            });
         }
         
         
     }
     
     private class PairSelector extends Window{
+        public SequenceSet myseqset;
+        
         VerticalLayoutContainer container = new VerticalLayoutContainer();
-        VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(10));
+        VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10));
         //property access
         ResourceProperties resources = GWT.create(ResourceProperties.class);
         SequenceProperties props = GWT.create(SequenceProperties.class);
@@ -300,17 +362,108 @@ public class TaskWizard extends PortletWizard{
         ListStore<Sequence> leftstore = new ListStore<Sequence>(props.key());
         ListStore<Sequence> rightstore = new ListStore<Sequence>(props.key());
         //ui widgets
-       
+        TextField setName = new TextField();
         ComboBox<Resource> filelist = new ComboBox<Resource>(filestore, resources.label());
         DualListField<Sequence, String> seqpairs = new DualListField<Sequence, String>(leftstore, rightstore, props.id(), new TextCell());        
         
         public PairSelector(){
-            //build UI
+            //set window appearance
+            this.setHeadingText("Select sequences from files and add to pair group");
+            //add widgets to window
+            container.setWidth(400);
+            container.setHeight(500);
+            container.add(new FieldLabel(setName, "Group Name"), layout);
+            container.add(new FieldLabel(filelist,"Select File"), layout);
+            container.add(new Label("Add sequences to pair group"), layout);
+            container.add(seqpairs, new VerticalLayoutContainer.VerticalLayoutData(1, 1, new Margins(10)));
+            container.add(new Label("In a group, each sequence is paired with all others for calculation."), layout);
+            container.add(new Label("e.g. 3 sequences A,B,C are paired as A-B, B-C, A-C"), layout);
+            this.setWidget(container);
+            //set filelist
+            fillFileList(mycalc.getUUID()); 
+            filelist.addSelectionHandler(new SelectionHandler<Resource>(){
+               @Override
+               public void onSelection(SelectionEvent<Resource> event){
+                   fillSeqList(event.getSelectedItem());
+               }
+            });
             
+            //set pair selector
+            seqpairs.setEnableDnd(true);
+            
+            //process when closing the window
+            this.addHideHandler(new HideEvent.HideHandler() {
+
+                @Override
+                public void onHide(HideEvent event) {
+                    if (myseqset == null){
+                        myseqset = new SequenceSet();       //move new instance call here to solve auto number mistake
+                    }
+                    
+                    if (setName.getText().isEmpty()){
+                        myseqset.setName(myseqset.getDefaultName());
+                    }else{
+                        myseqset.setName(setName.getText());
+                    }                    
+                    myseqset.clear();
+                    myseqset.addAll(rightstore.getAll());
+                }
+            });
+        }
+        
+        public PairSelector(SequenceSet seqset){
+            this();
+            //to edit pair, directly edit on pair
+            myseqset = seqset;
+            //add seqset to right list
+            rightstore.addAll(seqset);
+            //set group name
+            setName.setText(seqset.getName());
+        }
+        
+        private void fillFileList(String parent){
+            rpc.childResources(parent, new AsyncCallback<ArrayList<Resource>>() {
+                @Override
+                public void onSuccess(ArrayList<Resource> reslist) {
+                    filestore.addAll(reslist);
+                    filelist.setValue(filestore.get(0), true);      //try to select the first
+                    fillSeqList(filestore.get(0));                  //try to select the first
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Info.display("Error", "Communication with server failed.");
+                }
+            });
+        }
+        
+        private void fillSeqList(Resource res){
+            leftstore.clear();
+            rpc.parseSeqIDs(res, new AsyncCallback<ArrayList<Sequence>>() {
+                @Override
+                public void onSuccess(ArrayList<Sequence> idlist) {
+                    leftstore.addAll(idlist);
+                    //remove seqset from left list
+                    //REMEMBER : RPC CALL IS NOT SEQUENTIAL!!!
+                    for (Iterator<Sequence> it = rightstore.getAll().iterator(); it.hasNext();) {
+                        try{
+                            leftstore.remove(it.next());
+                        }catch(Exception ex){
+                            
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Info.display("Error", "Communication with server failed.");
+                }
+            });
+          
         }
     }
     
-    
+    //==============================================================================
     private class ParamUI{
         VerticalLayoutContainer ui = new VerticalLayoutContainer();
         VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(10));
@@ -321,7 +474,8 @@ public class TaskWizard extends PortletWizard{
         }
         
     }
-    
+
+    //==============================================================================    
     private class ConfirmUI{
         VerticalLayoutContainer ui = new VerticalLayoutContainer();
         VerticalLayoutContainer.VerticalLayoutData layout = new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(10));

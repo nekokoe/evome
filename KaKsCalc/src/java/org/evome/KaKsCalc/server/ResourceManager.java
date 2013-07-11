@@ -143,12 +143,12 @@ public class ResourceManager {
     
     
     public static Resource.ResType checkResourceType(Resource res) {
-        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res) + res.getName());
+        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res));
         return checkFileType(file);    
     }
     
     public static LinkedHashMap<String, DNASequence> parseFastaDNASeqs(Resource res){
-        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res) + res.getName());
+        Path file = Paths.get(getResourcePath(sysconf.DATA_ROOT_PATH, res));
         try{
             return FastaReaderHelper.readFastaDNASequence(file.toFile());
         }catch(Exception ex){

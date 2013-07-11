@@ -30,11 +30,12 @@ public class UploadInfo implements IsSerializable {
         text = "";
     }
     
-    public UploadInfo(String path, String name, String uuid, Account account) {
+    public UploadInfo(String path, String name, String uuid, Account account, Type type) {
         this.path = path;
         this.name = name;
         this.UUID = uuid;
         this.account = account;
+        this.type = type;
     }
     
     public void setText(String text){
