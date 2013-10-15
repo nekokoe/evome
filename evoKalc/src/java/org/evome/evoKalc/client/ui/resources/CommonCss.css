@@ -1,0 +1,23 @@
+/* 
+    Document   : CommonCss
+    Created on : 2013-8-28, 18:00:46
+    Author     : nekoko
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+body{
+    background-color: silver;
+    background-image: url(images/Jellyfish.jpg);
+    background-size: 1280px 1024px;
+}
+
+a{
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+}

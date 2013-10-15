@@ -1,0 +1,128 @@
+@CHARSET "UTF-8";
+
+/* last modified: Feb 20, 2013  */
+@external .balloon;
+.balloon {
+	display: block;
+	position: relative;
+	border: 1px solid darkgray;
+	background: lightyellow;
+	padding: 5px 10px 5px 10px;
+	border-radius: 5px;
+	box-shadow: 3px 3px 3px lightgray;
+}
+
+@external .balloon::after, .balloon::before;
+.balloon::after,
+.balloon::before{
+	display:block;
+	position:absolute;
+	z-index:1;
+	top:10px;
+	left:-20px;
+	width:0px;
+	height:0px;
+	border-style:solid;
+	border-width:10px 10px 10px 10px;
+	border-color: transparent red transparent transparent ;
+	content:' ';
+}
+
+@external .balloon::before; 
+.balloon::before{
+	z-index:2;
+	left:-19px;
+	border-right-color:yellow;
+}
+
+
+@external bottomTo, rightTo, topTo, leftTo;
+/* rightTo */
+@external .rightTo::after,.rightTo::before;
+.rightTo::after,.rightTo::before {
+	display: block;
+	z-index: 1;
+	top: 5px;
+	left: -20px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 10px 10px 10px 10px;
+	border-color: transparent darkgray transparent transparent;
+	content: '';
+}
+
+@external .rightTo::before;
+.rightTo::before {
+	z-index: 2;
+	left: -19px;
+	border-right-color: lightyellow;
+}
+
+@external .leftTo::after,.leftTo::before;
+/* left to */
+.leftTo::after,.leftTo::before {
+	display: block;
+	z-index: 1;
+	left: auto;
+	right: -20px;
+	top: 5px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 10px 10px 10px 10px;
+	border-color: transparent transparent transparent darkgray;
+	content: '';
+}
+
+@external .leftTo::before; 
+.leftTo::before {
+	z-index: 2;
+	right: -19px;
+	border-left-color: lightyellow;
+}
+
+/* bottom to  */
+@external .bottomTo::after,.bottomTo::before; 
+.bottomTo::after,.bottomTo::before {
+	display: block;
+	z-index: 1;
+	left: 5px;
+	top: -20px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 10px 10px 10px 10px;
+	border-color: transparent transparent darkgray transparent;
+	content: '';
+}
+
+@external .bottomTo::before;
+.bottomTo::before {
+	z-index: 2;
+	top: -19px;
+	border-bottom-color: lightyellow;
+}
+
+/* top  */
+@external .topTo::after,.topTo::before;
+.topTo::after,.topTo::before {
+	display: block;
+	z-index: 1;
+	left: 5px;
+	top: auto;
+	bottom: -20px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 10px 10px 10px 10px;
+	border-color: darkgray transparent transparent transparent;
+	content: '';
+}
+
+@external .topTo::before;
+.topTo::before {
+	z-index: 2;
+	bottom: -19px;
+	border-top-color: lightyellow;
+}

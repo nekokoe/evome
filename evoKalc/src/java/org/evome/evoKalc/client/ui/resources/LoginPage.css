@@ -1,0 +1,22 @@
+/* 
+    Document   : LoginPage
+    Created on : 2013-8-27, 16:18:20
+    Author     : nekoko
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.logo_title{
+    font-family: Arial;
+    font-size: 22px;
+}
+
+.container{
+    position: absolute;
+    top: 0px;
+
+}
